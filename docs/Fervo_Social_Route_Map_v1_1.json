@@ -1,0 +1,136 @@
+{
+  "product": "Fervo Social",
+  "market": "Brazil",
+  "locales": [
+    "pt-BR",
+    "es",
+    "en"
+  ],
+  "primary_navigation": [
+    {
+      "label": "Home",
+      "route": "/home"
+    },
+    {
+      "label": "Explore",
+      "route": "/explore"
+    },
+    {
+      "label": "Create",
+      "type": "modal"
+    },
+    {
+      "label": "Messages",
+      "route": "/messages"
+    },
+    {
+      "label": "Profile",
+      "route": "/me"
+    }
+  ],
+  "public_routes": [
+    "/",
+    "/login",
+    "/register",
+    "/verify-age",
+    "/forgot-password",
+    "/safety",
+    "/help",
+    "/legal/:slug"
+  ],
+  "authenticated_routes": [
+    "/home",
+    "/explore",
+    "/messages",
+    "/messages/:threadId",
+    "/profile/:handle",
+    "/event/:eventId",
+    "/me"
+  ],
+  "profile_types": [
+    "private",
+    "club_business",
+    "event_organizer",
+    "professional"
+  ],
+  "feed_post_types": [
+    "photo",
+    "video",
+    "text_status",
+    "looking_for",
+    "meet_now",
+    "event",
+    "club_promo",
+    "professional_availability",
+    "safety_guidance",
+    "sponsored"
+  ],
+  "removed_top_level_legacy_sections": [
+    "hotlist",
+    "pics",
+    "get_more",
+    "public_chatrooms",
+    "webcam_rooms",
+    "general_forums",
+    "country_selector"
+  ],
+  "version": "1.1",
+  "billing": {
+    "periods": [
+      {
+        "id": "monthly",
+        "months": 1,
+        "discount_percent": 0
+      },
+      {
+        "id": "four_month",
+        "months": 4,
+        "discount_percent": 10
+      },
+      {
+        "id": "annual",
+        "months": 12,
+        "discount_percent": 20
+      }
+    ],
+    "founding_club_offer": {
+      "plan": "business_pro",
+      "free_months": 12,
+      "payment_method_required": false,
+      "auto_renews_to_paid": false,
+      "expiry_action": "downgrade_to_basic_directory",
+      "reminder_days_before_expiry": [
+        90,
+        30,
+        7,
+        1
+      ]
+    }
+  },
+  "additional_profile_subtypes": {
+    "private": [
+      "single",
+      "couple",
+      "multi_partner",
+      "group_household"
+    ],
+    "professional": [
+      "independent_escort",
+      "independent_sex_worker",
+      "performer",
+      "creator",
+      "educator",
+      "other_approved"
+    ],
+    "club_business": [
+      "club",
+      "venue",
+      "adult_business"
+    ],
+    "event_organizer": [
+      "independent_organizer",
+      "club_organizer",
+      "professional_organizer"
+    ]
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "currency": "BRL",
+  "billing_periods": {
+    "monthly": {
+      "months": 1,
+      "discount_percent": 0
+    },
+    "four_month": {
+      "months": 4,
+      "discount_percent": 10
+    },
+    "annual": {
+      "months": 12,
+      "discount_percent": 20
+    }
+  },
+  "plans": {
+    "private_plus": {
+      "monthly_price": 19.9,
+      "four_month_total": 71.64,
+      "annual_total": 191.04
+    },
+    "private_premium": {
+      "monthly_price": 39.9,
+      "four_month_total": 143.64,
+      "annual_total": 383.04
+    },
+    "business_starter": {
+      "monthly_price": 99.0,
+      "four_month_total": 356.4,
+      "annual_total": 950.4
+    },
+    "business_pro": {
+      "monthly_price": 199.0,
+      "four_month_total": 716.4,
+      "annual_total": 1910.4
+    },
+    "organizer_starter": {
+      "monthly_price": 49.0,
+      "four_month_total": 176.4,
+      "annual_total": 470.4
+    },
+    "organizer_pro": {
+      "monthly_price": 149.0,
+      "four_month_total": 536.4,
+      "annual_total": 1430.4
+    },
+    "professional_essential": {
+      "monthly_price": 49.9,
+      "four_month_total": 179.64,
+      "annual_total": 479.04
+    },
+    "professional_pro": {
+      "monthly_price": 99.9,
+      "four_month_total": 359.64,
+      "annual_total": 959.04
+    }
+  },
+  "founding_club_offer": {
+    "name": "Founding Club Pro",
+    "entitlement_plan": "business_pro",
+    "free_months": 12,
+    "no_card_required": true,
+    "auto_paid_conversion": false,
+    "expiry_action": "downgrade_to_basic_directory",
+    "reminder_days": [
+      90,
+      30,
+      7,
+      1
+    ]
+  },
+  "professional_launch_price_policy": {
+    "is_introductory": true,
+    "guaranteed_paid_months": 12,
+    "international_visibility_addons_mvp": false
+  }
+}
