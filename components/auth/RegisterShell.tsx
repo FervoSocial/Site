@@ -9,8 +9,6 @@ import { StatusPanel } from "./StatusPanel";
 
 type RegisterState = "default" | "loading" | "error" | "success";
 
-const wait = (milliseconds: number) => new Promise((resolve) => setTimeout(resolve, milliseconds));
-
 export function RegisterShell() {
   const copy = ptBR.auth.register;
   const [state, setState] = useState<RegisterState>("default");
@@ -29,7 +27,7 @@ export function RegisterShell() {
       email.includes("@") &&
       username.trim().length >= 3 &&
       birthDate &&
-      password.length >= 8 &&
+      password.length >= 12 &&
       adultConsent &&
       termsConsent;
 
@@ -39,8 +37,17 @@ export function RegisterShell() {
     }
 
     setState("loading");
-    await wait(700);
-    setState("success");
+    try {
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ accountType, email, username, birthDate, password, adultConsent, termsConsent }),
+      });
+      if (!response.ok) throw new Error("registration_failed");
+      setState("success");
+    } catch {
+      setState("error");
+    }
   }
 
   return (

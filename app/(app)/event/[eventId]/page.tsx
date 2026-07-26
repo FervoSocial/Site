@@ -1,6 +1,5 @@
-import { PagePlaceholder } from "@/components/ui/PagePlaceholder";
-import { ptBR } from "@/lib/i18n";
+import { EventDetailShell } from "@/components/events/EventDetailShell";
 
 export default function EventPage() {
-  return <PagePlaceholder {...ptBR.routes.event} />;
+  return <EventDetailShell />;
 }

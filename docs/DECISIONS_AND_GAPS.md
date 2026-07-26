@@ -18,6 +18,10 @@ Events and Professionals remain feed-card types and Explore categories. This is 
 
 Product documentation uses `/profile/:handle`, `/event/:eventId`, and `/messages/:threadId`. Next.js implements the same routes with `[handle]`, `[eventId]`, and `[threadId]` folders.
 
+### Explore category routes
+
+The version 1.1 route map lists the parent `/explore` route only. The approved Explore Shell adds four shell-level category routes: `/explore/profiles`, `/explore/clubs`, `/explore/events`, and `/explore/professionals`. `/explore` remains the primary-navigation destination and defaults to profile discovery.
+
 ### Landing and shared visual direction
 
 - Purple/lilac remains the main brand and action colour.
@@ -33,19 +37,31 @@ Product documentation uses `/profile/:handle`, `/event/:eventId`, and `/messages
 - Authentication and verification shell
 - Home and Feed Shell
 - Private Member Profile Shell
+- Explore Shell
+- Messages Shell
+- Galleries Shell
+- Clubs and Events Shell
+- Professional Profiles Shell
+- Reviews Shell (built, awaiting acceptance)
 
-The Explore Shell is planned but not implemented.
 
 ## Known implementation limitations
 
-- Routes inside `(app)` look authenticated but are not protected by a session.
-- Form submissions and status transitions are demonstrations only.
-- All feed and profile data is static placeholder content.
+- Routes inside `(app)` now require an active session and approved verification state. Admin routes also require the moderator/admin role.
+- Registration, login, session, logout, recovery-token creation, and sandbox verification transitions persist in D1. Email delivery and password-reset completion remain placeholders.
+- All feed, profile, Explore, and Messages data is static placeholder content.
 - React state resets on refresh and is shared with no backend.
-- `/profile/:handle` ignores the handle and always renders the same Private Member example.
-- `/me` is not connected to the public profile shell.
-- Search, notifications, location mode, discreet exit, and Create are shell placeholders.
-- `app/chatgpt-auth.ts`, Drizzle, D1, and R2 are dormant starter capabilities.
+- `/profile/:handle` recognises a small fixed set of organisation demonstration handles; all other handles render the same Private Member example.
+- `/me` displays the signed-in account boundary but is not connected to the public profile content renderer or editing.
+- Search, notifications, location mode, and Create are shell placeholders. Discreet exit now performs logout.
+- Explore search, filters, sorting, result view, and state previews are local shell demonstrations with no query or persistence layer.
+- Message-request actions are local shell demonstrations. Thread IDs are ignored, and every conversation route renders the same text-only example.
+- Gallery section choice, item preview, placeholder state choice, and private-access request are local demonstrations. No files, access grants, or permission checks exist.
+- Club, organiser, and event content is fixed placeholder data. Every event ID renders the same event, and no real RSVP, waitlist, ticket, review, verification, or moderation behavior exists.
+- The Professional shell exists only for `luiza-educadora`. Verification labels are demonstrative, portfolio items are abstract, and all commercial and trust-sensitive behavior remains disabled.
+- Public reviews are embedded demonstrations only. Ratings are fixed display data; eligibility, submissions, responses, reports, moderation, and appeals do not exist.
+- Professional-only client safety feedback is deliberately excluded from public reviews and requires a future separately approved safety design.
+- `app/chatgpt-auth.ts` and R2 remain dormant starter capabilities. Drizzle and D1 now support Phase 1 identity data.
 - Only pt-BR copy exists; no locale selection or translation fallback exists.
 - The repository still contains starter names and comments in infrastructure files, including the package name and Worker comment.
 - The canonical GitHub repository is currently empty while the implemented application exists only in the local workspace snapshot. A full import is approved, but the installed GitHub integration currently lacks repository-content write access.
@@ -81,8 +97,8 @@ No billing functionality is implemented. When it is planned:
 
 ### Identity and accounts
 
-- Fervo account/session model and authentication provider
-- Age/identity-verification provider, fallback, retry, and appeal flow
+- Production email delivery and password-reset completion
+- Production age/identity-verification provider, fallback, retry limits, and appeal flow
 - How one account represents and verifies multiple adults
 - Public handle rules, renaming, reservation, and abuse prevention
 
@@ -114,9 +130,8 @@ No billing functionality is implemented. When it is planned:
 - Subscription entitlements, refunds, taxes, invoices, cancellation, and renewal communications
 - Feature-flag ownership and launch-gate sign-off
 
-## Recommended cleanup before data work
+## Recommended cleanup
 
 1. Rename the package and remaining starter comments to Fervo Social.
-2. Add an explicit `typecheck` script.
-3. Move remaining hard-coded visible landing/shell copy into `lib/i18n.ts`.
-4. Grant the GitHub integration repository-content write access, then perform the already approved full-workspace import.
+2. Move remaining hard-coded visible landing/shell copy into `lib/i18n.ts`.
+3. Grant the GitHub integration repository-content write access, then perform the already approved full-workspace import.

@@ -1,6 +1,5 @@
-import { PagePlaceholder } from "@/components/ui/PagePlaceholder";
-import { ptBR } from "@/lib/i18n";
+import { MessagesInbox } from "@/components/messages/MessagesInbox";
 
 export default function MessagesPage() {
-  return <PagePlaceholder {...ptBR.routes.messages} />;
+  return <MessagesInbox />;
 }

@@ -9,13 +9,12 @@ import { StatusPanel } from "./StatusPanel";
 
 type LoginState = "default" | "loading" | "error" | "success";
 
-const wait = (milliseconds: number) => new Promise((resolve) => setTimeout(resolve, milliseconds));
-
 export function LoginShell() {
   const copy = ptBR.auth.login;
   const [state, setState] = useState<LoginState>("default");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [nextRoute, setNextRoute] = useState("/home");
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -25,8 +24,19 @@ export function LoginShell() {
     }
 
     setState("loading");
-    await wait(700);
-    setState("success");
+    try {
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      const result = await response.json() as { next?: string };
+      if (!response.ok) throw new Error("login_failed");
+      setNextRoute(result.next === "/verify-age" ? "/verify-age" : "/home");
+      setState("success");
+    } catch {
+      setState("error");
+    }
   }
 
   return (
@@ -45,7 +55,7 @@ export function LoginShell() {
           tone="success"
           title={copy.successTitle}
           message={copy.successMessage}
-          actions={<Link className="auth-primary-link" href="/home">{copy.successAction}</Link>}
+          actions={<Link className="auth-primary-link" href={nextRoute}>{copy.successAction}</Link>}
         />
       ) : (
         <form className="auth-form" onSubmit={submit} noValidate>
