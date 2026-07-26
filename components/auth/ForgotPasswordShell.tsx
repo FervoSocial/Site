@@ -9,8 +9,6 @@ import { StatusPanel } from "./StatusPanel";
 
 type RecoveryState = "form" | "loading" | "error" | "requested";
 
-const wait = (milliseconds: number) => new Promise((resolve) => setTimeout(resolve, milliseconds));
-
 export function ForgotPasswordShell() {
   const copy = ptBR.auth.recovery;
   const [state, setState] = useState<RecoveryState>("form");
@@ -23,8 +21,17 @@ export function ForgotPasswordShell() {
       return;
     }
     setState("loading");
-    await wait(700);
-    setState("requested");
+    try {
+      const response = await fetch("/api/auth/recover", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      if (!response.ok) throw new Error("recovery_failed");
+      setState("requested");
+    } catch {
+      setState("error");
+    }
   }
 
   return (

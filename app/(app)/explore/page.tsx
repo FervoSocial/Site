@@ -1,6 +1,5 @@
-import { PagePlaceholder } from "@/components/ui/PagePlaceholder";
-import { ptBR } from "@/lib/i18n";
+import { ExploreShell } from "@/components/discovery/ExploreShell";
 
 export default function ExplorePage() {
-  return <PagePlaceholder {...ptBR.routes.explore} />;
+  return <ExploreShell category="profiles" />;
 }

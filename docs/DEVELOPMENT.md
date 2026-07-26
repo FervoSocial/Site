@@ -5,7 +5,7 @@
 - Node.js 22.13 or newer
 - npm, using the committed `package-lock.json`
 
-No environment variables, database, object storage, email provider, identity provider, or payment provider are required for the current shells.
+Phase 1 requires a D1 binding named `DB`. Set `VERIFICATION_PROVIDER_MODE=sandbox`; no production identity provider, email provider, object storage, or payment provider is connected.
 
 ## Setup
 
@@ -24,10 +24,11 @@ Use the local URL printed by vinext. The development server runs the App Router 
 | `npm run build` | Compile the Cloudflare Worker application into `dist/` |
 | `npm run start` | Run the compiled application locally |
 | `npm run lint` | Run ESLint across source files |
+| `npm run typecheck` | Run strict TypeScript validation without emitting files |
 | `npm test` | Build, then run rendered route-shell tests |
 | `npm run db:generate` | Generate Drizzle migrations after an approved schema change |
 
-There is no separate `typecheck` script. TypeScript compilation is exercised by the framework build; add an explicit `tsc --noEmit` script if independent type checking becomes necessary.
+Apply `drizzle/0000_skinny_hellcat.sql` to a new local or hosted D1 database before testing account flows. The migration creates the lookup rows required by registration.
 
 ## Safe change workflow
 
@@ -86,7 +87,7 @@ Current hosted preview:
 
 `https://fervo-social-preview.ai-workplace-3970.chatgpt.site/`
 
-Do not edit `dist/` directly. Build from source and deploy the validated output. D1 and R2 are currently disabled.
+Do not edit `dist/` directly. Build from source and deploy the validated output. D1 is declared as `DB`; R2 remains disabled. Deployment and migration application are separate authorized operations and were not performed during Phase 1.
 
 ## Repository state
 
