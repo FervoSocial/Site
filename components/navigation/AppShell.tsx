@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, type ReactNode } from "react";
 import { ptBR } from "@/lib/i18n";
+import { LogoutButton } from "@/components/auth/LogoutButton";
 
 type AppShellProps = {
   children: ReactNode;
@@ -95,9 +96,7 @@ export function AppShell({ children }: AppShellProps) {
           <button className="icon-button" type="button" aria-label={ptBR.shell.notifications}>
             <span aria-hidden="true">◌</span>
           </button>
-          <button className="discreet-exit" type="button">
-            {ptBR.shell.discreetExit}
-          </button>
+          <LogoutButton className="discreet-exit" label={ptBR.shell.discreetExit} />
           <Link className="header-avatar" href="/me" aria-label={ptBR.navigation.profile}>
             FS
           </Link>

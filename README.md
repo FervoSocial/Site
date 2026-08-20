@@ -23,7 +23,14 @@ The full documentation index is in [docs/README.md](docs/README.md).
 - Shared authenticated application shell with exactly five navigation items
 - Home feed shell with three feed tabs
 - Private Member profile shell at `/profile/:handle`
-- Placeholder routes for Explore, Messages, Events, and account management
+- Galleries shell inside the Private Member Mídia tab
+- Explore shell with profile, club, event, and professional category routes
+- Messages inbox, request, and placeholder conversation shells
+- Shared Club/Business and Event Organiser profile shells
+- Event detail shell with links from Explore
+- Professional profile shell with safe abstract portfolio placeholders
+- Embedded Reviews shell for organisations, Professionals, and events
+- Placeholder account-management route
 
 Hosted preview: [fervo-social-preview.ai-workplace-3970.chatgpt.site](https://fervo-social-preview.ai-workplace-3970.chatgpt.site/)
 

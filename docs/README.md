@@ -9,6 +9,7 @@ These documents describe both the intended Fervo Social product and the applicat
 | [Architecture](ARCHITECTURE.md) | Runtime, folder structure, rendering model, shared components, and state boundaries |
 | [Design system](DESIGN_SYSTEM.md) | Approved colour, typography, spacing, surface, glow, and responsive conventions |
 | [Development](DEVELOPMENT.md) | Setup, commands, validation, deployment shape, and contribution checklist |
+| [Privacy and identity](PRIVACY_AND_IDENTITY.md) | Phase 1 data classification, access rules, credential handling, retention, and verification boundary |
 | [Decisions and gaps](DECISIONS_AND_GAPS.md) | Approved deviations, unresolved decisions, safety boundaries, and launch gates |
 
 ## Canonical source files

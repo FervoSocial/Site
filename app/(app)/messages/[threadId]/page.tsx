@@ -1,6 +1,5 @@
-import { PagePlaceholder } from "@/components/ui/PagePlaceholder";
-import { ptBR } from "@/lib/i18n";
+import { ConversationThread } from "@/components/messages/ConversationThread";
 
 export default function ConversationPage() {
-  return <PagePlaceholder {...ptBR.routes.conversation} />;
+  return <ConversationThread />;
 }

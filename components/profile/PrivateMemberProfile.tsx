@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { GalleryShell } from "@/components/profile/GalleryShell";
 import { Surface } from "@/components/ui/Surface";
 import { ptBR } from "@/lib/i18n";
 
@@ -100,7 +101,7 @@ export function PrivateMemberProfile() {
                 type="button"
                 role="tab"
                 id={`private-profile-tab-${id}`}
-                aria-controls="private-profile-tab-panel"
+                aria-controls={`private-profile-tab-panel-${id}`}
                 aria-selected={activeTab === id}
                 onClick={() => setActiveTab(id)}
                 key={id}
@@ -112,12 +113,34 @@ export function PrivateMemberProfile() {
 
           <div
             className="private-profile-tab-panel"
-            id="private-profile-tab-panel"
+            id="private-profile-tab-panel-about"
             role="tabpanel"
-            aria-labelledby={`private-profile-tab-${activeTab}`}
+            aria-labelledby="private-profile-tab-about"
+            hidden={activeTab !== "about"}
           >
-            <h2>{profile.tabs.content[activeTab].title}</h2>
-            <p>{profile.tabs.content[activeTab].description}</p>
+            <h2>{profile.tabs.content.about.title}</h2>
+            <p>{profile.tabs.content.about.description}</p>
+          </div>
+
+          <div
+            className="private-profile-tab-panel private-profile-media-panel"
+            id="private-profile-tab-panel-media"
+            role="tabpanel"
+            aria-labelledby="private-profile-tab-media"
+            hidden={activeTab !== "media"}
+          >
+            <GalleryShell />
+          </div>
+
+          <div
+            className="private-profile-tab-panel"
+            id="private-profile-tab-panel-posts"
+            role="tabpanel"
+            aria-labelledby="private-profile-tab-posts"
+            hidden={activeTab !== "posts"}
+          >
+            <h2>{profile.tabs.content.posts.title}</h2>
+            <p>{profile.tabs.content.posts.description}</p>
           </div>
         </div>
       </Surface>
