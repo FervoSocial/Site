@@ -1,5 +1,7 @@
 # First Codex task — Fervo Social
 
+> **SUPERSEDED BOOTSTRAP PROMPT — HISTORICAL ONLY.** Do not use this file as current operating or product authority. Start with `AGENTS.md` and `docs/source-of-truth/00_READ_ME_FIRST.md`; use an owner-approved bounded pass brief. See `docs/SUPERSEDED_SOURCES.md`.
+
 You are working inside the Fervo Social repository. Read `AGENTS.md` and all three source files in `docs/` before taking action.
 
 ## Goal

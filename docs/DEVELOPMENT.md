@@ -32,8 +32,8 @@ Apply `drizzle/0000_skinny_hellcat.sql` to a new local or hosted D1 database bef
 
 ## Safe change workflow
 
-1. Confirm the approved milestone and its explicit exclusions.
-2. Read the relevant product and route sections in `docs/`.
+1. Confirm the approved pass, starting branch/commit, included scope, and explicit non-goals.
+2. Read `source-of-truth/00_READ_ME_FIRST.md`, `source-of-truth/02_CURRENT_DECISIONS.md`, the approved pass brief, and the relevant product/implementation documents.
 3. Update `docs/PROJECT_STATUS.md` as implementation status changes.
 4. Add visible pt-BR copy to `lib/i18n.ts`.
 5. Reuse the existing shell, surfaces, and design tokens.
@@ -91,15 +91,15 @@ Do not edit `dist/` directly. Build from source and deploy the validated output.
 
 ## Repository state
 
-The canonical repository is [FervoSocial/Site](https://github.com/FervoSocial/Site). GitHub access was verified on 21 July 2026:
+The canonical repository is [FervoSocial/Site](https://github.com/FervoSocial/Site).
 
 - visibility: public
 - default branch: `main`
-- remote content: empty
-- import permission: approved by the project owner
-- current blocker: the installed GitHub integration can read the repository but receives `Resource not accessible by integration` when writing repository contents
+- current controlled implementation baseline: `phase1/clean-baseline`
+- controlled baseline commit: `bc7208c74c689555fb6eb2f7043816c28618f814`
+- current documentation branch: `phase2/source-of-truth`
 
-The local workspace contains the implemented application but does not contain a normal `.git` directory. Retry the complete initial import only after the GitHub integration has repository-content write access. Publishing documentation alone would create a misleading repository because the documents describe application code that is not yet present remotely.
+Do not assume `main` contains the latest accepted source until GitHub is checked. Create each bounded pass from its explicitly approved starting branch/commit. Commit, push, PR, merge, and deployment require owner authority; this Phase 2 pass must not merge or deploy.
 
 ## Documentation checklist for every change
 
@@ -108,4 +108,4 @@ The local workspace contains the implemented application but does not contain a 
 - Did component ownership or state location change?
 - Did a token, breakpoint, or asset change?
 - Did setup, a dependency, a command, or hosting behavior change?
-- Was a product exception approved that belongs in `DECISIONS_AND_GAPS.md`?
+- Was an owner-approved product decision recorded in the current decision register, or an implementation mismatch recorded in `DECISIONS_AND_GAPS.md`?

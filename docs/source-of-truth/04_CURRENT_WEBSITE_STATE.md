@@ -1,9 +1,11 @@
-# Fervo Social - Project Status
+# Fervo Social - Current Website State
 
-Status: Phase 2 documentation branch in review
-Last reconciled: 25 August 2026 source pack
+Status: current baseline summary
+Prepared: 25 August 2026
 
-This living file reflects the approved 25 August 2026 source pack and replaces outdated status statements in the 5 August pre-change audit and older repository documentation. It does not erase those historical reports.
+> **Repository integration note:** this file records the Phase 2 starting baseline. The living post-reconciliation status is `../PROJECT_STATUS.md`; statements below about stale repository documentation describe the state before this branch updated it.
+
+This file replaces outdated status statements in the 5 August pre-change audit and older repository documentation. It does not erase those historical reports; it records what is currently known after the clean Phase 1 baseline work.
 
 ## 1. Repository and checkpoint
 
@@ -14,8 +16,6 @@ Default branch: `main`
 Current controlled product baseline: `phase1/clean-baseline`
 
 Baseline commit: `bc7208c74c689555fb6eb2f7043816c28618f814`
-
-Current documentation working branch: `phase2/source-of-truth`
 
 The baseline branch is pushed to GitHub. It contains the same source tree as the older Codex synchronization branch `agent/sync-fervo-social-phase-1`, but uses the corrected project commit identity and controlled Phase 1 checkpoint. The older draft PR is therefore a duplicate path, not a different product version.
 
@@ -108,13 +108,13 @@ Phase 4 must make hosted/production behaviour fail closed and require explicit e
 
 Additional future security work includes rate limiting, email ownership verification, password-reset completion, explicit origin/CSRF design for sensitive mutations, session management, and permission layers for private media/messages/blocks/reviews.
 
-## 7. Commercial/documentation reconciliation
+## 7. Commercial/documentation drift still present in the baseline
 
-This Phase 2 branch updates `AGENTS.md`, the documentation index, product/routes documentation, development guidance, and project status to treat the 25 August 2026 pack as current authority. Historical v1.1 files are explicitly marked superseded rather than deleted.
+The repository still contains v1.1 commercial references in `AGENTS.md`, `PRODUCT_AND_ROUTES.md`, billing display code, and other documentation. The latest owner-approved working commercial decisions are represented in this Work pack.
 
-One intentional implementation mismatch remains: `lib/billing-placeholder.ts` still imports `docs/Fervo_Social_Commercial_Config_v1_1.json`, while current commercial authority is version 1.3 at `docs/source-of-truth/config/commercial-config.json`. Do not replace the old JSON in place without adapting code and tests; the structures and founding rules differ. A later scoped billing-shell pass must migrate the runtime display.
+Do not simply replace the old repository JSON in-place without adapting the code; the current Work config structure includes newer fields and the existing billing placeholder expects the older structure. Phase 2 should first fix documentation/source hierarchy. A later scoped billing-shell migration should adapt code and tests.
 
-Earlier statements that GitHub was empty/local-only or that Phase 1 awaited acceptance are obsolete and no longer presented as current status.
+Older repository `PROJECT_STATUS.md` also contains stale statements that GitHub is empty/local-only and that Phase 1 is awaiting acceptance. Those are obsolete.
 
 ## 8. Product implementation gaps
 
@@ -162,6 +162,6 @@ These can be researched in parallel with product development, but affected produ
 
 Phase 1 clean baseline: **COMPLETE**.
 
-Phase 2 documentation/knowledge/source-of-truth work: **IMPLEMENTED ON `phase2/source-of-truth`, PENDING OWNER REVIEW**.
+Phase 2 documentation/knowledge/source-of-truth work: **CURRENT**.
 
 The Phase 2 scope is simple: update the project's knowledge and operating documents so Chat, Work, and Codex all use the same current rules. **Do not change actual website behaviour merely as part of creating/updating these documents.** Any product/code change - UI, pricing display, database, payments, referrals, media, verification, or other behaviour - must be handled in a separately approved implementation pass with its own testing and review.

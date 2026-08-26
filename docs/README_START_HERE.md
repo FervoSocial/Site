@@ -1,5 +1,7 @@
 # Fervo Social Codex Starter Pack
 
+> **SUPERSEDED STARTER INSTRUCTIONS — HISTORICAL ONLY.** The repository is already established. Use `../AGENTS.md` and `source-of-truth/00_READ_ME_FIRST.md` instead. The v1.1 files listed below are not current authority.
+
 ## Put these files in a new Git repository
 
 ```text
@@ -21,4 +23,4 @@ fervo-social/
 5. Review the plan before allowing Codex to install dependencies or build beyond Phase 1.
 6. Commit each accepted phase to Git before starting the next one.
 
-Do not ask Codex to "build the complete site" in one request. Use one milestone per task and keep the specification files as the source of truth.
+Historical instruction: the original starter used one milestone per task and treated the three v1.1 files as its source. That authority has been superseded by the current source pack and `AGENTS.md`.

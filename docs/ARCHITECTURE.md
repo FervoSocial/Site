@@ -50,7 +50,7 @@ lib/
   club-event-placeholder.ts Typed safe organisation and event demonstration data
   professional-placeholder.ts Typed safe Professional demonstration data
   reviews-placeholder.ts Typed safe context-specific review demonstration data
-  billing-placeholder.ts Typed plan and period view data derived from commercial configuration
+  billing-placeholder.ts Typed plan and period view data derived from the historical v1.1 display fixture
   moderation-placeholder.ts Typed safe fictional moderation cases
 db/                     D1 access and the Phase 1 identity schema
 drizzle/                Generated SQL migration and schema metadata
@@ -117,7 +117,7 @@ Some early landing-page and shell labels are still hard-coded. Treat moving them
 
 ## Placeholder data
 
-The typed placeholder modules under `lib/` define safe demonstration content for the feed, discovery results, messages, galleries, organisations, events, one Professional profile, and Billing shell presentation. Billing values are derived from the commercial configuration rather than repeated in component code. All locations are approximate, and visual placeholders are CSS compositions rather than media files.
+The typed placeholder modules under `lib/` define safe demonstration content for the feed, discovery results, messages, galleries, organisations, events, one Professional profile, and Billing shell presentation. Billing values are derived from the historical v1.1 JSON rather than repeated in component code. Current commercial authority is v1.3 at `docs/source-of-truth/config/commercial-config.json`; adapting the runtime fixture is deferred to a separate implementation pass. All displayed locations are approximate labels, and visual placeholders are CSS compositions rather than media files.
 
 The profile shell currently keeps its placeholder copy in `lib/i18n.ts`. No route parameter, API, database, or user identity changes the rendered profile.
 

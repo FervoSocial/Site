@@ -4,7 +4,9 @@
 
 Fervo Social is a Brazil-first, adults-only social discovery platform. It is intended to combine a vertically scrolling mixed-content feed with profiles, discovery, events, clubs, verified professional profiles, and private consent-based communication. The experience should remain substantially simpler than legacy adult-community platforms and usable by people with limited technical confidence, including a 40+ audience.
 
-Launch assumptions from the canonical specification:
+Current product authority is the owner-reviewed source pack under `docs/source-of-truth/`. The route catalogue below records implementation evidence and must not be used to override the current decision register.
+
+Current launch assumptions:
 
 - Brazil is the initial and fixed launch market.
 - Brazilian Portuguese is the default language; Spanish and English are planned.
@@ -15,14 +17,14 @@ Launch assumptions from the canonical specification:
 
 ## Account classes
 
-The universal profile system supports four account classes:
+The target universal profile system supports four public-facing account families:
 
-1. **Private Member** — a single person, couple, multi-partner relationship, or group/household. Each represented adult must eventually verify separately.
+1. **Private Member** — every adult has an individual account and individual verification. Two or more verified adults may later create a linked shared couple, trio, multi-partner, or other approved shared profile on top of those accounts.
 2. **Club or Business** — a club, venue, or approved adult business.
 3. **Event Organiser** — an independent, club, or professional organiser.
 4. **Professional** — an approved independent professional category. Commercial functionality remains feature-flagged pending legal and payment-provider approval.
 
-All four account classes now have front-end shells. Every profile remains fictional and disconnected from real accounts or verification.
+All four account families have front-end shells. The newly approved individual-account + linked-shared-profile architecture is not implemented: current profiles remain fictional demonstrations, and the Phase 1 schema does not yet provide the complete linked-profile permission model.
 
 ## Primary navigation
 
@@ -76,7 +78,7 @@ Planned legal slugs include `terms`, `privacy`, `content`, `professionals`, and 
 
 The `(app)` route group adds `AppShell` without changing the URL. Its layout requires an active session with approved adult verification.
 
-The `/me/billing` nested route extends the version 1.1 route map following explicit stage approval. It is not a sixth primary-navigation item.
+The `/me/billing` nested route is implementation evidence from the accepted Billing shell. It is not a sixth primary-navigation item. Historical v1.1 route material is not current product authority.
 
 ### Administration routes
 
@@ -97,21 +99,23 @@ Filter, Sort, Assign, Quarantine, Warn, Restrict, Suspend, Ban, Dismiss, Escalat
 
 ## Billing shell contract
 
-Billing remains inside account management at `/me/billing`. The shell shows one fictional current Private Plus subscription, billing status, monthly/quadrimestral/annual comparisons, and all configured Private, Business, Organiser, and Professional plan values. Prices and discounts are imported from `docs/Fervo_Social_Commercial_Config_v1_1.json`, never repeated as code constants.
+Billing remains inside account management at `/me/billing`. The shell shows one fictional current Private Plus subscription, billing status, monthly/four-month/annual comparisons, and plan values imported from `docs/Fervo_Social_Commercial_Config_v1_1.json`.
 
-The Founding Club Pro presentation preserves the approved safeguards: 12 free months, no card required, no automatic conversion to paid, and an affirmative purchase requirement for any later paid plan. Professional commercial plans are visible only as gated demonstrations pending legal and payment-provider approval.
+**Implementation drift:** the imported v1.1 fixture and Founding Club Pro presentation are superseded as commercial authority. Current rules are in `docs/source-of-truth/config/commercial-config.json` version 1.3 and decisions D-050–D-103. In particular, v1.3 distinguishes 12-month Founding Club Starter from provisional 60-day Club Pro qualification. This documentation pass does not change the shell, fixture import, tests, or billing behaviour. Professional commercial plans remain gated pending legal and payment-provider approval.
 
 Select Plan, Compare Period, Preview Changes, Manage Payment Method, Cancel, View Invoices, and offer-preview controls are disabled. Checkout, real payments, subscriptions, invoice logic, refunds, renewals, eligibility, persistence, security workflows, and payment-provider integration remain deferred.
 
 ## Home feed contract
 
-The current approved Home design deliberately has three tabs:
+The current product direction has three feeds:
 
 - Para você (`For You`)
-- Perto de você (`Nearby`)
+- Local / Your Area — final Portuguese label `WORKING`
 - Seguindo (`Following`)
 
 Events and Professionals appear as card types in the mixed feed and may later be found through Explore. They are not top-level feed tabs.
+
+**Current implementation:** the shell still displays `Perto de você`/Nearby and uses no real member-selected geographic scope. Radius/city/area/region controls and triangulation-safe location behaviour remain unimplemented.
 
 Current placeholder card kinds are:
 
@@ -188,7 +192,7 @@ The shared Explore Shell is available at `/explore` and four category routes:
 - Eventos at `/explore/events`
 - Profissionais at `/explore/professionals`
 
-`/explore` currently defaults to the same profile-discovery view as `/explore/profiles`. The approved category route set extends the version 1.1 route map, which listed only the parent `/explore` route.
+`/explore` currently defaults to the same profile-discovery view as `/explore/profiles`. The category paths describe the accepted shell implementation; the historical v1.1 route map is retained only for context.
 
 The shell contains a search field, safe placeholder cards, approximate locations, textual account labels, basic filter controls, sorting, grid/list controls, and reviewable loading/empty/no-results states. Club and Event cards now link to the corresponding shell routes. Controls are temporary and do not query, rank, filter, recommend, alert, or persist real data. Map clusters, advanced matching, saved searches, search alerts, booking, RSVP processing, reviews, and messaging remain deferred.
 

@@ -1,4 +1,6 @@
-# Decisions and gaps
+# Historical implementation decisions and gaps
+
+> **Status: superseded as the product decision register.** This file is retained for implementation history. Current owner-reviewed decisions are in [`source-of-truth/02_CURRENT_DECISIONS.md`](source-of-truth/02_CURRENT_DECISIONS.md). Current implementation status is in [`PROJECT_STATUS.md`](PROJECT_STATUS.md). If this file conflicts with either, do not follow it.
 
 ## Approved implementation decisions
 
@@ -6,13 +8,13 @@
 
 The version 1.1 build specification originally lists five Home tabs: For You, Nearby, Following, Events, and Professionals.
 
-The approved product decision for the current product is **three tabs only**:
+The current product decision remains **three tabs only**, but the second feed direction has been revised:
 
 - For You
-- Nearby
+- Local / Your Area — final Portuguese UX label is still `WORKING`
 - Following
 
-Events and Professionals remain feed-card types and Explore categories. This is an intentional simplification and overrides the older five-tab section.
+Events and Professionals remain feed-card types and Explore categories. The current UI still says `Perto de você`/Nearby and does not implement member-selected privacy-safe area/radius controls; that is implementation drift, not the current target decision.
 
 ### Route notation
 
@@ -42,7 +44,10 @@ The version 1.1 route map lists the parent `/explore` route only. The approved E
 - Galleries Shell
 - Clubs and Events Shell
 - Professional Profiles Shell
-- Reviews Shell (built, awaiting acceptance)
+- Reviews Shell
+- Billing Shell
+- Moderation Administration Shell
+- Phase 1 identity, privacy, verification-state, and core-data foundation
 
 
 ## Known implementation limitations
@@ -64,7 +69,7 @@ The version 1.1 route map lists the parent `/explore` route only. The approved E
 - `app/chatgpt-auth.ts` and R2 remain dormant starter capabilities. Drizzle and D1 now support Phase 1 identity data.
 - Only pt-BR copy exists; no locale selection or translation fallback exists.
 - The repository still contains starter names and comments in infrastructure files, including the package name and Worker comment.
-- The canonical GitHub repository is currently empty while the implemented application exists only in the local workspace snapshot. A full import is approved, but the installed GitHub integration currently lacks repository-content write access.
+- The canonical repository contains the controlled Phase 1 baseline on `phase1/clean-baseline` at `bc7208c74c689555fb6eb2f7043816c28618f814`. `main` must not be assumed current until checked.
 
 ## Safety and privacy boundaries
 
@@ -80,17 +85,20 @@ These are product rules, not optional polish:
 - External WhatsApp links are limited to verified organisations/professionals and need an off-platform safety warning.
 - Explicit media must never be used as seed or demonstration content.
 
-## Commercial constraints
+## Historical commercial notes — superseded by v1.3
 
-No billing functionality is implemented. When it is planned:
+The list below described the earlier v1.1 shell assumptions and is not current commercial authority. Use [`source-of-truth/config/commercial-config.json`](source-of-truth/config/commercial-config.json) version 1.3 and the D-050–D-103 decisions in the current register.
+
+Current implementation fact: no real billing functionality is implemented, and the visual Billing shell still imports the historical v1.1 JSON. A separate implementation pass must adapt code/tests before v1.3 can drive the UI.
+
+Historical notes retained for context:
 
 - Prices and discount periods must be loaded from the commercial configuration or database, never embedded in UI components.
 - Billing currency is BRL.
 - Supported periods are monthly, four months with a 10% discount, and annual with a 20% discount.
-- Founding Club Pro grants 12 free months of the `business_pro` entitlement.
-- The founding offer requires no payment card and must never auto-convert to paid.
-- At expiry it downgrades to the basic directory, with reminders planned for 90, 30, 7, and 1 days before expiry.
-- Professional launch pricing is introductory and international-visibility add-ons are outside the MVP.
+- Earlier v1.1 described Founding Club Pro as the 12-month free entitlement. Current v1.3 instead defines Founding Club Starter for 12 months plus provisional Club Pro for 60 days with qualification rules.
+- Founding free periods require no payment card and never auto-convert to paid.
+- Current Founding Professional duration and price rules are defined in v1.3.
 - Professional commercial features remain behind legal and payment-provider feature gates.
 
 ## Decisions required before production features
@@ -99,7 +107,7 @@ No billing functionality is implemented. When it is planned:
 
 - Production email delivery and password-reset completion
 - Production age/identity-verification provider, fallback, retry limits, and appeal flow
-- How one account represents and verifies multiple adults
+- Shared-profile subscription/payment ownership and detailed link/unlink permissions
 - Public handle rules, renaming, reservation, and abuse prevention
 
 ### Privacy and location
@@ -134,4 +142,4 @@ No billing functionality is implemented. When it is planned:
 
 1. Rename the package and remaining starter comments to Fervo Social.
 2. Move remaining hard-coded visible landing/shell copy into `lib/i18n.ts`.
-3. Grant the GitHub integration repository-content write access, then perform the already approved full-workspace import.
+3. Address dependency vulnerabilities in a separate scoped maintenance pass; do not run a broad forced upgrade incidentally.

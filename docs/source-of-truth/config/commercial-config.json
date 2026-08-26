@@ -1,0 +1,82 @@
+{
+  "version": "1.3",
+  "supersedes": "1.2",
+  "currency": "BRL",
+  "notes": [
+    "Price values are unchanged from the approved v1.2 commercial decisions.",
+    "Version 1.3 makes the first four-month Founding Professional term explicit and records the updated legitimate-staff referral rule."
+  ],
+  "billingPeriods": {
+    "monthly": { "months": 1, "discountPercent": 0 },
+    "four_month": { "months": 4, "discountPercent": 10 },
+    "annual": { "months": 12, "discountPercent": 20 }
+  },
+  "plans": {
+    "private": {
+      "free": { "monthly": 0.0 },
+      "plus": { "monthly": 19.9, "fourMonth": 71.64, "annual": 191.04 },
+      "premium": { "monthly": 49.9, "fourMonth": 179.64, "annual": 479.04 }
+    },
+    "professional": {
+      "basic": { "monthly": 0.0 },
+      "essential": { "monthly": 49.9, "fourMonth": 179.64, "annual": 479.04 },
+      "pro": { "monthly": 99.9, "fourMonth": 359.64, "annual": 959.04 },
+      "foundingPro": {
+        "launchWindowDays": 30,
+        "monthly": 79.9,
+        "fourMonth": 287.64,
+        "annual": 767.04,
+        "monthlyCyclesAtFoundingRate": 6,
+        "fourMonthTermsAtFoundingRate": 1,
+        "annualMonthsAtFoundingRate": 12
+      }
+    },
+    "club": {
+      "basicListing": { "monthly": 0.0 },
+      "starter": { "monthly": 99.0, "fourMonth": 356.4, "annual": 950.4 },
+      "pro": { "monthly": 199.0, "fourMonth": 716.4, "annual": 1910.4 }
+    },
+    "organiser": {
+      "starter": { "monthly": 49.0, "fourMonth": 176.4, "annual": 470.4 },
+      "pro": { "monthly": 149.0, "fourMonth": 536.4, "annual": 1430.4 }
+    }
+  },
+  "foundingProgrammes": {
+    "club": {
+      "starterFreeMonths": 12,
+      "provisionalProDays": 60,
+      "requiresPaymentMethod": false,
+      "autoConvertsToPaid": false,
+      "weeklyActivityWeeksRequired": 7,
+      "weeklyActivityWindowWeeks": 8,
+      "activatedMembersRequired": 50,
+      "activationWindowDays": 60,
+      "progressTargetDay30": 25,
+      "failedProOutcome": "FOUNDING_STARTER",
+      "legitimateStaffReferralsAllowed": true
+    },
+    "organiser": {
+      "starterFreeMonths": 12,
+      "provisionalProDays": 60,
+      "requiresPaymentMethod": false,
+      "autoConvertsToPaid": false,
+      "weeklyActivityWeeksRequired": 7,
+      "weeklyActivityWindowWeeks": 8,
+      "activationRoutes": [
+        { "activatedMembers": 50, "verifiedRsvps": 0 },
+        { "activatedMembers": 30, "verifiedRsvps": 75 }
+      ],
+      "activationWindowDays": 60,
+      "failedProOutcome": "FOUNDING_STARTER"
+    }
+  },
+  "activatedMemberCriteria": {
+    "ageVerified": true,
+    "contactVerified": true,
+    "minimumProfileComplete": true,
+    "approvedProfileImage": true,
+    "acceptedSafetyRules": true,
+    "goodStandingDays": 30,
+    "oneQualifiedReferralPerVerifiedAdult": true
+  }
+}

@@ -7,7 +7,7 @@ This document defines the implemented Phase 1 boundary. It is an engineering pol
 - **Private sign-in identity:** email address, password hash, session records, provider-reference hash, and consent history. These values never belong in a public profile response.
 - **Public identity:** pseudonymous handle, display name, account type, and an optional approximate location label.
 - **Not stored in Phase 1:** date of birth after the adult check, identity-document files or bytes, exact home address, and precise home coordinates.
-- Every represented adult receives an individual `profile_members` record and must eventually have an individual verification result. Phase 1 creates the registering owner only.
+- **Current product decision:** every human adult has an individual verified account; a couple/trio/multi-partner/shared profile is an additional linked profile layer. **Current implementation:** Phase 1 creates only the registering owner and does not yet implement the complete linked-shared-profile model, invitations, acceptance, unlinking, or permissions.
 
 ## Access rules
 
@@ -47,3 +47,5 @@ The five-item member navigation is shown only after the member guard succeeds. A
 ## Verification boundary
 
 The current provider is sandbox-only. It records required, pending, approved, or failed state plus a hashed opaque provider reference. No identity document is uploaded to or stored by Fervo Social. Production provider selection, fallback, retry limits, appeals, and document-retention responsibility remain unresolved launch gates.
+
+**Known preview risk:** the current API defaults to sandbox mode if `VERIFICATION_PROVIDER_MODE` is absent. Hosted/production environments must fail closed before any externally shared preview; correcting that behaviour belongs to the separately approved Phase 4 security pass, not this documentation pass.

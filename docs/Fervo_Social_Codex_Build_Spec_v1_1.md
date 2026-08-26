@@ -1,5 +1,7 @@
 # Fervo Social - Codex Build Specification
 
+> **SUPERSEDED AS CURRENT AUTHORITY — HISTORICAL v1.1 CONTEXT ONLY.** Current decisions, product direction, roadmap, and workflow are in `docs/source-of-truth/`. When this file conflicts with the current decision register, do not follow it. See `docs/SUPERSEDED_SOURCES.md`.
+
 Version: 1.1
 Launch market: Brazil
 Primary language: Brazilian Portuguese
