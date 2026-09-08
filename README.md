@@ -16,6 +16,19 @@ The current controlled implementation baseline is `phase1/clean-baseline` at com
 
 The full documentation index is in [docs/README.md](docs/README.md).
 
+## Recreate the development checkout
+
+Use the current source-of-truth branch when moving development to another computer:
+
+```bash
+git clone --branch phase2/source-of-truth --single-branch https://github.com/FervoSocial/Site.git
+cd Site
+npm ci
+npm run dev
+```
+
+Node.js 22.13 or newer is required. Keep local environment files outside Git; the safe development setting currently documented in `.env.example` is `VERIFICATION_PROVIDER_MODE=sandbox`. Account-flow testing also requires the committed migration at `drizzle/0000_skinny_hellcat.sql` to be applied to the local D1 database, as described in [Development](docs/DEVELOPMENT.md).
+
 ## Current product surface
 
 - Public landing page at `/`
