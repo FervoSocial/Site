@@ -1,5 +1,15 @@
 # Fervo Social - Project Status
 
+## Post-Founder Phase 1 — visual implementation, pending review
+
+Starting checkpoint: `post-founder-review/phase0-reconcile` at `72359036bc1ee01dc30876af48a9066df799eec6`, fetched and verified with a clean tree. Working branch: `post-founder-review/phase1-visual-dynamics`. Phase 0 is approved; the older pending-review narrative below is its original snapshot.
+
+Implemented only visual polish: removed the old main Feed heading, added a restrained low-opacity gold-texture drift with reduced-motion support, short interaction transitions, larger existing avatar/ring treatments and accessible Like/Save and header tooltips. No prominent motion control is placed in the header. See [Design System](DESIGN_SYSTEM.md) for exact presentation changes. Image replacement is partially implemented: no approved demo profile photos were available, so safe fallbacks remain rather than invented identities.
+
+The older five-item navigation, Explore destination, three feed tabs, Profile → `/me`, exposed professional fixtures and all current product behaviour remain unchanged. Professionals remain **DEFERRED / OWNER REACTIVATION REQUIRED**. Later founder phases and outstanding production/security work are not implemented or approved by this visual pass.
+
+No dependencies, routes, authentication, guards, verification, schemas, commercial configuration, billing, permissions or fixture data were changed. Local preview uses an ignored snapshot of the existing disposable preview database; no security bypass or schema change was needed. No commit, push, merge or deployment is authorised in this pass.
+
 ## 16 September 2026 verification update
 
 Verified remote source: `phase2/source-of-truth` at `ae16985f32b939c591372f141ffa9ff8493b7890`, descended from the accepted Phase 1 implementation baseline. Current local documentation pass: `post-founder-review/phase0-reconcile`, pending owner review and uncommitted.

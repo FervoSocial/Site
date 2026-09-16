@@ -167,7 +167,21 @@ test("server-renders the shared application shell and five navigation items", as
   assert.match(html, />Criar</);
   assert.match(html, />Mensagens</);
   assert.match(html, />Perfil</);
-  assert.match(html, /Descubra no seu ritmo/);
+  assert.doesNotMatch(html, /Descubra no seu ritmo/);
+  assert.match(html, /id="feed-title"/);
+  assert.match(html, /class="app-atmosphere" aria-hidden="true"/);
+  assert.doesNotMatch(html, /Pausar fundo|Retomar fundo/);
+  assert.match(html, /aria-label="Curtir"/);
+  assert.match(html, /aria-label="Guardar"/);
+  assert.match(html, /control-tooltip/);
+  assert.match(html, /touch-action-label/);
+});
+
+test("visual motion is subtle and opt-in to no-preference", () => {
+  const css = readFileSync(new URL("../app/globals.css", import.meta.url), "utf8");
+  assert.match(css, /@media \(prefers-reduced-motion: no-preference\)\s*\{\s*\.app-atmosphere::before\s*\{ animation: app-gold-drift/);
+  assert.match(css, /@media \(prefers-reduced-motion: reduce\)/);
+  assert.match(css, /@media \(hover: hover\) and \(pointer: fine\)/);
 });
 
 test("server-renders public and authenticated placeholder routes", async () => {

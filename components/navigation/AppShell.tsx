@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useState, type ReactNode } from "react";
 import { ptBR } from "@/lib/i18n";
 import { LogoutButton } from "@/components/auth/LogoutButton";
+import { TooltipButton } from "@/components/ui/TooltipButton";
 
 type AppShellProps = {
   children: ReactNode;
@@ -79,6 +80,7 @@ export function AppShell({ children }: AppShellProps) {
 
   return (
     <div className="app-shell">
+      <div className="app-atmosphere" aria-hidden="true" />
       <header className="app-header">
         <Link className="app-brand" href="/home" aria-label="Fervo Social — Home">
           Fervo<span>Social</span>
@@ -90,12 +92,12 @@ export function AppShell({ children }: AppShellProps) {
         </button>
 
         <div className="header-actions">
-          <button className="icon-button" type="button" aria-label={ptBR.shell.search}>
+          <TooltipButton className="icon-button" type="button" label={ptBR.shell.search}>
             <span aria-hidden="true">⌕</span>
-          </button>
-          <button className="icon-button" type="button" aria-label={ptBR.shell.notifications}>
+          </TooltipButton>
+          <TooltipButton className="icon-button" type="button" label={ptBR.shell.notifications}>
             <span aria-hidden="true">◌</span>
-          </button>
+          </TooltipButton>
           <LogoutButton className="discreet-exit" label={ptBR.shell.discreetExit} />
           <Link className="header-avatar" href="/me" aria-label={ptBR.navigation.profile}>
             FS

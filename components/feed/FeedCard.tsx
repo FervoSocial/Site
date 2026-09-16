@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { FeedPlaceholderItem } from "@/lib/feed-placeholder";
 import { ptBR } from "@/lib/i18n";
+import { TooltipButton } from "@/components/ui/TooltipButton";
 
 type FeedCardProps = {
   followed: boolean;
@@ -83,18 +84,18 @@ export function FeedCard({
       </div>
 
       <footer className="feed-actions" aria-label="Ações da publicação">
-        <button type="button" aria-pressed={liked} onClick={onLike} className={liked ? "is-active" : ""}>
-          <span aria-hidden="true">♡</span>
-          {liked ? actions.liked : actions.like}
-        </button>
+        <TooltipButton type="button" label={liked ? actions.liked : actions.like} aria-pressed={liked} onClick={onLike} className={`feed-icon-action ${liked ? "is-active" : ""}`}>
+          <span aria-hidden="true">{liked ? "♥" : "♡"}</span>
+          <span className="touch-action-label" aria-hidden="true">{liked ? actions.liked : actions.like}</span>
+        </TooltipButton>
         <button type="button" disabled title={actions.unavailable}>
           <span aria-hidden="true">○</span>
           {actions.comment}
         </button>
-        <button type="button" aria-pressed={saved} onClick={onSave} className={saved ? "is-active" : ""}>
-          <span aria-hidden="true">◇</span>
-          {saved ? actions.saved : actions.save}
-        </button>
+        <TooltipButton type="button" label={saved ? actions.saved : actions.save} aria-pressed={saved} onClick={onSave} className={`feed-icon-action ${saved ? "is-active" : ""}`}>
+          <span className="bookmark-icon" aria-hidden="true" />
+          <span className="touch-action-label" aria-hidden="true">{saved ? actions.saved : actions.save}</span>
+        </TooltipButton>
         <button type="button" disabled title={actions.unavailable}>
           <span aria-hidden="true">✉</span>
           {actions.message}

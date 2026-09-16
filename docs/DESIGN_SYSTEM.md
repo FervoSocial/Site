@@ -2,7 +2,17 @@
 
 ## Visual direction
 
-The [16 September founder delta](source-of-truth/07_POST_FOUNDER_REVIEW_HANDOVER_2026-09-16.md) adds approved targets: subtle golden-flame movement, restrained micro-interactions, reduced-motion support, image-led larger profile/rings, separate badges, clean icon-led navigation and accessible hover labels. These targets are not yet implemented. Ring taxonomy, badge limits and the chilli-pepper Save/Hot/Favourite concept remain design decisions required.
+The [16 September founder delta](source-of-truth/07_POST_FOUNDER_REVIEW_HANDOVER_2026-09-16.md) supplies the approved targets. Post-Founder Phase 1 implements restrained authenticated-background movement, interaction feedback, larger existing avatar/ring treatments and accessible interaction labels, pending owner review. Revised navigation, the future image/ring taxonomy and additional badge design remain unimplemented. The chilli-pepper concept remains outside this pass.
+
+### Phase 1 visual implementation
+
+- Authenticated `AppShell` reuses the existing gold-smoke asset in a fixed, clipped background layer. A low-opacity 42-second alternating drift moves only 1.5px horizontally and 1px vertically with a 0.4% scale range, leaving content stationary. The treatment is intentionally atmospheric and carries no header control.
+- Reduced-motion preference keeps the background static and removes the added transitions. No video, new image or animation dependency is used.
+- Interaction colour/border feedback takes 150–180ms; no delayed actions, moving click targets or animated page layouts. Existing navigation and feed tabs are retained.
+- Feed avatars are 64px desktop/56px small-screen (previously 48/44); discovery circles 92px (previously 72); message avatars 56px (previously 48). Profile-header borders are more prominent, and mobile profile circles grow to a maximum 280px. Existing colours and separate account/status labels are retained, not a final category taxonomy.
+- The image-replacement objective is **partially implemented**: no suitable approved profile-photo asset exists in the current fixture set. Initials/abstract backgrounds remain safe fallbacks; no portrait was invented or fetched.
+- Only feed Like/Save permanent labels are hidden on fine-pointer hover-capable devices; touch users retain text. Buttons retain accessible names and pressed states, with hover/focus labels dismissible by Escape. Comment, Message and Report remain explicit, and disabled demo controls use readable muted contrast. Search/notification header buttons receive equivalent labels without gaining new functionality. Safety/ambiguous actions and navigation labels stay visible.
+- Home retains its existing HOME heading and description but no longer displays “Descubra no seu ritmo”. Landing copy is unchanged.
 
 Fervo Social uses a calm, modern social-platform aesthetic:
 

@@ -1,5 +1,63 @@
 @import "tailwindcss";
 
+/* Phase 1: feedback and background atmosphere only; no layout animation. */
+.feed-heading h1.feed-compact-title {
+  font-size: 0.85rem;
+  letter-spacing: 0.14em;
+  line-height: 1.5;
+}
+.tooltip-button { position: relative; }
+.control-tooltip {
+  position: absolute;
+  z-index: 30;
+  bottom: calc(100% - 2px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: 180px;
+  padding: 6px 9px;
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  background: #1e1e2e;
+  color: var(--text);
+  font-size: 0.75rem;
+  line-height: 1.4;
+  visibility: hidden;
+}
+.control-tooltip[data-visible="true"] { visibility: visible; }
+.header-actions .control-tooltip { top: calc(100% - 2px); bottom: auto; }
+.feed-actions button .control-tooltip { font-size: 0.75rem; }
+.feed-actions button .touch-action-label { font-size: inherit; }
+.bookmark-icon {
+  display: block;
+  width: 14px;
+  height: 19px;
+  border: 2px solid currentColor;
+  border-radius: 2px 2px 0 0;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 75%, 0 100%);
+}
+.is-active .bookmark-icon { background: currentColor; }
+@media (hover: hover) and (pointer: fine) {
+  .feed-icon-action .touch-action-label { display: none; }
+  .feed-card:focus-within, .explore-result-card:focus-within,
+  .feed-card:hover, .explore-result-card:hover { border-color: rgba(196, 181, 253, 0.28); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .app-atmosphere::before { animation: app-gold-drift 42s ease-in-out infinite alternate; }
+  .app-shell :is(.nav-item, .icon-button, .feed-follow-button, .feed-actions button, .feed-tabs button, .private-profile-actions button, .message-list-item, .explore-result-footer a) {
+    transition: color 150ms ease, background-color 150ms ease, border-color 150ms ease, box-shadow 150ms ease;
+  }
+  .feed-card, .explore-result-card { transition: border-color 180ms ease; }
+}
+@keyframes app-gold-drift {
+  from { transform: translate3d(-1.5px, -1px, 0) scale(1.004); opacity: 0.55; }
+  to { transform: translate3d(1.5px, 1px, 0) scale(1.008); opacity: 0.62; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .app-atmosphere::before { opacity: 0.58; }
+  .app-shell :is(button, a, .feed-card, .explore-result-card) { transition: none; }
+}
+
 :root {
   --background: #0b0b12;
   --surface: #151522;
@@ -350,6 +408,21 @@ a:focus-visible {
   grid-template-columns: 218px minmax(0, 1fr);
   grid-template-rows: var(--header-height) minmax(0, 1fr);
   background-color: #020202;
+  isolation: isolate;
+}
+
+.app-atmosphere {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.app-atmosphere::before {
+  content: "";
+  position: absolute;
+  inset: -12px;
   background-image:
     radial-gradient(
       ellipse 58% 54% at 53% 48%,
@@ -360,7 +433,6 @@ a:focus-visible {
     ),
     linear-gradient(rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.24)),
     url("/fervo-gold-smoke-v2.png");
-  background-attachment: fixed;
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -1629,11 +1701,11 @@ a:focus-visible {
 
 .feed-avatar {
   display: grid;
-  width: 48px;
-  height: 48px;
+  width: 64px;
+  height: 64px;
   flex: 0 0 auto;
   place-items: center;
-  border: 1px solid rgba(196, 181, 253, 0.28);
+  border: 2px solid rgba(196, 181, 253, 0.4);
   border-radius: 50%;
   background: linear-gradient(135deg, rgba(139, 92, 246, 0.55), rgba(148, 0, 211, 0.22));
   color: white;
@@ -1859,14 +1931,14 @@ a:focus-visible {
   min-height: 54px;
   align-items: center;
   justify-content: center;
-  gap: 7px;
+  gap: 8px;
   padding: 7px 5px;
   border: 0;
   border-right: 1px solid rgba(245, 243, 255, 0.055);
   background: transparent;
   color: var(--muted);
   cursor: pointer;
-  font-size: 0.68rem;
+  font-size: 0.72rem;
 }
 
 .feed-actions button:last-child {
@@ -1881,12 +1953,19 @@ a:focus-visible {
 
 .feed-actions button:disabled {
   cursor: not-allowed;
-  opacity: 0.42;
+  color: #918a9e;
+  opacity: 0.68;
 }
 
-.feed-actions button span {
+.feed-actions button > span:not(.touch-action-label):not(.control-tooltip),
+.feed-actions .bookmark-icon {
+  display: grid;
+  width: 20px;
+  height: 20px;
+  place-items: center;
   color: #c4b5fd;
-  font-size: 1rem;
+  font-size: 1.08rem;
+  line-height: 1;
 }
 
 @media (max-width: 820px) {
@@ -1930,8 +2009,8 @@ a:focus-visible {
   }
 
   .feed-avatar {
-    width: 44px;
-    height: 44px;
+    width: 56px;
+    height: 56px;
   }
 
   .feed-follow-button {
@@ -2002,7 +2081,7 @@ a:focus-visible {
   place-items: center;
   align-content: center;
   gap: 12px;
-  border: 1px solid rgba(196, 181, 253, 0.25);
+  border: 3px solid rgba(196, 181, 253, 0.38);
   border-radius: 50%;
   background:
     radial-gradient(circle at 35% 28%, rgba(255, 255, 255, 0.13), transparent 20%),
@@ -2666,7 +2745,7 @@ a:focus-visible {
   }
 
   .private-profile-photo {
-    width: min(68vw, 260px);
+    width: min(72vw, 280px);
   }
 
   .private-profile-bio {
@@ -3147,10 +3226,10 @@ a:focus-visible {
 
 .explore-result-visual span {
   display: grid;
-  width: 72px;
-  height: 72px;
+  width: 92px;
+  height: 92px;
   place-items: center;
-  border: 1px solid rgba(196, 181, 253, 0.3);
+  border: 2px solid rgba(196, 181, 253, 0.4);
   border-radius: 50%;
   background: rgba(139, 92, 246, 0.14);
   box-shadow: 0 0 24px rgba(148, 0, 211, 0.16);
@@ -3652,8 +3731,8 @@ a:focus-visible {
 
 .message-avatar {
   display: grid;
-  width: 48px;
-  height: 48px;
+  width: 56px;
+  height: 56px;
   flex: 0 0 auto;
   place-items: center;
   border: 1px solid rgba(196, 181, 253, 0.28);

@@ -36,8 +36,7 @@ export function FeedShell() {
   return (
     <section className="feed-shell" aria-labelledby="feed-title">
       <header className="feed-heading">
-        <p className="section-kicker">{ptBR.feed.eyebrow}</p>
-        <h1 id="feed-title">{ptBR.feed.title}</h1>
+        <h1 id="feed-title" className="section-kicker feed-compact-title">{ptBR.feed.eyebrow}</h1>
         <p>{ptBR.feed.description}</p>
       </header>
 
