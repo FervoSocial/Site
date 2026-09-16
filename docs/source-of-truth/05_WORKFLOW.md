@@ -14,7 +14,7 @@ The workflow also protects the project against a common AI failure mode: confide
 
 When requirements conflict:
 
-1. explicit project-owner decision recorded in the current decision register;
+1. later explicit Product Owner decisions, currently `07_POST_FOUNDER_REVIEW_HANDOVER_2026-09-16.md`, and the reconciled decision register; apply only explicit changes and retain non-conflicting decisions;
 2. current approved implementation-pass brief;
 3. current product overview/build plan;
 4. this current workflow and the reconciled repository `AGENTS.md`;

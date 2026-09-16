@@ -1,6 +1,6 @@
 # Documentation index
 
-The owner-approved source pack dated 25 August 2026 is the current product, commercial, roadmap, workflow, and AI-operating authority. Living engineering documents describe the implementation evidence. Historical v1.1 material is not current authority.
+The 25 August 2026 source pack remains authoritative except for explicit changes in the approved 16 September Product Owner delta. Living engineering documents describe implementation evidence, not proof that the new targets are implemented. Historical v1.1 material is not current authority.
 
 ## Current source-of-truth pack
 
@@ -8,6 +8,8 @@ Read these in order:
 
 | Document | Purpose |
 | --- | --- |
+| [16 September handover](source-of-truth/07_POST_FOUNDER_REVIEW_HANDOVER_2026-09-16.md) | Latest approved Product Owner delta; read first |
+| [Phase 0 reconciliation](source-of-truth/08_PHASE0_RECONCILIATION_2026-09-16.md) | Supersessions, retained rules, code evidence, drift, and unresolved decisions |
 | [Read me first](source-of-truth/00_READ_ME_FIRST.md) | Current baseline, source hierarchy, evidence rule, phase, and pack navigation |
 | [Project overview](source-of-truth/01_PROJECT_OVERVIEW.md) | Current product model and target experience |
 | [Current decisions](source-of-truth/02_CURRENT_DECISIONS.md) | Owner-reviewed decision register and labelled unresolved gates |

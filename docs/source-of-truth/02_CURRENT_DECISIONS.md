@@ -3,6 +3,8 @@
 Status: revised consolidated working decision register
 Prepared: 25 August 2026
 
+Reconciled: 16 September 2026 against [the approved Product Owner delta](07_POST_FOUNDER_REVIEW_HANDOVER_2026-09-16.md). Only explicit changes supersede prior decisions. D-003–D-005 and D-015 are revised below; D-110–D-115 record the additional delta. Commercial configuration v1.3 and non-conflicting decisions remain unchanged.
+
 This document consolidates the latest supported decisions from Fervo project conversations, the v1.2 commercial documents, the revised Founding Club requirements, the build plan, the workflow, the pre-change audit, the current GitHub baseline, and the project-owner review completed on 25 August 2026.
 
 Decision statuses:
@@ -22,19 +24,17 @@ Brazil is the first launch market. Brazilian Portuguese is the primary UI langua
 Fervo Social is 18+ only. Successful adult verification is mandatory before full restricted product access.
 
 ### D-003 - Product model - FINAL
-Fervo combines legacy adult-community functionality with a simplified Instagram/TikTok/Reels-style interface and mixed vertical feed. It should remain substantially simpler than FabSwingers-style navigation.
+Fervo is a simpler adults-only social/community platform with one mixed vertical Feed. Text, pictures and short video are ordinary profile-linked posts. A separate Reels product is excluded from launch; prior Reels-style wording must not be interpreted as a separate product requirement. Initial launch is responsive mobile web, with no native app required.
 
 ### D-004 - Primary navigation - FINAL
-Exactly five authenticated primary items: Home, Explore, Create, Messages, Profile. No sixth permanent section should be added without an explicit project-owner decision.
+SUPERSEDED: the permanent five-item Home / Explore / Create / Messages / Profile rule.
+
+The approved launch destinations are Home/Feed, Create, Clubs & Events, Messages, Profile, and Health / Safety / Advice. Use clean icon-led navigation, accessible names, and desktop hover labels where appropriate. Explore is no longer permanent navigation; Search remains available and may lead to results pages. Fale Conosco belongs in help/static/footer/support entry points. Exact new route assignments and responsive arrangement are not specified by this delta.
 
 ### D-005 - Home feeds and local discovery - FINAL direction / UX label WORKING
-Home has three primary feeds only:
+SUPERSEDED: For You / Local-Your Area / Following as three required visible tabs or separate feeds.
 
-- For You;
-- Local / Your Area - final Portuguese label still requires UX wording review;
-- Following.
-
-Events and Professionals are feed-card/content types and Explore categories, not Home tabs.
+There is one Feed with selectable Public, Nearby/Distance, and Friends views through a cleaner view-switch control. Final Portuguese names remain DECISION REQUIRED. Friends-of-Friends is an audience/privacy permission, not a fourth view; the Friends view may surface eligible content according to those permissions. Detailed rules and backend support remain DECISION REQUIRED. Clubs & Events also have a dedicated launch discovery/feed surface; Professionals are deferred from initial public launch.
 
 The Local/Your Area feed is a major discovery surface, not simply a list of the physically closest accounts. Members should be able to select a privacy-safe geographic scope such as 10 km, 20 km, 50 km, a city, an area, or a region. Exact user locations must not be exposed, and implementation must address location-triangulation risk.
 
@@ -84,7 +84,7 @@ Current direction:
 - separate Bronze/Silver/Gold bottom bar, badge, or equivalent marker = membership/plan level;
 - highest paid tiers should be visually easy to identify without changing the identity ring.
 
-The exact palette, icon treatment, and cross-account Bronze/Silver/Gold mapping remain a UX implementation detail.
+Use member images wherever available, with larger, prominent profile-image/ring presentation. Keep composition, intention, availability, activity, membership and commercial/sponsored indicators separate from the identity/category ring. Do not combine gender, orientation, relationship composition and plan into one ring signal. Exact ring taxonomy, accessibility treatment, badge form and number visible remain DECISION REQUIRED; the delta does not settle these.
 
 ### D-016 - Verification provider strategy - FINAL direction / provider RESEARCH REQUIRED
 Fervo should use a strong specialist age/identity-verification provider. Provider selection must compare Brazil document coverage, fraud resistance, liveness/age-assurance quality, privacy, data retention, reliability, and price.
@@ -249,6 +249,8 @@ Use targeted promotions based on evidence of low conversion rather than constant
 
 ## Professional plans
 
+These retained v1.3 values describe the deferred professional roadmap, not initial public-launch availability. The 30-day founding window is retained; its anchor relative to a later professional activation is DECISION REQUIRED. Do not silently change prices, start dates or eligibility.
+
 ### D-070 - Professional pricing - FINAL working commercial decision
 
 | Plan | Monthly | Four months | Annual |
@@ -367,7 +369,27 @@ No free founding entitlement may create an unexpected paid charge. A customer mu
 ### D-103 - Evidence and certainty rule for AI work - FINAL operating rule
 AI must not invent Fervo decisions or present unsupported assumptions as fact in order to give a complete or agreeable answer. If a point is uncertain, contradictory, inferred, or not decided, it must be clearly marked as `UNCONFIRMED`, `PROVISIONAL`, `ASSUMPTION`, `RESEARCH REQUIRED`, `DECISION REQUIRED`, or `LAUNCH GATE` as appropriate.
 
-## Research, professional-advice, and launch-gated items
+## Post-founder decisions — 16 September 2026
+
+### D-110 - Professionals deferred — FINAL launch scope
+Professional architecture and roadmap remain, but the entire professional area is **DEFERRED / OWNER REACTIVATION REQUIRED** and must remain out of launch scope until the Product Owner explicitly reactivates that phase. Reactivation is not a normal unresolved `DECISION REQUIRED`. This resolves earlier day-one ambiguity, beyond the existing commercial gate. Future professional profiles derive from individually verified adult identities and support discovery, not Fervo-operated bookings, service pricing/payments, client assignment or commissions. Discovery/filter semantics and any advertising/gallery concept require later design/legal review; Terms alone do not remove platform obligations.
+
+### D-111 - Profile and health claims — FINAL direction
+Profile opens the member's public-facing experience; owner-only verification, privacy, security, billing and account administration are secondary settings/account controls. Optional public information may include pseudonymous display name, bio, age/permitted basics, member-chosen physical/social information, orientation/preferences, relationship/lifestyle, interests, expectations, languages and education. STI-test dates, medical-test uploads, “clean” status and comparable member health-status trust claims are explicitly excluded. No new data schema is approved by this description.
+
+### D-112 - Dedicated launch destinations — FINAL direction
+Clubs & Events is a controllable discovery/feed surface for club/event content, search, filters and links to existing profiles/details. Highlighted/promoted placements are subject to commercial enablement; exact paid products remain DECISION REQUIRED. Health / Safety / Advice is a static/editorial destination for consent, safer meetings/sex, encounter safety and help, and a source for official educational posts. It is separate from member health claims. New URL choices are DECISION REQUIRED.
+
+### D-113 - Dynamic visual direction — FINAL requirement
+Add subtle golden-flame movement and restrained efficient micro-interactions with reduced-motion support; prefer lightweight CSS/SVG-style techniques where suitable. Avoid animation-heavy/noisy treatment. Remove “Descubra no seu ritmo” from the main Feed unless a later review restores it. This is an approved target, not an implementation claim.
+
+### D-114 - Interaction simplification — FINAL direction / details open
+Obvious interaction icons need not carry permanent visible labels unless usability testing requires them; accessible names remain required. Reporting/move actions are secondary. Explore a red chilli-pepper Save/Hot/Favourite visual; final icon/function naming and the meaning of “move” remain DECISION REQUIRED, not approved behaviour.
+
+### D-115 - Immediate sequence — FINAL planning order
+Post-Founder Phase 0 verification/reconciliation; Phase 1 low-risk visual/dynamic improvements; Phase 2 navigation and Feed view shell; Phase 3 Clubs & Events; Phase 4 public Profile and secondary settings; Phase 5 privacy/data alignment. Professionals remain deferred. This separate numbering does not mark retained production/data/security phases complete and does not authorise implementation in Phase 0.
+
+## Remaining research, professional-advice, and launch-gated items
 
 These items are intentionally not filled by guesswork. They should be researched or taken to the relevant professional at the appropriate phase.
 

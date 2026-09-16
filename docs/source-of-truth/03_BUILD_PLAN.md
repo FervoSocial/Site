@@ -3,6 +3,22 @@
 Status: active roadmap
 Prepared/updated: 25 August 2026
 
+Reconciled: 16 September 2026. The [founder delta](07_POST_FOUNDER_REVIEW_HANDOVER_2026-09-16.md) supplies the immediate order below. The older numbered phases remain the long-term production roadmap, subject to these explicit changes; they are not newly completed by the UI review.
+
+## Immediate post-founder implementation sequence
+
+| Post-Founder phase | Scope | Current boundary |
+| --- | --- | --- |
+| 0 | Verify remote/code/preview; reconcile documentation and source hierarchy | This pass only; pending owner review |
+| 1 | Low-risk visuals: remove Feed heading “Descubra no seu ritmo”, subtle gold-flame motion, reduced-motion support, micro-interactions, images where available, larger profile/rings, accessible cleaner icons | Await separate approval |
+| 2 | Revised icon-led navigation and one Feed with Public, Nearby/Distance, Friends views; Search replaces permanent Explore destination | Await separate approval; labels/route mapping not final |
+| 3 | Dedicated Clubs & Events discovery/feed using existing shells | Await separate approval; paid products undecided |
+| 4 | Public-facing Profile and secondary owner settings/account controls; no member health claims | Await separate approval |
+| 5 | Friends/Friends-of-Friends privacy and required data/permission alignment | Await approved permission design before implementation |
+| Deferred | Professionals | DEFERRED / OWNER REACTIVATION REQUIRED; out of launch scope until the Product Owner explicitly reactivates the phase, not an unresolved decision |
+
+Phase 0 makes no runtime changes. Founder phase numbers do not renumber the production roadmap below. Production identity, media safety, permissions, billing and security gates remain outstanding. The current documentation checkpoint is `phase2/source-of-truth` at `ae16985f32b939c591372f141ffa9ff8493b7890`.
+
 Work one phase and one bounded pass at a time. The project owner reviews checkpoints before the next pass begins.
 
 ## Phase 1 - Establish a clean project baseline - COMPLETE
@@ -30,7 +46,7 @@ Controlled checkpoint:
 
 Completion condition: satisfied.
 
-## Phase 2 - Establish the knowledge and operating source of truth - CURRENT
+## Phase 2 - Establish the knowledge and operating source of truth - checkpoint established
 
 Objectives:
 
@@ -133,15 +149,15 @@ Investor-demo priorities:
 
 - polished public landing and onboarding story;
 - coherent 18+ verification demonstration without implying the sandbox is production;
-- Home with For You / Local-Your Area / Following experience;
+- one Home Feed with Public / Nearby-Distance / Friends views;
 - Local/Your Area selector concept showing privacy-safe radius/city/region control;
 - clear individual account + linked shared-profile concept;
 - polished Private Member profile and media states;
-- Explore for people, clubs, events, and professionals;
+- Search/result access and dedicated Clubs & Events plus Health / Safety / Advice destinations;
 - Create flow/prototype for major content types;
 - Messages/introduction/media-consent journey;
 - Club and Organiser profiles/events;
-- Professional profile and the confidential safety-network proposition;
+- Professionals and the confidential safety-network proposition documented as deferred roadmap only;
 - pricing/founding offers presented consistently;
 - profile identity rings and tier-marker concept;
 - contact/link options for commercial/professional profiles;
@@ -199,7 +215,7 @@ Implement the first complete real user journey:
 - visible/forensic watermark strategy as approved;
 - feed persistence;
 - Local/Your Area discovery controls;
-- Explore/search;
+- Search/results without permanent Explore navigation;
 - follow/save/nudge rules;
 - first-contact limits;
 - private messaging;
@@ -225,6 +241,8 @@ Keep personal-account participation. Implement commercial Starter/Pro, commercia
 Completion condition: verified clubs and organisers create credible local inventory and safely drive member activation.
 
 ## Phase 8 - Professional accounts and safety network
+
+**Deferred from initial public launch; not the automatic next launch phase.** Require explicit Product Owner reactivation and design/legal review. Preserve the non-conflicting roadmap below. No Fervo-operated service booking/payments, service pricing, client assignment or commissions are approved.
 
 Implement:
 
@@ -252,7 +270,7 @@ Completion condition: verified independent professionals can maintain a safe, co
 
 Before production payment activation, complete the approved company/accounting/legal/provider research.
 
-Implement configuration-driven plan entitlements and billing for Private, Professional, Club, and Organiser plans; monthly/four-month/annual periods; approved PIX/card provider paths; renewal notices; cancellation; failed-payment handling; founding expiry; no unexpected paid conversion; promotion codes/targeted offers; invoices/taxes/refunds as legally/provider-approved; subscription analytics.
+Implement configuration-driven plan entitlements and billing for launch-enabled Private, Club and Organiser plans; retain Professional values for later separately approved activation. Monthly/four-month/annual periods, approved PIX/card provider paths, renewal notices, cancellation, failed-payment handling, founding expiry, explicit paid conversion, targeted offers, invoices/taxes/refunds and analytics remain subject to their existing gates.
 
 Completion condition: every displayed price/entitlement comes from configuration/data and production payment behaviour is explicit, legally/provider approved, and testable.
 

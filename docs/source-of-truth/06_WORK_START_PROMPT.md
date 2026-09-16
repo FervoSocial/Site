@@ -14,7 +14,7 @@ Then inspect the GitHub repository:
 
 Use the branch:
 
-`phase1/clean-baseline`
+`phase2/source-of-truth` (verified checkpoint `ae16985f32b939c591372f141ffa9ff8493b7890`)
 
 and verify the commit currently expected by the source pack.
 
@@ -41,8 +41,10 @@ Act as an independent reviewer and project-planning agent. Do not write or modif
 Do not reopen these unless you find a genuine source conflict or material safety/legal issue:
 
 - Brazil-first, 18+ product;
-- exactly five authenticated primary navigation items;
-- Home uses For You / Local-Your Area / Following; final Local label is a UX wording detail;
+- the 16 September handover supersedes permanent five-item navigation: Home/Feed, Create, Clubs & Events, Messages, public Profile, Health / Safety / Advice are launch destinations; Search replaces permanent Explore;
+- one Feed has Public / Nearby-Distance / Friends views; Friends-of-Friends is an audience permission; final labels/details remain open;
+- Professionals are deferred from initial public launch; preserve architecture and commercial gates;
+- responsive mobile web; ordinary posts rather than a separate Reels product; no member health-status claims;
 - Local discovery must support privacy-safe user-selected geographic scope rather than expose exact location;
 - every human adult uses an individual verified account;
 - couple/trio/multi-partner shared profiles are linked profile layers on top of individual accounts;
@@ -70,7 +72,7 @@ Perform a source-of-truth and Phase 1 baseline review.
 6. Review authentication/session/verification guards, admin guard, D1/Drizzle schema, `.env.example`, `.gitignore`, and current tests/build scripts.
 7. Check the known verification risk: sandbox must not be an implicit production/hosted fallback.
 8. Identify obvious privacy, safety, security, accessibility, architecture, or documentation issues that should block the Phase 2 documentation baseline or later merging of the clean baseline into `main`.
-9. Assess whether the planned Phase 2 -> Phase 3 -> Phase 4 -> Investor-Ready milestone sequence is technically coherent.
+9. Assess the immediate Post-Founder sequence in `03_BUILD_PLAN.md` without marking the retained production roadmap complete. Read `07_POST_FOUNDER_REVIEW_HANDOVER_2026-09-16.md` as a delta, not a full source-pack replacement.
 10. Do not research every launch-gated legal/provider question in this first task. Instead, confirm that the pack identifies them clearly and does not present them as settled facts.
 11. Do not implement corrections.
 

@@ -1,6 +1,16 @@
 # Fervo Social - Project Status
 
-Status: Phase 2 documentation branch in review
+## 16 September 2026 verification update
+
+Verified remote source: `phase2/source-of-truth` at `ae16985f32b939c591372f141ffa9ff8493b7890`, descended from the accepted Phase 1 implementation baseline. Current local documentation pass: `post-founder-review/phase0-reconcile`, pending owner review and uncommitted.
+
+Read [the founder delta](source-of-truth/07_POST_FOUNDER_REVIEW_HANDOVER_2026-09-16.md) for approved targets and [the Phase 0 evidence report](source-of-truth/08_PHASE0_RECONCILIATION_2026-09-16.md) for current code drift. Older baseline validation below is historical, not this pass's results.
+
+Current code still has five member navigation items with Explore and Profile → `/me`; three visible Para você / Perto de você / Seguindo tabs; the old Feed heading; a placeholder Create sheet; exposed professional discovery/demo; static gold-smoke imagery; initials/abstract profile placeholders; and placeholder Safety/Help. Dedicated launch Clubs & Events and Health/Safety surfaces, the public Profile destination, revised Feed views, professional launch deferral, and dynamic flame treatment are **not implemented by this documentation pass**.
+
+The immediate founder sequence is verification → visuals → navigation/Feed shell → Clubs & Events → public Profile/settings → privacy/data alignment; Professionals deferred. Broader production/security/data work remains open.
+
+Status: Post-Founder Review Phase 0 documentation reconciliation pending owner review; Phase 2 checkpoint established
 Last reconciled: 25 August 2026 source pack
 
 This living file reflects the approved 25 August 2026 source pack and replaces outdated status statements in the 5 August pre-change audit and older repository documentation. It does not erase those historical reports.
@@ -68,7 +78,7 @@ Current stack/evidence:
 | Age verification | Sandbox foundation only; production provider not selected |
 | Authenticated route guard | Real server-side approved-session guard |
 | Admin route guard | Real moderator/admin role guard exists |
-| Home feed | Visual shell; fixed data/local React state; current label is still `Nearby`, not the newly defined Local/Your Area concept |
+| Home feed | Visual shell with fixed data/local state and old Para você / Perto de você / Seguindo tabs; approved one-Feed Public / Nearby-Distance / Friends switch is not implemented |
 | Explore | Visual shell; fixed results/local controls |
 | Create | Placeholder sheet |
 | Private profile | Visual shell / fixed demonstration |
@@ -104,7 +114,7 @@ The new architectural decision that every adult has an individual verified accou
 
 The verification API currently defaults to sandbox mode when `VERIFICATION_PROVIDER_MODE` is absent. In sandbox mode an authenticated pending user can invoke the sandbox approval action. This is acceptable only in an explicit local/test environment.
 
-Phase 4 must make hosted/production behaviour fail closed and require explicit environment configuration before the site is shared as an externally accessible investor preview or beta environment.
+Long-term production-roadmap Phase 4 (not Post-Founder Phase 4) must make hosted/production behaviour fail closed and require explicit configuration before an externally accessible investor preview or beta.
 
 Additional future security work includes rate limiting, email ownership verification, password-reset completion, explicit origin/CSRF design for sensitive mutations, session management, and permission layers for private media/messages/blocks/reviews.
 
@@ -162,6 +172,6 @@ These can be researched in parallel with product development, but affected produ
 
 Phase 1 clean baseline: **COMPLETE**.
 
-Phase 2 documentation/knowledge/source-of-truth work: **IMPLEMENTED ON `phase2/source-of-truth`, PENDING OWNER REVIEW**.
+Phase 2 documentation checkpoint: **ESTABLISHED at `ae16985`**. Current Post-Founder Phase 0 reconciliation: **PENDING OWNER REVIEW**. No broader production phase is marked complete.
 
 The Phase 2 scope is simple: update the project's knowledge and operating documents so Chat, Work, and Codex all use the same current rules. **Do not change actual website behaviour merely as part of creating/updating these documents.** Any product/code change - UI, pricing display, database, payments, referrals, media, verification, or other behaviour - must be handled in a separately approved implementation pass with its own testing and review.

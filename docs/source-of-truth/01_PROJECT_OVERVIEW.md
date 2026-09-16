@@ -3,9 +3,11 @@
 Status: revised current working product overview
 Prepared: 25 August 2026
 
+Reconciled: 16 September 2026. The [Product Owner delta](07_POST_FOUNDER_REVIEW_HANDOVER_2026-09-16.md) supersedes only explicit conflicts; the remainder of this overview remains in force. These are targets, not claims of current implementation.
+
 ## 1. Mission
 
-Fervo Social is an adults-only social discovery and community platform launching first in Brazil. It is intended to preserve the useful social/community functions found on legacy adult platforms while removing their crowded navigation and dated interaction model. The target experience is closer to a modern Instagram/TikTok/Reels product: fast visual discovery, a mixed vertical feed, simple profiles, local discovery, events, clubs, verified independent professional profiles, and private consent-based communication.
+Fervo Social is an adults-only social discovery and community platform launching first in Brazil. It combines modern visual discovery, one mixed social Feed, rich profiles, clubs/events, and private consent-based communication. Text, pictures and short video are ordinary posts linked to profiles. Responsive mobile web is the initial launch target; no separate Reels product or native app is required. Professional architecture is retained for later activation, not initial public launch.
 
 The product should be usable by people with limited technical confidence, including a substantial 40+ audience.
 
@@ -35,31 +37,21 @@ Account type, shared-profile composition, gender identity, orientation, and rela
 
 ## 4. Primary navigation
 
-Authenticated member navigation is permanently limited to five items:
+The permanent five-item rule is superseded. Launch destinations are Home/Feed, Create, Clubs & Events, Messages, public-facing Profile, and Health / Safety / Advice. Use clean icon-led controls and accessible labels; desktop labels may appear on hover. Explore is removed as a permanent destination, while Search and result pages remain available. Fale Conosco belongs in help/static/footer/support areas.
 
-1. Home
-2. Explore
-3. Create
-4. Messages
-5. Profile
-
-Legacy concepts such as dedicated Hotlist/Pics/Forums/Chatrooms/Clubs/Meets navigation are absorbed into the feed, Explore, profiles, Create, and event modules. Public chatrooms and webcam rooms are not part of the MVP. General public forums are removed/deferred.
+New URL assignments and exact mobile navigation arrangement remain DECISION REQUIRED. Public chatrooms, webcam rooms and general public forums remain excluded/deferred.
 
 ## 5. Home and local discovery
 
-Home uses a mixed vertical feed with three primary tabs/feeds:
-
-- For You
-- Local / Your Area - final Portuguese label still requires UX wording review
-- Following
+Home uses one mixed Feed with selectable Public, Nearby/Distance and Friends views. The required visible For You / Local-Your Area / Following three-tab treatment is superseded by a cleaner view-switch control. Final Portuguese names remain open. Friends-of-Friends is an audience/privacy permission, not a fourth Feed view.
 
 The Local/Your Area feed is not merely "who is physically closest". It is a major discovery surface influenced by a member-selected geographic scope. The intended controls may support privacy-safe selections such as 10 km, 20 km, 50 km, selected city, area, or region. Exact user locations must never be exposed, and implementation must consider triangulation risk.
 
-Events and Professionals are feed-card/content types, not additional Home tabs.
+Clubs & Events have a dedicated launch discovery/feed destination. Professional content/surfaces are deferred from initial public launch.
 
-Feed content may include member photo/video posts, text/status posts, looking-for posts, Meet Now concepts, event cards, club promotions, professional availability/promotion, official safety information, and clearly identified sponsored content.
+Ordinary profile-linked posts may include text, pictures and short video. Event/club content, official safety guidance and clearly identified sponsored content fit the wider content model; professional availability/promotion remains future scope.
 
-Explore remains the broader discovery surface for profiles, clubs, events, and professionals.
+Search may lead to dedicated result pages; current Explore routes are implementation evidence rather than a permanent launch navigation requirement.
 
 ## 6. Profiles and visual identity
 
@@ -75,6 +67,10 @@ Current visual direction:
 The exact colour palette, iconography, and cross-account tier mapping may be refined in UX implementation, but the separation of **identity ring** from **membership-status marker** is the intended model.
 
 Approximate location is permitted; exact home location is not. Public profile identity remains separate from login identity and verification records.
+
+Use member profile images wherever available and enlarge their presentation. Keep identity/category rings separate from composition, intention, availability, activity, membership and commercial indicators; exact taxonomy and badge limits remain open. Profile opens the public-facing experience, with owner administration behind secondary settings/account controls. Optional member-supplied social/profile information is described in handover section 9; medical-test uploads, STI dates, “clean” status and comparable health trust claims are prohibited.
+
+Subtle golden-flame movement, restrained micro-interactions and reduced-motion support are required future design work. Remove “Descubra no seu ritmo” from the main Feed in the approved visual pass. Obvious icons can shed permanent visible labels while retaining accessible names. The chilli-pepper interaction concept still needs design validation.
 
 ## 7. Messaging, contact links, and off-platform communication
 
@@ -116,6 +112,8 @@ A dedicated **Photo & Media Rules** page is required before real uploads launch.
 
 ## 9. Events, clubs, and organisers
 
+Clubs & Events is a dedicated launch discovery/feed surface with search, filters, profile/event links and commercially enabled highlights. Final paid highlight products are not settled. Health / Safety / Advice is also a dedicated launch editorial surface, with periodically updated guidance and support access, separate from member health claims.
+
 Clubs and organisers are intended to generate credible local inventory and event activity. Clubs and organisers share a Business account family for infrastructure such as verification, staff, billing, analytics, promotion, and event-management capabilities, but retain separate product modules and price points.
 
 A normal personal account may participate in events and create small private/social gatherings. Commercial organiser features require a paid organiser tier or founding entitlement.
@@ -123,6 +121,8 @@ A normal personal account may participate in events and create small private/soc
 Legitimate club staff may become Fervo members and may count toward referral activation when they independently satisfy the same real-member qualification rules as everyone else. Staff status alone is not grounds for automatic rejection.
 
 ## 10. Professionals
+
+**Deferred from initial public launch.** Preserve the architecture and non-conflicting roadmap below, but require explicit Product Owner reactivation before building/exposing the full area. Future profiles derive from verified individual identities. Fervo should not initially process service payments, set service prices, assign clients, take commissions or operate service-booking infrastructure. Professional filter semantics and future discovery/advertising concepts require separate design/legal review.
 
 Professional profiles are part of the discovery/feed ecosystem rather than a detached classified-ad site. The product is designed primarily around verified **independent professionals**. The exact legal boundaries for establishments, intermediaries, and third-party commercial structures must be confirmed by Brazilian counsel rather than assumed in product documents.
 
@@ -181,7 +181,7 @@ The exact feed-ranking and sponsored-content policy requires product design plus
 
 Fervo has two different readiness targets.
 
-**Investor-ready demonstration** should show a polished, coherent, believable product journey using clearly fictional/demo data where necessary. It should communicate the product vision, local discovery, individual + shared-profile architecture, feed, profiles, messaging, clubs/events, professional experience, safety differentiation, pricing, and responsive UX. It must not falsely claim that payments, live verification, production moderation, real media storage, or legal/provider approvals are complete.
+**Investor-ready demonstration** should show a polished, coherent journey using clearly fictional/demo data where necessary: individual/shared profiles, one Feed, private messaging, Clubs & Events, Health/Safety, pricing and responsive web. Professionals belong only in the deferred roadmap, not the launch journey. It must not falsely claim that payments, live verification, production moderation, real media storage, or legal/provider approvals are complete.
 
 **Beta-ready production** requires real provider integrations, approved legal/operational policies, persistent permissions/data, moderation capability, payment/email infrastructure, and launch safeguards.
 

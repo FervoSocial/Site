@@ -8,7 +8,7 @@ Build Fervo Social as a Brazil-first, adults-only social discovery and community
 
 Read the current source pack before planning, reviewing, or implementing:
 
-1. `docs/source-of-truth/00_READ_ME_FIRST.md` — navigation, current baseline, evidence rule, and source hierarchy.
+1. `docs/source-of-truth/07_POST_FOUNDER_REVIEW_HANDOVER_2026-09-16.md` — latest explicit Product Owner delta; overrides older sources only on its explicit changes. Read `00_READ_ME_FIRST.md` for the complete hierarchy and baseline.
 2. `docs/source-of-truth/02_CURRENT_DECISIONS.md` — current owner-reviewed product and commercial decision register.
 3. The currently approved implementation-pass brief, when one exists.
 4. `docs/source-of-truth/01_PROJECT_OVERVIEW.md` and `docs/source-of-truth/03_BUILD_PLAN.md` — product model and phased roadmap.
@@ -38,8 +38,13 @@ Do not invent missing product, legal, safety, privacy, operational, commercial, 
 
 ## Core product rules
 
-- Keep exactly five authenticated primary navigation items: Home, Explore, Create, Messages, Profile.
-- Home has three feeds only: For You, Local/Your Area, and Following. The final Portuguese Local label is still a working UX decision. Events and Professionals are content types and Explore categories, not Home tabs.
+- The permanent five-item rule is superseded. Launch destinations are Home/Feed, Create, Clubs & Events, Messages, public-facing Profile, and Health / Safety / Advice, using clean icon-led navigation with accessible labels. Explore is not a permanent destination; Search remains available.
+- One Feed has selectable Public, Nearby/Distance, and Friends views. The old required For You / Local-Your Area / Following tabs are superseded. Friends-of-Friends is an audience permission, not a fourth view. Final Portuguese labels and detailed permission rules remain decision required.
+- Text, pictures, and short video are ordinary profile-linked posts; no separate Reels product or native app at launch. Responsive mobile web is the launch target.
+- Professionals are **DEFERRED / OWNER REACTIVATION REQUIRED**, not a normal unresolved `DECISION REQUIRED`. They remain in the architecture/roadmap but out of launch scope until the Product Owner explicitly reactivates that phase; commercial/provider gates remain in force.
+- Profile opens the public-facing member experience; owner-only account/settings are secondary. Do not add STI-test dates, medical-test uploads, “clean” status, or comparable member health trust claims.
+- Use profile images where available, with a prominent identity/category ring separate from composition, activity, availability, membership, and commercial indicators. Exact taxonomy/badge design remains decision required.
+- Subtle golden-flame movement and restrained micro-interactions with reduced-motion support are approved targets, not evidence of implementation.
 - Every human adult has an individually verified account. A couple, trio, multi-partner, or other approved shared profile is a linked profile layer on top of individual accounts; it does not replace them.
 - Keep account type, shared-profile composition, gender identity, orientation, and relationship structure as separate concepts.
 - Use a shared profile architecture with modules by account family; do not create four unrelated profile applications.
@@ -63,6 +68,8 @@ Do not invent missing product, legal, safety, privacy, operational, commercial, 
 - The current Billing shell still reads the historical v1.1 runtime fixture. This is a documented implementation gap, not permission to change billing behavior during a documentation-only pass.
 
 ## Workflow and scope control
+
+The immediate post-founder sequence is: Phase 0 verification/reconciliation; Phase 1 low-risk visual/dynamic work; Phase 2 navigation and one-Feed view shell; Phase 3 Clubs & Events; Phase 4 public Profile/secondary settings; Phase 5 privacy/data alignment. Professionals are deferred. These phase numbers are distinct from the retained long-term production roadmap. Phase 0 authorises documentation only; do not implement the handover, commit, push, merge, or deploy without subsequent approval.
 
 - Work one bounded pass and one primary objective at a time.
 - Confirm the repository, branch, starting commit, clean working tree, source references, included scope, and explicit non-goals before editing.

@@ -15,6 +15,8 @@ The following files are preserved because they explain earlier implementation ch
 
 ## Conflict rule
 
+The 16 September handover partially supersedes the August pack: permanent five-item navigation, permanent Explore, the required visible For You / Local-Your Area / Following treatment, possible day-one Professionals, a separate Reels launch product, member health-status claims, and initials as primary profile imagery when images exist. Non-conflicting August decisions and commercial configuration v1.3 remain current. See `source-of-truth/08_PHASE0_RECONCILIATION_2026-09-16.md` for precise scope; no historical files were deleted or rewritten.
+
 Do not delete or silently rewrite historical evidence to look current. When a historical requirement conflicts with the current source pack:
 
 1. follow the hierarchy in `source-of-truth/00_READ_ME_FIRST.md` and `AGENTS.md`;

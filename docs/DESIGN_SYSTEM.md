@@ -2,6 +2,8 @@
 
 ## Visual direction
 
+The [16 September founder delta](source-of-truth/07_POST_FOUNDER_REVIEW_HANDOVER_2026-09-16.md) adds approved targets: subtle golden-flame movement, restrained micro-interactions, reduced-motion support, image-led larger profile/rings, separate badges, clean icon-led navigation and accessible hover labels. These targets are not yet implemented. Ring taxonomy, badge limits and the chilli-pepper Save/Hot/Favourite concept remain design decisions required.
+
 Fervo Social uses a calm, modern social-platform aesthetic:
 
 - Very dark matte background
@@ -53,7 +55,7 @@ The application uses Geist through `next/font/google`, with Arial/Helvetica fall
 - Headlines: bold, tightly tracked, compact line height.
 - Body text: soft white or muted lavender-grey with generous line height.
 - Eyebrows: small uppercase text with wide tracking.
-- Labels: always remain readable at mobile sizes; do not rely on icon-only controls.
+- Labels: accessible names remain required. Recognisable interaction icons need not have permanent visible labels unless usability testing requires them; desktop navigation may use hover labels.
 
 ## Actions
 
@@ -81,8 +83,8 @@ The application uses Geist through `next/font/google`, with Arial/Helvetica fall
 ## Responsive behavior
 
 - Design mobile first, with a 360-pixel-wide device as a minimum target.
-- At 820 pixels and below, the desktop navigation becomes a fixed five-item bottom bar and the header simplifies.
-- Dense action rows may reflow into smaller grids; labels must remain visible.
+- Current code: at 820 pixels and below, navigation becomes a fixed five-item bottom bar. The permanent five-item target is superseded; the exact replacement mobile arrangement is not specified.
+- Dense action rows may reflow; meaningful accessible labels remain required.
 - Touch targets should stay close to or above 44 pixels.
 - Use `100svh` and safe-area insets where full-height or fixed mobile navigation is involved.
 

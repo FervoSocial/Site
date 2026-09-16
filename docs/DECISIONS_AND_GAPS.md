@@ -4,6 +4,8 @@
 
 ## Approved implementation decisions
 
+**Historical section:** the three-tab and permanent Explore descriptions below are superseded as targets by the [16 September delta](source-of-truth/07_POST_FOUNDER_REVIEW_HANDOVER_2026-09-16.md). They explain current code only. Current drift and unresolved decisions are recorded in [Phase 0 reconciliation](source-of-truth/08_PHASE0_RECONCILIATION_2026-09-16.md).
+
 ### Three Home feed tabs
 
 The version 1.1 build specification originally lists five Home tabs: For You, Nearby, Following, Events, and Professionals.

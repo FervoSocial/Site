@@ -28,7 +28,9 @@ All four account families have front-end shells. The newly approved individual-a
 
 ## Primary navigation
 
-Authenticated navigation must always contain exactly five items:
+**Approved target:** Home/Feed, Create, Clubs & Events, Messages, public-facing Profile, and Health / Safety / Advice. Explore is no longer permanent navigation; Search remains. Professionals are deferred from initial public launch. Account/settings are secondary controls. Exact new URLs and navigation layout remain DECISION REQUIRED; this pass does not create or remove routes.
+
+**Current implementation, superseded as a permanent product rule:** the code still contains these five items:
 
 | Item | Destination | Current behavior |
 | --- | --- | --- |
@@ -107,13 +109,15 @@ Select Plan, Compare Period, Preview Changes, Manage Payment Method, Cancel, Vie
 
 ## Home feed contract
 
-The current product direction has three feeds:
+The approved target is one Feed with selectable Public, Nearby/Distance and Friends views through a cleaner switch. Friends-of-Friends is an audience permission, not a fourth view. Final Portuguese labels and permission details remain open. Text, pictures and short video are ordinary profile-linked posts, with no separate Reels product.
+
+The superseded requirement was three visible tabs:
 
 - Para você (`For You`)
 - Local / Your Area — final Portuguese label `WORKING`
 - Seguindo (`Following`)
 
-Events and Professionals appear as card types in the mixed feed and may later be found through Explore. They are not top-level feed tabs.
+Current code still includes Event and Professional cards and Explore categories. The target adds a dedicated Clubs & Events launch surface and defers Professionals; that launch deferral is not implemented yet.
 
 **Current implementation:** the shell still displays `Perto de você`/Nearby and uses no real member-selected geographic scope. Radius/city/area/region controls and triangulation-safe location behaviour remain unimplemented.
 
@@ -165,6 +169,8 @@ Real verification, event creation, ticketing, payments, RSVP/waitlist processing
 
 ### Professional profiles shell contract
 
+**Implementation evidence only:** this existing shell remains exposed in code. The founder delta defers the entire professional area from initial public launch; later owner reactivation and legal/provider gates are required. No professional routes are removed during reconciliation.
+
 `/profile/luiza-educadora` renders one safe fictional Professional profile. The Luiza result at `/explore/professionals` links to this handle; the other Professional results remain discovery placeholders.
 
 The shell contains a professional name and category, clearly demonstrative adult/professional verification labels, approximate service area, availability, services summary, languages, accessibility, boundaries, abstract public portfolio items, a locked private-gallery state, and a reviews placeholder. No rate is rendered.
@@ -184,6 +190,8 @@ Write Review and Check Eligibility show a local ineligible state. Helpful uses t
 Professional-only client safety feedback is not part of this shell. It requires a separately approved structured safety system with moderation, notification, and appeal rights.
 
 ## Explore shell contract
+
+The following describes existing code. Permanent Explore navigation is superseded by Search/results and the dedicated launch destinations in the founder delta. Existing paths are preserved pending a separately approved route/navigation pass.
 
 The shared Explore Shell is available at `/explore` and four category routes:
 

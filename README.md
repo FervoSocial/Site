@@ -8,6 +8,10 @@ The current controlled implementation baseline is `phase1/clean-baseline` at com
 
 ## Start here
 
+Read the [16 September Product Owner delta](docs/source-of-truth/07_POST_FOUNDER_REVIEW_HANDOVER_2026-09-16.md) first. It overrides only its explicit changes to the August pack. The approved documentation checkpoint is `phase2/source-of-truth` at `ae16985f32b939c591372f141ffa9ff8493b7890`; the Phase 1 implementation baseline above remains unchanged.
+
+**Approved target, not yet implemented:** one Feed with Public, Nearby/Distance and Friends views; launch destinations Home/Feed, Create, Clubs & Events, Messages, public Profile, and Health / Safety / Advice. Explore leaves permanent navigation; Professionals are deferred from launch. Profile settings are secondary. Ordinary posts support text/images/short video, with no separate Reels product. Subtle accessible gold-flame motion is required; member health-status claims are excluded.
+
 1. Read the [current source-of-truth pack](docs/source-of-truth/00_READ_ME_FIRST.md).
 2. Read the [current decision register](docs/source-of-truth/02_CURRENT_DECISIONS.md) before making product or commercial assumptions.
 3. Read [Project status](docs/PROJECT_STATUS.md) to distinguish implemented foundations from shell/demo functionality.
@@ -29,7 +33,7 @@ npm run dev
 
 Node.js 22.13 or newer is required. Keep local environment files outside Git; the safe development setting currently documented in `.env.example` is `VERIFICATION_PROVIDER_MODE=sandbox`. Account-flow testing also requires the committed migration at `drizzle/0000_skinny_hellcat.sql` to be applied to the local D1 database, as described in [Development](docs/DEVELOPMENT.md).
 
-## Current product surface
+## Current implemented product surface (older shell, not the revised target)
 
 - Public landing page at `/`
 - Persistent password/session foundation and sandbox-only verification-state flow
@@ -72,7 +76,7 @@ npm test
 
 - Brazilian Portuguese is the default interface language.
 - Dark mode is the default, with purple as the primary accent and gold as a secondary atmospheric accent.
-- Authenticated navigation contains exactly: Home, Explore, Create, Messages, and Profile.
+- Launch navigation follows the September handover; the existing five-item navigation is implementation drift, not a permanent rule.
 - Create opens a modal or sheet, not a top-level page.
 - Locations shown to members must remain approximate.
 - No public chatrooms or webcam rooms.
