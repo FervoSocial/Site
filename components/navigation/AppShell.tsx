@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState, type ReactNode } from "react";
 import { ptBR } from "@/lib/i18n";
 import { LogoutButton } from "@/components/auth/LogoutButton";
@@ -11,49 +11,125 @@ type AppShellProps = {
   children: ReactNode;
 };
 
+type NavIconName = "home" | "create" | "clubsEvents" | "messages" | "profile" | "safety" | "more" | "search";
+
 type NavItem = {
   label: string;
   href?: string;
-  icon: string;
+  icon: NavIconName;
   match?: string[];
-  action?: "create";
+  action?: "create" | "more";
 };
 
-const navItems: NavItem[] = [
-  { label: ptBR.navigation.home, href: "/home", icon: "⌂", match: ["/home", "/event"] },
-  { label: ptBR.navigation.explore, href: "/explore", icon: "◇", match: ["/explore"] },
-  { label: ptBR.navigation.create, icon: "+", action: "create" },
-  { label: ptBR.navigation.messages, href: "/messages", icon: "✉", match: ["/messages"] },
-  { label: ptBR.navigation.profile, href: "/me", icon: "●", match: ["/me", "/profile"] },
+const desktopNavItems: NavItem[] = [
+  { label: ptBR.navigation.home, href: "/home", icon: "home", match: ["/home"] },
+  { label: ptBR.navigation.create, icon: "create", action: "create" },
+  {
+    label: ptBR.navigation.clubsEvents,
+    href: "/clubs-events",
+    icon: "clubsEvents",
+    match: ["/clubs-events", "/explore/clubs", "/explore/events", "/event"],
+  },
+  { label: ptBR.navigation.messages, href: "/messages", icon: "messages", match: ["/messages"] },
+  { label: ptBR.navigation.profile, href: "/me", icon: "profile", match: ["/me", "/profile"] },
+  {
+    label: ptBR.navigation.healthSafety,
+    href: "/health-safety",
+    icon: "safety",
+    match: ["/health-safety"],
+  },
 ];
+
+const mobileNavItems: NavItem[] = [
+  desktopNavItems[0],
+  desktopNavItems[2],
+  desktopNavItems[1],
+  desktopNavItems[3],
+  {
+    label: ptBR.navigation.more,
+    icon: "more",
+    action: "more",
+    match: ["/me", "/profile", "/health-safety", "/explore/profiles"],
+  },
+];
+
+function NavigationIcon({ name }: { name: NavIconName }) {
+  const paths: Record<NavIconName, ReactNode> = {
+    home: <path d="M3.5 10.5 12 3.8l8.5 6.7v9.2h-6v-5.9h-5v5.9h-6z" />,
+    create: <path d="M12 5v14M5 12h14" />,
+    clubsEvents: (
+      <>
+        <path
+          className="nav-clubs-heart"
+          d="M4 3.1c.6 1.5 1.5 2.2 2.7 2.4C8.6 4.6 10.7 5.3 12 7c1.3-1.7 3.4-2.4 5.3-1.5 1.2-.2 2.1-.9 2.7-2.4.5 2.2-.1 4-1.3 5 .6 4.6-3.5 7.8-6.7 10-3.2-2.2-7.3-5.4-6.7-10C4.1 7.1 3.5 5.3 4 3.1Z"
+        />
+        <path className="nav-clubs-tail" d="M17.4 14.6c3.3 1.7 4 5.2 1.5 7.1-1.1.9-2.6.9-4 .2m1.8-1.5-1.8 1.5 2 .8" />
+      </>
+    ),
+    messages: (
+      <>
+        <path className="nav-listening-face" d="M2.8 4.2c2.9.6 5.1 2.1 6.3 4.2l-1.9 1.4c1.2 1.4 1.3 3 .5 4.7l-3.2 1.7M4.5 16.2c.8.5 1.3 1.6 1.3 3.2" />
+        <path className="nav-listening-ear" d="M16.2 20.2c-3-1.5-4.5-4.7-4.5-9.1 0-4.5 2-7.3 5.6-7.3 3 0 4.7 2.2 4.7 5.5 0 2.7-1.1 4.3-2.6 5.7-1 .9-1.4 2-1.5 3.5" />
+        <path className="nav-listening-ear" d="M16.4 15.5c-1.1-1.2-1.6-3-1.6-5.2 0-2.4.8-3.8 2.5-3.8 1.4 0 2.2 1.1 2.2 2.9 0 1.6-.6 2.8-2 4" />
+        <path className="nav-whisper-lines" d="M8.6 9.1h1.5m-1.8 2.5h1.8" />
+      </>
+    ),
+    profile: <><circle cx="12" cy="8" r="4" /><path d="M4.5 21c.7-4.2 3.2-6.3 7.5-6.3s6.8 2.1 7.5 6.3" /></>,
+    safety: <path d="M12 3.2 20 6v5.6c0 5-2.7 8-8 10.2C6.7 19.6 4 16.6 4 11.6V6zM8.8 12l2.1 2.1 4.6-5" />,
+    more: <><circle cx="5" cy="12" r="1.2" /><circle cx="12" cy="12" r="1.2" /><circle cx="19" cy="12" r="1.2" /></>,
+    search: <><circle cx="10.5" cy="10.5" r="6" /><path d="m15 15 5 5" /></>,
+  };
+
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      {paths[name]}
+    </svg>
+  );
+}
 
 function Navigation({
   pathname,
   onCreate,
+  onMore,
+  moreOpen,
   className,
+  items,
 }: {
   pathname: string;
   onCreate: () => void;
+  onMore?: () => void;
+  moreOpen?: boolean;
   className: string;
+  items: NavItem[];
 }) {
   return (
     <nav className={className} aria-label="Navegação principal">
-      {navItems.map((item) => {
+      {items.map((item) => {
         const active = item.match?.some(
           (route) => pathname === route || pathname.startsWith(`${route}/`),
         );
         const content = (
           <>
-            <span className="nav-icon" aria-hidden="true">
-              {item.icon}
+            <span className="nav-icon">
+              <NavigationIcon name={item.icon} />
             </span>
-            <span>{item.label}</span>
+            <span className="nav-label" aria-hidden="true">{item.label}</span>
           </>
         );
 
-        if (item.action === "create") {
+        if (item.action) {
+          const isMore = item.action === "more";
           return (
-            <button className="nav-item nav-item-create" type="button" onClick={onCreate} key={item.label}>
+            <button
+              className={`nav-item ${item.action === "create" ? "nav-item-create" : "nav-item-more"}`}
+              type="button"
+              onClick={isMore ? onMore : onCreate}
+              aria-label={item.label}
+              aria-expanded={isMore ? moreOpen : undefined}
+              aria-controls={isMore ? "mobile-more-sheet" : undefined}
+              data-active={active ? "true" : undefined}
+              key={item.label}
+            >
               {content}
             </button>
           );
@@ -63,6 +139,7 @@ function Navigation({
           <Link
             className="nav-item"
             href={item.href ?? "/home"}
+            aria-label={item.label}
             aria-current={active ? "page" : undefined}
             key={item.label}
           >
@@ -76,7 +153,19 @@ function Navigation({
 
 export function AppShell({ children }: AppShellProps) {
   const pathname = usePathname();
+  const router = useRouter();
   const [createOpen, setCreateOpen] = useState(false);
+  const [moreOpen, setMoreOpen] = useState(false);
+
+  function openCreate() {
+    setMoreOpen(false);
+    setCreateOpen(true);
+  }
+
+  function openMore() {
+    setCreateOpen(false);
+    setMoreOpen(true);
+  }
 
   return (
     <div className="app-shell">
@@ -92,8 +181,13 @@ export function AppShell({ children }: AppShellProps) {
         </button>
 
         <div className="header-actions">
-          <TooltipButton className="icon-button" type="button" label={ptBR.shell.search}>
-            <span aria-hidden="true">⌕</span>
+          <TooltipButton
+            className="icon-button"
+            type="button"
+            label={ptBR.shell.search}
+            onClick={() => router.push("/explore/profiles")}
+          >
+            <NavigationIcon name="search" />
           </TooltipButton>
           <TooltipButton className="icon-button" type="button" label={ptBR.shell.notifications}>
             <span aria-hidden="true">◌</span>
@@ -107,20 +201,31 @@ export function AppShell({ children }: AppShellProps) {
 
       <Navigation
         pathname={pathname}
-        onCreate={() => setCreateOpen(true)}
+        onCreate={openCreate}
         className="desktop-navigation"
+        items={desktopNavItems}
       />
 
       <main className="app-content">{children}</main>
 
       <Navigation
         pathname={pathname}
-        onCreate={() => setCreateOpen(true)}
+        onCreate={openCreate}
+        onMore={openMore}
+        moreOpen={moreOpen}
         className="bottom-navigation"
+        items={mobileNavItems}
       />
 
       {createOpen ? (
-        <div className="sheet-backdrop" role="presentation" onMouseDown={() => setCreateOpen(false)}>
+        <div
+          className="sheet-backdrop"
+          role="presentation"
+          onMouseDown={() => setCreateOpen(false)}
+          onKeyDown={(event) => {
+            if (event.key === "Escape") setCreateOpen(false);
+          }}
+        >
           <section
             className="create-sheet"
             role="dialog"
@@ -133,6 +238,47 @@ export function AppShell({ children }: AppShellProps) {
             <h2 id="create-sheet-title">{ptBR.shell.createTitle}</h2>
             <p>{ptBR.shell.createDescription}</p>
             <button className="sheet-close" type="button" onClick={() => setCreateOpen(false)} autoFocus>
+              {ptBR.shell.close}
+            </button>
+          </section>
+        </div>
+      ) : null}
+
+      {moreOpen ? (
+        <div
+          className="sheet-backdrop"
+          role="presentation"
+          onMouseDown={() => setMoreOpen(false)}
+          onKeyDown={(event) => {
+            if (event.key === "Escape") setMoreOpen(false);
+          }}
+        >
+          <section
+            className="create-sheet mobile-more-sheet"
+            id="mobile-more-sheet"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="mobile-more-title"
+            onMouseDown={(event) => event.stopPropagation()}
+          >
+            <div className="sheet-handle" aria-hidden="true" />
+            <p className="section-kicker">{ptBR.navigation.more}</p>
+            <h2 id="mobile-more-title">{ptBR.shell.moreTitle}</h2>
+            <nav className="mobile-more-links" aria-label={ptBR.shell.moreTitle}>
+              <Link href="/me" onClick={() => setMoreOpen(false)}>
+                <span className="nav-icon"><NavigationIcon name="profile" /></span>
+                <span><strong>{ptBR.navigation.profile}</strong><small>{ptBR.shell.profileNote}</small></span>
+              </Link>
+              <Link href="/health-safety" onClick={() => setMoreOpen(false)}>
+                <span className="nav-icon"><NavigationIcon name="safety" /></span>
+                <span><strong>{ptBR.navigation.healthSafety}</strong><small>{ptBR.shell.healthSafetyNote}</small></span>
+              </Link>
+              <Link href="/explore/profiles" onClick={() => setMoreOpen(false)}>
+                <span className="nav-icon"><NavigationIcon name="search" /></span>
+                <span><strong>{ptBR.shell.search}</strong><small>{ptBR.shell.searchNote}</small></span>
+              </Link>
+            </nav>
+            <button className="sheet-close" type="button" onClick={() => setMoreOpen(false)} autoFocus>
               {ptBR.shell.close}
             </button>
           </section>

@@ -1,14 +1,28 @@
 # Fervo Social - Project Status
 
-## Post-Founder Phase 1 — visual implementation, pending review
+## Post-Founder Phase 2 — navigation and Feed shell, pending review
+
+Starting checkpoint: approved `post-founder-review/phase1-visual-dynamics` at `9d9db2f3dbebd0604d038d3e5db97d99a25bf379`. Working branch: `post-founder-review/phase2-navigation-feed`.
+
+This bounded pass replaces permanent Explore navigation with the founder-approved launch destinations; keeps Search through the existing profile-results surface; adds authenticated entry routes at `/clubs-events` and `/health-safety`; and changes Home to one Feed with three icon-only views whose accessible names are `Público`, `Distância` and `Amigos`. The Home masthead carries the Fervo Social wordmark and safe initials-based friend activity orbits. Selected, focus and tooltip states are explicit without restoring permanent labels. `/clubs-events` now interleaves the existing Club and Event fixtures in one vertical discovery surface with existing profile/detail links. The views and mixed discovery surface use fixed demo content only. No ranking, persistence, real geolocation, promotion system or Friends/Friends-of-Friends permission logic exists.
+
+Desktop now uses a six-destination icon rail with hover/focus labels. Mobile uses Home, Clubs & Events, Create, Messages and More; Profile, Health/Safety/Advice and Search are available in the More sheet. This avoids a crowded six-icon bottom bar. Mobile navigation remains **PROVISIONAL / PRODUCT OWNER REVIEW PENDING**. Profile temporarily remains `/me`, because linking the current account to a genuine public profile belongs to Phase 4 and using a fictional member would be misleading.
+
+Professionals remain **DEFERRED / OWNER REACTIVATION REQUIRED**. They are absent from launch navigation, Feed fixtures and discovery category shortcuts. Existing direct professional demonstration routes remain dormant/internal evidence and were not expanded or deleted.
+
+Full Clubs & Events remains Phase 3; public Profile/settings remains Phase 4; Friends/Friends-of-Friends data and permissions remain Phase 5. No dependency, schema, migration, authentication, verification, privacy, billing, commercial or backend change is included. No commit, push, merge or deployment is authorised in this pass.
+
+## Post-Founder Phase 1 — visual implementation, approved
 
 Starting checkpoint: `post-founder-review/phase0-reconcile` at `72359036bc1ee01dc30876af48a9066df799eec6`, fetched and verified with a clean tree. Working branch: `post-founder-review/phase1-visual-dynamics`. Phase 0 is approved; the older pending-review narrative below is its original snapshot.
 
-Implemented only visual polish: removed the old main Feed heading, added a restrained low-opacity gold-texture drift with reduced-motion support, short interaction transitions, larger existing avatar/ring treatments and accessible Like/Save and header tooltips. No prominent motion control is placed in the header. See [Design System](DESIGN_SYSTEM.md) for exact presentation changes. Image replacement is partially implemented: no approved demo profile photos were available, so safe fallbacks remain rather than invented identities.
+Approved Phase 1 checkpoint: `post-founder-review/phase1-visual-dynamics` at `9d9db2f3dbebd0604d038d3e5db97d99a25bf379`.
 
-The older five-item navigation, Explore destination, three feed tabs, Profile → `/me`, exposed professional fixtures and all current product behaviour remain unchanged. Professionals remain **DEFERRED / OWNER REACTIVATION REQUIRED**. Later founder phases and outstanding production/security work are not implemented or approved by this visual pass.
+Implemented only visual polish: removed the old main Feed heading, added a low-opacity fluid gold-texture flow with reduced-motion support, short interaction transitions, larger existing avatar/ring treatments and accessible Like/Save and header tooltips. The approved Phase 2 refinement keeps the same unchanged background asset and uses a 48-second primary wave plus softer 64-second counter-wave on closed, low-amplitude paths while content remains stationary. No prominent motion control is placed in the header. See [Design System](DESIGN_SYSTEM.md) for exact presentation changes. Image replacement is partially implemented: no approved demo profile photos were available, so safe fallbacks remain rather than invented identities.
 
-No dependencies, routes, authentication, guards, verification, schemas, commercial configuration, billing, permissions or fixture data were changed. Local preview uses an ignored snapshot of the existing disposable preview database; no security bypass or schema change was needed. No commit, push, merge or deployment is authorised in this pass.
+Phase 1 retained the older navigation and feed controls; those specific shell areas are superseded by the Phase 2 work above. Professionals remain **DEFERRED / OWNER REACTIVATION REQUIRED**. Later founder phases and outstanding production/security work are not implemented by the visual pass.
+
+No dependencies, routes, authentication, guards, verification, schemas, commercial configuration, billing, permissions or fixture data were changed. Local preview used an ignored snapshot of the existing disposable preview database; no security bypass or schema change was needed. Phase 1 was committed and pushed only after Product Owner approval; it was not merged or deployed.
 
 ## 16 September 2026 verification update
 
@@ -16,7 +30,7 @@ Verified remote source: `phase2/source-of-truth` at `ae16985f32b939c591372f141ff
 
 Read [the founder delta](source-of-truth/07_POST_FOUNDER_REVIEW_HANDOVER_2026-09-16.md) for approved targets and [the Phase 0 evidence report](source-of-truth/08_PHASE0_RECONCILIATION_2026-09-16.md) for current code drift. Older baseline validation below is historical, not this pass's results.
 
-Current code still has five member navigation items with Explore and Profile → `/me`; three visible Para você / Perto de você / Seguindo tabs; the old Feed heading; a placeholder Create sheet; exposed professional discovery/demo; static gold-smoke imagery; initials/abstract profile placeholders; and placeholder Safety/Help. Dedicated launch Clubs & Events and Health/Safety surfaces, the public Profile destination, revised Feed views, professional launch deferral, and dynamic flame treatment are **not implemented by this documentation pass**.
+At this Phase 0 verification snapshot, code still had five member navigation items with Explore and Profile → `/me`; three visible Para você / Perto de você / Seguindo tabs; the old Feed heading; a placeholder Create sheet; exposed professional discovery/demo; static gold-smoke imagery; initials/abstract profile placeholders; and placeholder Safety/Help. The approved Phase 1 and current Phase 2 sections above supersede this historical implementation snapshot.
 
 The immediate founder sequence is verification → visuals → navigation/Feed shell → Clubs & Events → public Profile/settings → privacy/data alignment; Professionals deferred. Broader production/security/data work remains open.
 
@@ -88,8 +102,8 @@ Current stack/evidence:
 | Age verification | Sandbox foundation only; production provider not selected |
 | Authenticated route guard | Real server-side approved-session guard |
 | Admin route guard | Real moderator/admin role guard exists |
-| Home feed | Visual shell with fixed data/local state and old Para você / Perto de você / Seguindo tabs; approved one-Feed Public / Nearby-Distance / Friends switch is not implemented |
-| Explore | Visual shell; fixed results/local controls |
+| Home feed | One Feed shell with provisional Público / Distância / Amigos demo views; fixed data and local state only |
+| Search/results | Existing Explore result routes retained internally; `/explore/profiles` is the current Search entry, with fixed results/local controls |
 | Create | Placeholder sheet |
 | Private profile | Visual shell / fixed demonstration |
 | Linked shared profile | Product architecture now approved; not yet implemented as a real linked-account system |
@@ -102,7 +116,7 @@ Current stack/evidence:
 | Professional safety network | Product direction approved; not implemented |
 | Billing | Configuration-driven display shell using repository v1.1 commercial config; no checkout/entitlements |
 | Moderation UI | Role-protected visual shell; no real moderation operations/evidence/actions |
-| Safety/help/legal | Placeholder pages; no final Photo & Media Rules |
+| Health/Safety/Advice | Minimal authenticated editorial launch shell at `/health-safety`; public Safety/Help/legal placeholders remain and no final Photo & Media Rules exist |
 
 ## 5. Implemented identity/privacy foundation
 

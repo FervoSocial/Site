@@ -28,19 +28,18 @@ All four account families have front-end shells. The newly approved individual-a
 
 ## Primary navigation
 
-**Approved target:** Home/Feed, Create, Clubs & Events, Messages, public-facing Profile, and Health / Safety / Advice. Explore is no longer permanent navigation; Search remains. Professionals are deferred from initial public launch. Account/settings are secondary controls. Exact new URLs and navigation layout remain DECISION REQUIRED; this pass does not create or remove routes.
-
-**Current implementation, superseded as a permanent product rule:** the code still contains these five items:
+**Approved target and current Phase 2 shell:** Home/Feed, Create, Clubs & Events, Messages, Profile, and Health / Safety / Advice. Explore is no longer permanent navigation; Search remains. Professionals are deferred from initial public launch. Account/settings are secondary controls.
 
 | Item | Destination | Current behavior |
 | --- | --- | --- |
-| Home | `/home` | Implemented feed shell |
-| Explore | `/explore` | Implemented Explore Shell with category subnavigation |
+| Home / Feed | `/home` | One Feed shell with three provisional selectable demo views |
 | Create | Modal or bottom sheet | Opens a placeholder sheet; it is not a route |
+| Clubs & Events | `/clubs-events` | Minimal launch entry linking to retained club and event discovery routes |
 | Messages | `/messages` | Implemented inbox and conversation shell |
-| Profile | `/me` | Placeholder for future account management |
+| Profile | `/me` | Temporary account-first drift retained until Phase 4 can connect a genuine signed-in public profile |
+| Health / Safety / Advice | `/health-safety` | Minimal authenticated editorial shell with an existing Help link |
 
-Desktop uses compact side navigation. Mobile uses bottom navigation with both an icon and a text label.
+Desktop uses a narrow icon-led rail with accessible names and hover/focus labels. Mobile uses five bottom controls — Home, Clubs & Events, Create, Messages and More — with Profile, Health/Safety/Advice and Search in the More sheet. Search also remains in the desktop/tablet header and navigates to `/explore/profiles`.
 
 ## Route catalogue
 
@@ -66,6 +65,8 @@ Planned legal slugs include `terms`, `privacy`, `content`, `professionals`, and 
 | Product route | Implementation file | Status |
 | --- | --- | --- |
 | `/home` | `app/(app)/home/page.tsx` | Implemented Home and Feed Shell |
+| `/clubs-events` | `app/(app)/clubs-events/page.tsx` | Minimal launch entry; full Clubs & Events work remains Phase 3 |
+| `/health-safety` | `app/(app)/health-safety/page.tsx` | Minimal editorial launch shell; not medical or legal advice |
 | `/explore` | `app/(app)/explore/page.tsx` | Explore Shell; defaults to profile discovery |
 | `/explore/profiles` | `app/(app)/explore/profiles/page.tsx` | Profile discovery shell |
 | `/explore/clubs` | `app/(app)/explore/clubs/page.tsx` | Club discovery shell with profile links |
@@ -89,7 +90,7 @@ The `/me/billing` nested route is implementation evidence from the accepted Bill
 | `/admin/moderation` | `app/admin/moderation/page.tsx` | Fictional moderation queue shell |
 | `/admin/moderation/:caseId` | `app/admin/moderation/[caseId]/page.tsx` | Fictional case-detail shell |
 
-Administration routes use a separate `AdminShell`. They are not public/member destinations and never appear in the five-item primary navigation. Their layout now requires an active approved moderator or admin account; moderation actions remain placeholders.
+Administration routes use a separate `AdminShell`. They are not public/member destinations and never appear in launch navigation. Their layout now requires an active approved moderator or admin account; moderation actions remain placeholders.
 
 ## Moderation administration shell contract
 
@@ -109,24 +110,18 @@ Select Plan, Compare Period, Preview Changes, Manage Payment Method, Cancel, Vie
 
 ## Home feed contract
 
-The approved target is one Feed with selectable Public, Nearby/Distance and Friends views through a cleaner switch. Friends-of-Friends is an audience permission, not a fourth view. Final Portuguese labels and permission details remain open. Text, pictures and short video are ordinary profile-linked posts, with no separate Reels product.
+The implemented Phase 2 shell is one Feed with three icon-only view controls. Their accessible Portuguese names are `Público`, `Distância` and `Amigos`; final wording and permission details remain `DECISION REQUIRED`. The Home masthead uses the Fervo Social wordmark and a safe initials-based row of recent friend activity orbits until approved member images exist. Friends-of-Friends is an audience permission, not a fourth view. Text, pictures and short video remain ordinary profile-linked posts, with no separate Reels product.
 
-The superseded requirement was three visible tabs:
+The views filter fixed demonstration items in component memory only. `Distância` does not use real geolocation or a member-selected geographic scope. Radius/city/area/region controls, ranking, persistence, detailed Friends permissions and triangulation-safe backend behaviour remain unimplemented. The Professional fixture is removed from the launch Feed; event and safety cards remain supported.
 
-- Para você (`For You`)
-- Local / Your Area — final Portuguese label `WORKING`
-- Seguindo (`Following`)
+`/clubs-events` is a single mixed discovery surface rather than separate Club and Event entry cards. It interleaves the existing Club and Event fixtures, keeps their type explicit, and links to existing `/profile/:handle` and `/event/:eventId` demonstrations. The full Phase 3 filters, promotion rules, ranking and backend data remain unimplemented.
 
-Current code still includes Event and Professional cards and Explore categories. The target adds a dedicated Clubs & Events launch surface and defers Professionals; that launch deferral is not implemented yet.
-
-**Current implementation:** the shell still displays `Perto de você`/Nearby and uses no real member-selected geographic scope. Radius/city/area/region controls and triangulation-safe location behaviour remain unimplemented.
-
-Current placeholder card kinds are:
+Current placeholder card kinds supported by the component are:
 
 - Member media post
 - Text/status post
 - Event
-- Professional
+- Professional (type retained for dormant/internal compatibility, not present in launch Feed fixtures)
 - Official safety guidance
 - Sponsored content
 
@@ -191,7 +186,7 @@ Professional-only client safety feedback is not part of this shell. It requires 
 
 ## Explore shell contract
 
-The following describes existing code. Permanent Explore navigation is superseded by Search/results and the dedicated launch destinations in the founder delta. Existing paths are preserved pending a separately approved route/navigation pass.
+Explore is no longer permanent navigation. Search now opens `/explore/profiles`, and Clubs & Events links to the retained club/event result routes. Existing paths remain internally available to avoid destructive route work.
 
 The shared Explore Shell is available at `/explore` and four category routes:
 
@@ -200,7 +195,7 @@ The shared Explore Shell is available at `/explore` and four category routes:
 - Eventos at `/explore/events`
 - Profissionais at `/explore/professionals`
 
-`/explore` currently defaults to the same profile-discovery view as `/explore/profiles`. The category paths describe the accepted shell implementation; the historical v1.1 route map is retained only for context.
+`/explore` currently defaults to the same profile-discovery view as `/explore/profiles`. Launch-facing category shortcuts contain Profiles, Clubs and Events only. `/explore/professionals` remains directly addressable as dormant implementation evidence but is not linked from launch navigation, Search shortcuts or category navigation. The historical v1.1 route map is retained only for context.
 
 The shell contains a search field, safe placeholder cards, approximate locations, textual account labels, basic filter controls, sorting, grid/list controls, and reviewable loading/empty/no-results states. Club and Event cards now link to the corresponding shell routes. Controls are temporary and do not query, rank, filter, recommend, alert, or persist real data. Map clusters, advanced matching, saved searches, search alerts, booking, RSVP processing, reviews, and messaging remain deferred.
 

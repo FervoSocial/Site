@@ -2,17 +2,28 @@
 
 ## Visual direction
 
-The [16 September founder delta](source-of-truth/07_POST_FOUNDER_REVIEW_HANDOVER_2026-09-16.md) supplies the approved targets. Post-Founder Phase 1 implements restrained authenticated-background movement, interaction feedback, larger existing avatar/ring treatments and accessible interaction labels, pending owner review. Revised navigation, the future image/ring taxonomy and additional badge design remain unimplemented. The chilli-pepper concept remains outside this pass.
+The [16 September founder delta](source-of-truth/07_POST_FOUNDER_REVIEW_HANDOVER_2026-09-16.md) supplies the approved targets. Post-Founder Phase 1 implemented restrained authenticated-background movement, interaction feedback, larger existing avatar/ring treatments and accessible interaction labels. Post-Founder Phase 2 now implements the revised icon-led launch navigation and lighter one-Feed view switch, pending Product Owner review. The future image/ring taxonomy, additional badge design and chilli-pepper concept remain unimplemented.
+
+### Phase 2 navigation and Feed shell
+
+- Desktop uses a narrow six-destination icon rail. Clubs & Events uses an original heart-and-tail community symbol, and Messages uses an original speaking-and-listening profile symbol. Every destination retains an accessible name and a visual label on hover or keyboard focus; no destination depends on hover for activation.
+- Mobile retains five generous bottom controls: Home, Clubs & Events, Create, Messages and More. The accessible More sheet contains Profile, Health/Safety/Advice and Search instead of forcing six crowded bottom-bar destinations. Mobile navigation remains **PROVISIONAL / PRODUCT OWNER REVIEW PENDING**.
+- Search remains in the desktop/tablet header and in the mobile More sheet. It reuses `/explore/profiles`; Explore is no longer permanent navigation.
+- The Home masthead uses the Fervo Social wordmark followed by initials-based friend activity orbits. A solid purple ring and restrained neon glow indicate recent demo activity; initials remain the safe fallback until approved profile images exist.
+- The one Feed uses three consistently sized icon-only view controls for the provisional concepts `Público`, `Distância` and `Amigos`. People, radar and friend-pair icons replace the previous segmented text control while retaining accessible names, focus/hover tooltips, a shape-based selected marker and explicit keyboard focus ring. The icons remain visible on touch devices without depending on hover. These are local demo filters, not separate feeds, real ranking or real geolocation.
+- `/clubs-events` is one vertical mixed discovery surface. Existing Club and Event fixtures are interleaved, with textual type chips plus distinct restrained accents and direct links to the existing Club profile and Event detail demonstrations. It does not add filtering, promotion, ranking or backend behaviour.
+- Professionals are absent from launch navigation, Feed fixtures and discovery category shortcuts. Existing direct demonstration routes remain dormant implementation evidence.
+- Profile still points to `/me` until the separately approved Phase 4 can connect the signed-in member to a real public-facing profile without using a misleading fictional identity.
 
 ### Phase 1 visual implementation
 
-- Authenticated `AppShell` reuses the existing gold-smoke asset in a fixed, clipped background layer. A low-opacity 42-second alternating drift moves only 1.5px horizontally and 1px vertically with a 0.4% scale range, leaving content stationary. The treatment is intentionally atmospheric and carries no header control.
-- Reduced-motion preference keeps the background static and removes the added transitions. No video, new image or animation dependency is used.
+- Authenticated `AppShell` keeps the existing gold-smoke asset unchanged and presents it through two fixed, clipped layers. A 48-second primary wave and softer 64-second counter-wave follow closed paths with gentle, opposing horizontal/vertical swell. Only transform and very small opacity changes animate, while all content remains stationary. The secondary layer is masked toward the outer atmosphere so it does not cloud the reading area. The treatment carries no prominent header control.
+- Reduced-motion preference keeps the original background static, removes the counter-flow layer and removes the added interaction transitions. No video, new image or animation dependency is used.
 - Interaction colour/border feedback takes 150–180ms; no delayed actions, moving click targets or animated page layouts. Existing navigation and feed tabs are retained.
 - Feed avatars are 64px desktop/56px small-screen (previously 48/44); discovery circles 92px (previously 72); message avatars 56px (previously 48). Profile-header borders are more prominent, and mobile profile circles grow to a maximum 280px. Existing colours and separate account/status labels are retained, not a final category taxonomy.
 - The image-replacement objective is **partially implemented**: no suitable approved profile-photo asset exists in the current fixture set. Initials/abstract backgrounds remain safe fallbacks; no portrait was invented or fetched.
-- Only feed Like/Save permanent labels are hidden on fine-pointer hover-capable devices; touch users retain text. Buttons retain accessible names and pressed states, with hover/focus labels dismissible by Escape. Comment, Message and Report remain explicit, and disabled demo controls use readable muted contrast. Search/notification header buttons receive equivalent labels without gaining new functionality. Safety/ambiguous actions and navigation labels stay visible.
-- Home retains its existing HOME heading and description but no longer displays “Descubra no seu ritmo”. Landing copy is unchanged.
+- Feed actions retain accessible names and pressed states. Like/Save keep their existing focus/hover tooltips; Comment, Message and Report now use clear icon-only presentation with explicit accessible labels and explanatory `title` text while remaining disabled demonstrations. Search/notification header buttons retain equivalent labels without gaining new functionality.
+- Home replaces the old HOME heading and introductory sentence with the Fervo Social wordmark and recent-activity orbit row. Small-screen wordmark and orbit spacing is tightened without changing hierarchy or mobile navigation. No realistic member portraits were invented; landing copy is unchanged.
 
 Fervo Social uses a calm, modern social-platform aesthetic:
 
@@ -93,7 +104,7 @@ The application uses Geist through `next/font/google`, with Arial/Helvetica fall
 ## Responsive behavior
 
 - Design mobile first, with a 360-pixel-wide device as a minimum target.
-- Current code: at 820 pixels and below, navigation becomes a fixed five-item bottom bar. The permanent five-item target is superseded; the exact replacement mobile arrangement is not specified.
+- At 820 pixels and below, navigation becomes a fixed five-control bottom bar with an accessible More sheet for the remaining launch destinations and Search.
 - Dense action rows may reflow; meaningful accessible labels remain required.
 - Touch targets should stay close to or above 44 pixels.
 - Use `100svh` and safe-area insets where full-height or fixed mobile navigation is involved.

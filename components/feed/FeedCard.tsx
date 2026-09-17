@@ -22,6 +22,36 @@ const typeLabels = {
   sponsored: ptBR.feed.types.sponsored,
 };
 
+function FeedActionIcon({ name }: { name: "comment" | "message" | "report" }) {
+  if (name === "message") {
+    return (
+      <svg className="feed-action-svg" aria-hidden="true" viewBox="0 0 24 24">
+        <path d="M4 5.5h16v11H9l-5 3v-14Z" />
+        <path d="m7.5 9 4.5 3.4L16.5 9" />
+      </svg>
+    );
+  }
+
+  if (name === "report") {
+    return (
+      <svg className="feed-action-svg" aria-hidden="true" viewBox="0 0 24 24">
+        <path d="M12 3.5 21 20H3L12 3.5Z" />
+        <path d="M12 9v5" />
+        <circle className="feed-action-icon-dot" cx="12" cy="17.1" r=".7" />
+      </svg>
+    );
+  }
+
+  return (
+    <svg className="feed-action-svg" aria-hidden="true" viewBox="0 0 24 24">
+      <path d="M4 5.5h16v11H9l-5 3v-14Z" />
+      <circle className="feed-action-icon-dot" cx="8.5" cy="11" r=".7" />
+      <circle className="feed-action-icon-dot" cx="12" cy="11" r=".7" />
+      <circle className="feed-action-icon-dot" cx="15.5" cy="11" r=".7" />
+    </svg>
+  );
+}
+
 export function FeedCard({
   followed,
   item,
@@ -88,21 +118,18 @@ export function FeedCard({
           <span aria-hidden="true">{liked ? "♥" : "♡"}</span>
           <span className="touch-action-label" aria-hidden="true">{liked ? actions.liked : actions.like}</span>
         </TooltipButton>
-        <button type="button" disabled title={actions.unavailable}>
-          <span aria-hidden="true">○</span>
-          {actions.comment}
+        <button type="button" disabled aria-label={actions.comment} title={`${actions.comment}: ${actions.unavailable}`}>
+          <FeedActionIcon name="comment" />
         </button>
         <TooltipButton type="button" label={saved ? actions.saved : actions.save} aria-pressed={saved} onClick={onSave} className={`feed-icon-action ${saved ? "is-active" : ""}`}>
           <span className="bookmark-icon" aria-hidden="true" />
           <span className="touch-action-label" aria-hidden="true">{saved ? actions.saved : actions.save}</span>
         </TooltipButton>
-        <button type="button" disabled title={actions.unavailable}>
-          <span aria-hidden="true">✉</span>
-          {actions.message}
+        <button type="button" disabled aria-label={actions.message} title={`${actions.message}: ${actions.unavailable}`}>
+          <FeedActionIcon name="message" />
         </button>
-        <button type="button" disabled title={actions.unavailable}>
-          <span aria-hidden="true">!</span>
-          {actions.report}
+        <button type="button" disabled aria-label={actions.report} title={`${actions.report}: ${actions.unavailable}`}>
+          <FeedActionIcon name="report" />
         </button>
       </footer>
     </article>

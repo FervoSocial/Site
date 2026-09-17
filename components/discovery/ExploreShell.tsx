@@ -5,9 +5,9 @@ import { useState, type FormEvent } from "react";
 import {
   exploreResults,
   type ExploreCategory,
-  type ExploreResult,
 } from "@/lib/explore-placeholder";
 import { ptBR } from "@/lib/i18n";
+import { ExploreResultCard } from "./ExploreResultCard";
 
 type ExploreShellProps = {
   category: ExploreCategory;
@@ -20,42 +20,7 @@ const categoryRoutes: Array<{ category: ExploreCategory; href: string }> = [
   { category: "profiles", href: "/explore/profiles" },
   { category: "clubs", href: "/explore/clubs" },
   { category: "events", href: "/explore/events" },
-  { category: "professionals", href: "/explore/professionals" },
 ];
-
-function ResultCard({ result }: { result: ExploreResult }) {
-  return (
-    <article className={`explore-result-card explore-result-${result.category}`}>
-      <div className="explore-result-visual" aria-hidden="true">
-        <span>{result.initials}</span>
-      </div>
-
-      <div className="explore-result-copy">
-        <div className="explore-result-heading">
-          <div>
-            <p>{result.accountLabel}</p>
-            <h2>{result.name}</h2>
-          </div>
-          {result.verified ? (
-            <span className="explore-verified">{ptBR.explore.results.verified}</span>
-          ) : null}
-        </div>
-        <p className="explore-result-location">{result.location}</p>
-        <p className="explore-result-summary">{result.summary}</p>
-        <div className="explore-result-footer">
-          <span>{result.meta}</span>
-          {result.href ? (
-            <Link href={result.href}>{ptBR.explore.results.open}</Link>
-          ) : (
-            <button type="button" disabled title={ptBR.explore.results.actionUnavailable}>
-              {ptBR.explore.results.open}
-            </button>
-          )}
-        </div>
-      </div>
-    </article>
-  );
-}
 
 function LoadingState() {
   return (
@@ -167,7 +132,7 @@ export function ExploreShell({ category }: ExploreShellProps) {
           </label>
           <label>
             <span>{ptBR.explore.filters.profileType}</span>
-            <select defaultValue={category}>
+            <select defaultValue={category === "professionals" ? "profiles" : category}>
               {categoryRoutes.map((item) => (
                 <option value={item.category} key={item.category}>
                   {ptBR.explore.categories[item.category].label}
@@ -260,7 +225,7 @@ export function ExploreShell({ category }: ExploreShellProps) {
       {resultState === "results" ? (
         <div className={`explore-results explore-results-${resultView}`}>
           {results.map((result) => (
-            <ResultCard key={result.id} result={result} />
+            <ExploreResultCard key={result.id} result={result} />
           ))}
         </div>
       ) : null}

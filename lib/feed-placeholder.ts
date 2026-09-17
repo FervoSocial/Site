@@ -1,4 +1,4 @@
-export type FeedTabId = "for-you" | "nearby" | "following";
+export type FeedViewId = "public" | "nearby" | "friends";
 
 export type FeedCardKind =
   | "media"
@@ -20,7 +20,7 @@ export type FeedPlaceholderItem = {
   location: string;
   meta?: string;
   profileHref: string;
-  tabs: FeedTabId[];
+  views: FeedViewId[];
   time: string;
   title?: string;
   verified?: boolean;
@@ -31,7 +31,7 @@ export const feedPlaceholderItems: FeedPlaceholderItem[] = [
   {
     id: "luna-caio-media",
     kind: "media",
-    tabs: ["for-you", "following"],
+    views: ["public", "friends"],
     author: "Luna & Caio",
     handle: "luna-e-caio",
     initials: "LC",
@@ -47,7 +47,7 @@ export const feedPlaceholderItems: FeedPlaceholderItem[] = [
   {
     id: "bia-leo-status",
     kind: "text",
-    tabs: ["for-you", "nearby"],
+    views: ["public", "nearby"],
     author: "Bia & Leo",
     handle: "bia-e-leo",
     initials: "BL",
@@ -61,7 +61,7 @@ export const feedPlaceholderItems: FeedPlaceholderItem[] = [
   {
     id: "noite-lilas-event",
     kind: "event",
-    tabs: ["for-you", "nearby", "following"],
+    views: ["public", "nearby", "friends"],
     author: "Clube Aurora",
     handle: "clube-aurora",
     initials: "CA",
@@ -76,25 +76,9 @@ export const feedPlaceholderItems: FeedPlaceholderItem[] = [
     meta: "Sábado · confirmação futura",
   },
   {
-    id: "marina-professional",
-    kind: "professional",
-    tabs: ["for-you", "nearby"],
-    author: "Marina Luz",
-    handle: "marina-luz",
-    initials: "ML",
-    accountLabel: "Profissional verificada",
-    verified: true,
-    location: "São Paulo · área de atendimento",
-    time: "atualizado hoje",
-    profileHref: "/profile/marina-luz",
-    title: "Conteúdo, educação e conversa segura",
-    body: "Perfil profissional de demonstração com foco em comunicação, limites e atendimento respeitoso.",
-    meta: "Disponibilidade sob consulta futura",
-  },
-  {
     id: "fervo-safety",
     kind: "safety",
-    tabs: ["for-you", "nearby", "following"],
+    views: ["public", "nearby", "friends"],
     author: "Fervo Social",
     handle: "fervo-oficial",
     initials: "FS",
@@ -109,7 +93,7 @@ export const feedPlaceholderItems: FeedPlaceholderItem[] = [
   {
     id: "horizonte-sponsored",
     kind: "sponsored",
-    tabs: ["for-you"],
+    views: ["public"],
     author: "Espaço Horizonte",
     handle: "espaco-horizonte",
     initials: "EH",
@@ -124,7 +108,7 @@ export const feedPlaceholderItems: FeedPlaceholderItem[] = [
   {
     id: "renata-following",
     kind: "media",
-    tabs: ["following"],
+    views: ["friends"],
     author: "Renata",
     handle: "renata-sp",
     initials: "RE",

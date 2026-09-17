@@ -123,7 +123,7 @@ const approvedAccount = pendingAccount.then(() => createTestAccount({ approved: 
 const adminAccount = approvedAccount.then(() => createTestAccount({ approved: true, role: "admin" }));
 
 function needsMemberSession(pathname) {
-  return ["/home", "/explore", "/messages", "/profile", "/event", "/me"].some(
+  return ["/home", "/clubs-events", "/health-safety", "/explore", "/messages", "/profile", "/event", "/me"].some(
     (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
   );
 }
@@ -156,17 +156,27 @@ test("server-renders the Fervo Social landing page", async () => {
   assert.doesNotMatch(html, /codex-preview|SkeletonPreview|react-loading-skeleton/i);
 });
 
-test("server-renders the shared application shell and five navigation items", async () => {
+test("server-renders the founder-approved launch navigation shell", async () => {
   const response = await render("/home");
   assert.equal(response.status, 200);
 
   const html = await response.text();
   assert.match(html, /Navegação principal/);
-  assert.match(html, />Home</);
-  assert.match(html, />Explorar</);
-  assert.match(html, />Criar</);
-  assert.match(html, />Mensagens</);
-  assert.match(html, />Perfil</);
+  assert.match(html, /aria-label="Home"/);
+  assert.match(html, /aria-label="Criar"/);
+  assert.match(html, /aria-label="Clubes e eventos"/);
+  assert.match(html, /nav-clubs-heart/);
+  assert.match(html, /nav-clubs-tail/);
+  assert.match(html, /aria-label="Mensagens"/);
+  assert.match(html, /nav-listening-face/);
+  assert.match(html, /nav-listening-ear/);
+  assert.match(html, /aria-label="Perfil"/);
+  assert.match(html, /aria-label="Saúde, segurança e orientação"/);
+  assert.match(html, /href="\/clubs-events"/);
+  assert.match(html, /href="\/health-safety"/);
+  assert.doesNotMatch(html, /class="nav-item" href="\/explore"/);
+  assert.match(html, /aria-label="Pesquisar"/);
+  assert.match(html, /aria-label="Mais"/);
   assert.doesNotMatch(html, /Descubra no seu ritmo/);
   assert.match(html, /id="feed-title"/);
   assert.match(html, /class="app-atmosphere" aria-hidden="true"/);
@@ -179,9 +189,17 @@ test("server-renders the shared application shell and five navigation items", as
 
 test("visual motion is subtle and opt-in to no-preference", () => {
   const css = readFileSync(new URL("../app/globals.css", import.meta.url), "utf8");
-  assert.match(css, /@media \(prefers-reduced-motion: no-preference\)\s*\{\s*\.app-atmosphere::before\s*\{ animation: app-gold-drift/);
+  assert.match(css, /animation: app-gold-flow 48s ease-in-out infinite/);
+  assert.match(css, /animation: app-gold-undertow 64s ease-in-out infinite/);
+  assert.match(css, /scale3d\(/);
+  assert.match(css, /@keyframes app-gold-flow/);
+  assert.match(css, /@keyframes app-gold-undertow/);
+  assert.match(css, /url\("\/fervo-gold-smoke-v2\.png"\)/);
   assert.match(css, /@media \(prefers-reduced-motion: reduce\)/);
+  assert.match(css, /\.app-atmosphere::after\s*\{ display: none; \}/);
   assert.match(css, /@media \(hover: hover\) and \(pointer: fine\)/);
+  assert.match(css, /\.feed-view-switch button\[aria-selected="true"\]::after/);
+  assert.match(css, /\.feed-view-switch button:focus-visible/);
 });
 
 test("server-renders public and authenticated placeholder routes", async () => {
@@ -193,6 +211,8 @@ test("server-renders public and authenticated placeholder routes", async () => {
     "/safety",
     "/help",
     "/legal/terms",
+    "/clubs-events",
+    "/health-safety",
     "/explore",
     "/explore/profiles",
     "/explore/clubs",
@@ -298,20 +318,53 @@ test("persists private identity safely and enforces verification and role bounda
   assert.match(afterLogout.headers.get("location") ?? "", /\/login$/);
 });
 
-test("server-renders the three-tab Home and Feed shell", async () => {
+test("server-renders one Feed with three selectable views", async () => {
   const home = await (await render("/home")).text();
   const tabs = home.match(/role="tab"/g) ?? [];
 
   assert.equal(tabs.length, 3);
-  assert.match(home, />Para você</i);
-  assert.match(home, />Perto de você</i);
-  assert.match(home, />Seguindo</i);
+  assert.match(home, /role="tab" aria-selected="true"/i);
+  assert.match(home, /aria-label="Público"/i);
+  assert.match(home, /aria-label="Distância"/i);
+  assert.match(home, /aria-label="Amigos"/i);
+  assert.match(home, /Visualizações do Feed/i);
+  assert.match(home, /class="feed-brand-logo" aria-label="Fervo Social"/i);
+  assert.match(home, /class="friend-activity-orbits" aria-label="Amigos com atividade recente"/i);
+  assert.match(home, /atividade recente/i);
+  assert.doesNotMatch(home, /Uma seleção leve de pessoas/i);
+  assert.doesNotMatch(home, /Rótulos provisórios/i);
+  assert.match(home, /aria-label="Comentar"/i);
+  assert.match(home, /aria-label="Mensagem"/i);
+  assert.match(home, /aria-label="Denunciar"/i);
+  assert.match(home, /feed-action-svg/i);
   assert.match(home, /Evento/i);
-  assert.match(home, /Profissional/i);
+  assert.doesNotMatch(home, /Perfil profissional de demonstração/i);
   assert.match(home, /Conteúdo seguro de demonstração/i);
   assert.match(home, /localização sempre aproximada/i);
   assert.match(home, /href="\/profile\//i);
   assert.match(home, /href="\/event\//i);
+});
+
+test("server-renders the launch Clubs and Events and Health Safety entry points", async () => {
+  const clubsEvents = await (await render("/clubs-events")).text();
+  assert.match(clubsEvents, /Clubes e eventos/i);
+  assert.match(clubsEvents, /Fluxo de Clubes e Eventos/i);
+  assert.match(clubsEvents, /Clube ou espaço/i);
+  assert.match(clubsEvents, />Evento</i);
+  for (const name of ["Espaço Aurora", "Noite de Conexões", "Casa Livre", "Encontro no Jardim", "Ponto Violeta", "Fervo Social Club"]) {
+    assert.match(clubsEvents, new RegExp(name, "i"));
+  }
+  assert.match(clubsEvents, /href="\/profile\/espaco-aurora"/i);
+  assert.match(clubsEvents, /href="\/event\/noite-conexoes"/i);
+  assert.match(clubsEvents, /Fase 3/i);
+
+  const healthSafety = await (await render("/health-safety")).text();
+  assert.match(healthSafety, /Saúde, segurança e orientação/i);
+  assert.match(healthSafety, /Encontros mais seguros/i);
+  assert.match(healthSafety, /Consentimento e limites/i);
+  assert.match(healthSafety, /Preocupação com menor de idade/i);
+  assert.match(healthSafety, /href="\/help"/i);
+  assert.match(healthSafety, /não substitui orientação médica/i);
 });
 
 test("server-renders the Private Member profile milestone", async () => {
@@ -457,6 +510,7 @@ test("server-renders the Explore shell and category routes", async () => {
   assert.match(explore, /Carregando/i);
   assert.match(explore, /Categoria vazia/i);
   assert.match(explore, /Sem resultados/i);
+  assert.doesNotMatch(explore, /href="\/explore\/professionals"/i);
 
   const categoryRoutes = [
     ["/explore/profiles", /Perfis para descobrir/i],

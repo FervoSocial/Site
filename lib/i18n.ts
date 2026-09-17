@@ -2,10 +2,12 @@ export const ptBR = {
   brand: "Fervo Social",
   navigation: {
     home: "Home",
-    explore: "Explorar",
     create: "Criar",
+    clubsEvents: "Clubes e eventos",
     messages: "Mensagens",
     profile: "Perfil",
+    healthSafety: "Saúde, segurança e orientação",
+    more: "Mais",
   },
   shell: {
     approximateLocation: "São Paulo · Localização aproximada",
@@ -14,6 +16,10 @@ export const ptBR = {
     discreetExit: "Saída discreta",
     createTitle: "Criar",
     createDescription: "As opções de publicação serão adicionadas numa próxima etapa.",
+    moreTitle: "Mais opções",
+    profileNote: "Perfil e controles da conta",
+    healthSafetyNote: "Orientações editoriais e ajuda",
+    searchNote: "Pesquisar perfis com localização aproximada",
     close: "Fechar",
   },
   common: {
@@ -338,14 +344,15 @@ export const ptBR = {
     },
   },
   feed: {
-    eyebrow: "Home",
     title: "Descubra no seu ritmo",
-    description: "Uma seleção leve de pessoas, encontros, eventos e espaços da comunidade.",
+    activeFriendsLabel: "Amigos com atividade recente",
+    recentActivity: "atividade recente",
     demoNotice: "Conteúdo seguro de demonstração · localização sempre aproximada",
-    tabs: {
-      forYou: "Para você",
-      nearby: "Perto de você",
-      following: "Seguindo",
+    viewsLabel: "Visualizações do Feed",
+    views: {
+      public: "Público",
+      nearby: "Distância",
+      friends: "Amigos",
     },
     actions: {
       follow: "Seguir",
@@ -373,7 +380,7 @@ export const ptBR = {
   explore: {
     eyebrow: "Explorar",
     title: "Descubra a comunidade",
-    description: "Encontre pessoas, espaços, eventos e profissionais usando apenas localização aproximada.",
+    description: "Encontre pessoas, espaços e eventos usando apenas localização aproximada.",
     categoriesLabel: "Categorias para explorar",
     categories: {
       profiles: {
@@ -455,6 +462,35 @@ export const ptBR = {
         action: "Limpar pesquisa",
       },
     },
+  },
+  clubsEventsEntry: {
+    eyebrow: "Comunidade presencial",
+    title: "Clubes e eventos",
+    description: "Descubra espaços e encontros da comunidade num único fluxo, sempre com localização aproximada.",
+    feedEyebrow: "Descobertas da comunidade",
+    feedTitle: "Espaços e encontros, juntos",
+    feedDescription: "Clubes e eventos aparecem intercalados nesta demonstração para facilitar uma descoberta contínua.",
+    feedLabel: "Fluxo de Clubes e Eventos",
+    clubType: "Clube ou espaço",
+    eventType: "Evento",
+    phaseNotice: "Fluxo de demonstração · filtros, promoção, ordenação e dados reais ficam para a Fase 3",
+  },
+  healthSafety: {
+    eyebrow: "Cuidado e comunidade",
+    title: "Saúde, segurança e orientação",
+    description: "Informações editoriais para ajudar adultos a tomar decisões mais seguras dentro e fora da Fervo.",
+    meetingTitle: "Encontros mais seguros",
+    meetingDescription: "Combine expectativas com antecedência, prefira um primeiro encontro em local conhecido e mantenha uma forma independente de sair.",
+    consentTitle: "Consentimento e limites",
+    consentDescription: "Converse sobre limites com clareza. Qualquer pessoa pode mudar de ideia ou interromper uma interação a qualquer momento.",
+    wellbeingTitle: "Bem-estar e saúde sexual",
+    wellbeingDescription: "Procure informação adequada às suas necessidades e orientação de profissionais de saúde qualificados quando necessário.",
+    reportingTitle: "Preocupação com menor de idade",
+    reportingDescription: "A Fervo é somente para adultos. Use a opção de denúncia quando suspeitar que uma pessoa possa ter menos de 18 anos.",
+    helpTitle: "Precisa de ajuda?",
+    helpDescription: "Consulte a área de ajuda para encontrar os canais de suporte disponíveis nesta demonstração.",
+    helpAction: "Abrir ajuda",
+    editorialNotice: "Conteúdo editorial geral · não substitui orientação médica, jurídica ou de emergência",
   },
   messages: {
     eyebrow: "Mensagens privadas",
