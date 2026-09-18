@@ -2,10 +2,14 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { ptBR } from "@/lib/i18n";
 import { LogoutButton } from "@/components/auth/LogoutButton";
 import { TooltipButton } from "@/components/ui/TooltipButton";
+import {
+  FeedAtmosphereContext,
+  type AtmosphereVariant,
+} from "@/components/navigation/FeedAtmosphereContext";
 
 type AppShellProps = {
   children: ReactNode;
@@ -52,6 +56,136 @@ const mobileNavItems: NavItem[] = [
     match: ["/me", "/profile", "/health-safety", "/explore/profiles"],
   },
 ];
+
+const atmosphereVideos: Record<AtmosphereVariant, string> = {
+  kling: "/fervo-gold-smoke-kling-2-5.mp4",
+  seedance: "/fervo-gold-smoke-seedance-2-5-h264.mp4",
+};
+const atmospherePoster = "/fervo-gold-smoke-v2.png";
+const atmosphereVariants: AtmosphereVariant[] = ["kling", "seedance"];
+
+function AppAtmosphere({ requestedVariant }: { requestedVariant: AtmosphereVariant }) {
+  const videoRefs = useRef<Record<AtmosphereVariant, HTMLVideoElement | null>>({
+    kling: null,
+    seedance: null,
+  });
+  const [motionAllowed, setMotionAllowed] = useState(false);
+  const [visibleVariant, setVisibleVariant] = useState<AtmosphereVariant>("kling");
+  const [videoReady, setVideoReady] = useState<Record<AtmosphereVariant, boolean>>({
+    kling: false,
+    seedance: false,
+  });
+
+  useEffect(() => {
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const syncPreference = () => {
+      setMotionAllowed(!reducedMotion.matches);
+      if (reducedMotion.matches) {
+        setVideoReady({ kling: false, seedance: false });
+        setVisibleVariant("kling");
+      }
+    };
+
+    syncPreference();
+    reducedMotion.addEventListener("change", syncPreference);
+    return () => reducedMotion.removeEventListener("change", syncPreference);
+  }, []);
+
+  useEffect(() => {
+    if (!motionAllowed) {
+      atmosphereVariants.forEach((variant) => {
+        const video = videoRefs.current[variant];
+        if (!video) return;
+        video.pause();
+        video.currentTime = 0;
+        video.load();
+      });
+      return;
+    }
+
+    const video = videoRefs.current[requestedVariant];
+    if (!video) return;
+
+    let cancelled = false;
+    void video
+      .play()
+      .then(() => {
+        if (cancelled) return;
+        setVideoReady((current) => ({ ...current, [requestedVariant]: true }));
+        setVisibleVariant(requestedVariant);
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setVideoReady((current) => ({ ...current, [requestedVariant]: false }));
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [motionAllowed, requestedVariant]);
+
+  useEffect(() => {
+    if (!motionAllowed) return;
+
+    const timer = window.setTimeout(() => {
+      if (requestedVariant !== visibleVariant) return;
+      const inactiveVariant = visibleVariant === "kling" ? "seedance" : "kling";
+      videoRefs.current[inactiveVariant]?.pause();
+    }, 760);
+
+    return () => window.clearTimeout(timer);
+  }, [motionAllowed, requestedVariant, visibleVariant]);
+
+  function handlePlaying(variant: AtmosphereVariant) {
+    setVideoReady((current) => ({ ...current, [variant]: true }));
+    if (requestedVariant !== variant) videoRefs.current[variant]?.pause();
+  }
+
+  function handleError(variant: AtmosphereVariant) {
+    setVideoReady((current) => ({ ...current, [variant]: false }));
+  }
+
+  return (
+    <div
+      className="app-atmosphere"
+      data-motion={motionAllowed ? "video" : "static"}
+      data-requested-background={requestedVariant}
+      data-active-background={visibleVariant}
+      data-kling-ready={videoReady.kling ? "true" : "false"}
+      data-seedance-ready={videoReady.seedance ? "true" : "false"}
+      aria-hidden="true"
+    >
+      {atmosphereVariants.map((variant) => {
+        const sourceEnabled =
+          motionAllowed &&
+          (variant === "kling" || requestedVariant === "seedance" || videoReady.seedance);
+
+        return (
+          <video
+            className={`app-atmosphere-video app-atmosphere-video-${variant}`}
+            data-background={variant}
+            ref={(element) => {
+              videoRefs.current[variant] = element;
+            }}
+            autoPlay={motionAllowed && variant === "kling"}
+            muted
+            loop
+            playsInline
+            preload={sourceEnabled ? "auto" : "none"}
+            poster={atmospherePoster}
+            tabIndex={-1}
+            onPlaying={() => handlePlaying(variant)}
+            onError={() => handleError(variant)}
+            key={variant}
+          >
+            {sourceEnabled ? <source src={atmosphereVideos[variant]} type="video/mp4" /> : null}
+          </video>
+        );
+      })}
+      <span className="app-atmosphere-shade" />
+    </div>
+  );
+}
 
 function NavigationIcon({ name }: { name: NavIconName }) {
   const paths: Record<NavIconName, ReactNode> = {
@@ -154,8 +288,10 @@ function Navigation({
 export function AppShell({ children }: AppShellProps) {
   const pathname = usePathname();
   const router = useRouter();
+  const [feedAtmosphere, setFeedAtmosphere] = useState<AtmosphereVariant>("kling");
   const [createOpen, setCreateOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
+  const requestedAtmosphere = pathname === "/home" ? feedAtmosphere : "kling";
 
   function openCreate() {
     setMoreOpen(false);
@@ -168,8 +304,9 @@ export function AppShell({ children }: AppShellProps) {
   }
 
   return (
-    <div className="app-shell">
-      <div className="app-atmosphere" aria-hidden="true" />
+    <FeedAtmosphereContext.Provider value={setFeedAtmosphere}>
+      <div className="app-shell">
+        <AppAtmosphere requestedVariant={requestedAtmosphere} />
       <header className="app-header">
         <Link className="app-brand" href="/home" aria-label="Fervo Social — Home">
           Fervo<span>Social</span>
@@ -284,6 +421,7 @@ export function AppShell({ children }: AppShellProps) {
           </section>
         </div>
       ) : null}
-    </div>
+      </div>
+    </FeedAtmosphereContext.Provider>
   );
 }

@@ -179,7 +179,7 @@ test("server-renders the founder-approved launch navigation shell", async () => 
   assert.match(html, /aria-label="Mais"/);
   assert.doesNotMatch(html, /Descubra no seu ritmo/);
   assert.match(html, /id="feed-title"/);
-  assert.match(html, /class="app-atmosphere" aria-hidden="true"/);
+  assert.match(html, /class="app-atmosphere"[^>]*aria-hidden="true"/);
   assert.doesNotMatch(html, /Pausar fundo|Retomar fundo/);
   assert.match(html, /aria-label="Curtir"/);
   assert.match(html, /aria-label="Guardar"/);
@@ -187,16 +187,40 @@ test("server-renders the founder-approved launch navigation shell", async () => 
   assert.match(html, /touch-action-label/);
 });
 
-test("visual motion is subtle and opt-in to no-preference", () => {
+test("the shared Feed atmosphere switches Kling and Seedance with a static fallback", () => {
   const css = readFileSync(new URL("../app/globals.css", import.meta.url), "utf8");
-  assert.match(css, /animation: app-gold-flow 48s ease-in-out infinite/);
-  assert.match(css, /animation: app-gold-undertow 64s ease-in-out infinite/);
-  assert.match(css, /scale3d\(/);
-  assert.match(css, /@keyframes app-gold-flow/);
-  assert.match(css, /@keyframes app-gold-undertow/);
+  const shell = readFileSync(
+    new URL("../components/navigation/AppShell.tsx", import.meta.url),
+    "utf8",
+  );
+  const feed = readFileSync(
+    new URL("../components/feed/FeedShell.tsx", import.meta.url),
+    "utf8",
+  );
+
+  assert.match(shell, /fervo-gold-smoke-kling-2-5\.mp4/);
+  assert.match(shell, /fervo-gold-smoke-seedance-2-5-h264\.mp4/);
+  assert.doesNotMatch(
+    shell,
+    /seedance:\s*"\/fervo-gold-smoke-seedance-2-5\.mp4"/,
+  );
+  assert.match(shell, /data-active-background=\{visibleVariant\}/);
+  assert.match(shell, /autoPlay=\{motionAllowed && variant === "kling"\}/);
+  assert.match(shell, /muted/);
+  assert.match(shell, /loop/);
+  assert.match(shell, /playsInline/);
+  assert.match(shell, /poster=\{atmospherePoster\}/);
+  assert.match(shell, /prefers-reduced-motion: reduce/);
+  assert.match(shell, /video\.pause\(\)/);
+  assert.match(shell, /\.play\(\)/);
+  assert.match(feed, /activeView === "friends" \? "seedance" : "kling"/);
+  assert.doesNotMatch(css, /@keyframes app-gold-(flow|undertow)/);
+  assert.match(css, /\.app-atmosphere-video[\s\S]*object-fit: cover/);
+  assert.match(css, /data-active-background="kling"/);
+  assert.match(css, /data-active-background="seedance"/);
   assert.match(css, /url\("\/fervo-gold-smoke-v2\.png"\)/);
   assert.match(css, /@media \(prefers-reduced-motion: reduce\)/);
-  assert.match(css, /\.app-atmosphere::after\s*\{ display: none; \}/);
+  assert.match(css, /\.app-atmosphere-video\s*\{ display: none; \}/);
   assert.match(css, /@media \(hover: hover\) and \(pointer: fine\)/);
   assert.match(css, /\.feed-view-switch button\[aria-selected="true"\]::after/);
   assert.match(css, /\.feed-view-switch button:focus-visible/);

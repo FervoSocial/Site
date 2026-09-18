@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState, type Dispatch, type SetStateAction } from "react";
+import { useEffect, useMemo, useState, type Dispatch, type SetStateAction } from "react";
 import { feedPlaceholderItems, type FeedViewId } from "@/lib/feed-placeholder";
 import { ptBR } from "@/lib/i18n";
+import { useFeedAtmosphere } from "@/components/navigation/FeedAtmosphereContext";
 import { TooltipButton } from "@/components/ui/TooltipButton";
 import { FeedCard } from "./FeedCard";
 
@@ -55,6 +56,7 @@ function FeedViewIcon({ view }: { view: FeedViewId }) {
 
 export function FeedShell() {
   const [activeView, setActiveView] = useState<FeedViewId>("public");
+  const setFeedAtmosphere = useFeedAtmosphere();
   const [likedIds, setLikedIds] = useState<Set<string>>(() => new Set());
   const [savedIds, setSavedIds] = useState<Set<string>>(() => new Set());
   const [followedHandles, setFollowedHandles] = useState<Set<string>>(
@@ -64,6 +66,17 @@ export function FeedShell() {
   const visibleItems = useMemo(
     () => feedPlaceholderItems.filter((item) => item.views.includes(activeView)),
     [activeView],
+  );
+
+  useEffect(() => {
+    setFeedAtmosphere(activeView === "friends" ? "seedance" : "kling");
+  }, [activeView, setFeedAtmosphere]);
+
+  useEffect(
+    () => () => {
+      setFeedAtmosphere("kling");
+    },
+    [setFeedAtmosphere],
   );
 
   function toggle(setter: Dispatch<SetStateAction<Set<string>>>, value: string) {
