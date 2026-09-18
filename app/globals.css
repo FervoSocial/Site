@@ -434,7 +434,11 @@ a:focus-visible {
 .app-atmosphere[data-active-background="kling"][data-kling-ready="true"]
   .app-atmosphere-video-kling,
 .app-atmosphere[data-active-background="seedance"][data-seedance-ready="true"]
-  .app-atmosphere-video-seedance {
+  .app-atmosphere-video-seedance,
+.app-atmosphere[data-active-background="hailuo"][data-hailuo-ready="true"]
+  .app-atmosphere-video-hailuo,
+.app-atmosphere[data-active-background="hailuo"][data-hailuo-loop-blend="true"]
+  .app-atmosphere-video-hailuo-loop {
   opacity: 1;
 }
 

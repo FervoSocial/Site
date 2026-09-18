@@ -60,28 +60,43 @@ const mobileNavItems: NavItem[] = [
 const atmosphereVideos: Record<AtmosphereVariant, string> = {
   kling: "/fervo-gold-smoke-kling-2-5.mp4",
   seedance: "/fervo-gold-smoke-seedance-2-5-h264.mp4",
+  hailuo: "/fervo-gold-smoke-hailuo-2-3.mp4",
 };
 const atmospherePoster = "/fervo-gold-smoke-v2.png";
-const atmosphereVariants: AtmosphereVariant[] = ["kling", "seedance"];
+const atmosphereVariants: AtmosphereVariant[] = ["kling", "seedance", "hailuo"];
+const hailuoLoopBlendLead = 0.95;
+const hailuoLoopBlendDuration = 700;
 
 function AppAtmosphere({ requestedVariant }: { requestedVariant: AtmosphereVariant }) {
   const videoRefs = useRef<Record<AtmosphereVariant, HTMLVideoElement | null>>({
     kling: null,
     seedance: null,
+    hailuo: null,
   });
+  const hailuoLoopVideoRef = useRef<HTMLVideoElement | null>(null);
+  const hailuoLoopInProgressRef = useRef(false);
+  const hailuoHandoffTimerRef = useRef<number | null>(null);
+  const hailuoCleanupTimerRef = useRef<number | null>(null);
+  const requestedVariantRef = useRef(requestedVariant);
   const [motionAllowed, setMotionAllowed] = useState(false);
   const [visibleVariant, setVisibleVariant] = useState<AtmosphereVariant>("kling");
   const [videoReady, setVideoReady] = useState<Record<AtmosphereVariant, boolean>>({
     kling: false,
     seedance: false,
+    hailuo: false,
   });
+  const [hailuoLoopBlend, setHailuoLoopBlend] = useState(false);
+
+  useEffect(() => {
+    requestedVariantRef.current = requestedVariant;
+  }, [requestedVariant]);
 
   useEffect(() => {
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     const syncPreference = () => {
       setMotionAllowed(!reducedMotion.matches);
       if (reducedMotion.matches) {
-        setVideoReady({ kling: false, seedance: false });
+        setVideoReady({ kling: false, seedance: false, hailuo: false });
         setVisibleVariant("kling");
       }
     };
@@ -100,6 +115,12 @@ function AppAtmosphere({ requestedVariant }: { requestedVariant: AtmosphereVaria
         video.currentTime = 0;
         video.load();
       });
+      const hailuoLoopVideo = hailuoLoopVideoRef.current;
+      if (hailuoLoopVideo) {
+        hailuoLoopVideo.pause();
+        hailuoLoopVideo.currentTime = 0;
+        hailuoLoopVideo.load();
+      }
       return;
     }
 
@@ -129,12 +150,49 @@ function AppAtmosphere({ requestedVariant }: { requestedVariant: AtmosphereVaria
 
     const timer = window.setTimeout(() => {
       if (requestedVariant !== visibleVariant) return;
-      const inactiveVariant = visibleVariant === "kling" ? "seedance" : "kling";
-      videoRefs.current[inactiveVariant]?.pause();
+      atmosphereVariants.forEach((variant) => {
+        if (variant !== visibleVariant) videoRefs.current[variant]?.pause();
+      });
+      if (visibleVariant !== "hailuo") hailuoLoopVideoRef.current?.pause();
     }, 760);
 
     return () => window.clearTimeout(timer);
   }, [motionAllowed, requestedVariant, visibleVariant]);
+
+  useEffect(() => {
+    if (motionAllowed && requestedVariant === "hailuo") return;
+
+    if (hailuoHandoffTimerRef.current !== null) {
+      window.clearTimeout(hailuoHandoffTimerRef.current);
+      hailuoHandoffTimerRef.current = null;
+    }
+    if (hailuoCleanupTimerRef.current !== null) {
+      window.clearTimeout(hailuoCleanupTimerRef.current);
+      hailuoCleanupTimerRef.current = null;
+    }
+    hailuoLoopInProgressRef.current = false;
+    const resetTimer = window.setTimeout(() => setHailuoLoopBlend(false), 0);
+
+    const hailuoLoopVideo = hailuoLoopVideoRef.current;
+    if (hailuoLoopVideo) {
+      hailuoLoopVideo.pause();
+      hailuoLoopVideo.currentTime = 0;
+    }
+
+    return () => window.clearTimeout(resetTimer);
+  }, [motionAllowed, requestedVariant]);
+
+  useEffect(
+    () => () => {
+      if (hailuoHandoffTimerRef.current !== null) {
+        window.clearTimeout(hailuoHandoffTimerRef.current);
+      }
+      if (hailuoCleanupTimerRef.current !== null) {
+        window.clearTimeout(hailuoCleanupTimerRef.current);
+      }
+    },
+    [],
+  );
 
   function handlePlaying(variant: AtmosphereVariant) {
     setVideoReady((current) => ({ ...current, [variant]: true }));
@@ -145,6 +203,54 @@ function AppAtmosphere({ requestedVariant }: { requestedVariant: AtmosphereVaria
     setVideoReady((current) => ({ ...current, [variant]: false }));
   }
 
+  function handleHailuoTimeUpdate() {
+    const hailuoVideo = videoRefs.current.hailuo;
+    const hailuoLoopVideo = hailuoLoopVideoRef.current;
+    if (
+      !motionAllowed ||
+      requestedVariantRef.current !== "hailuo" ||
+      !hailuoVideo ||
+      !hailuoLoopVideo ||
+      !Number.isFinite(hailuoVideo.duration) ||
+      hailuoLoopInProgressRef.current ||
+      hailuoVideo.currentTime < hailuoVideo.duration - hailuoLoopBlendLead
+    ) {
+      return;
+    }
+
+    hailuoLoopInProgressRef.current = true;
+    hailuoLoopVideo.currentTime = 0;
+    void hailuoLoopVideo
+      .play()
+      .then(() => {
+        if (requestedVariantRef.current !== "hailuo") {
+          hailuoLoopInProgressRef.current = false;
+          hailuoLoopVideo.pause();
+          return;
+        }
+
+        setHailuoLoopBlend(true);
+        hailuoHandoffTimerRef.current = window.setTimeout(() => {
+          hailuoHandoffTimerRef.current = null;
+          if (requestedVariantRef.current !== "hailuo") return;
+
+          hailuoVideo.currentTime = hailuoLoopVideo.currentTime;
+          void hailuoVideo.play();
+          setHailuoLoopBlend(false);
+
+          hailuoCleanupTimerRef.current = window.setTimeout(() => {
+            hailuoCleanupTimerRef.current = null;
+            hailuoLoopVideo.pause();
+            hailuoLoopVideo.currentTime = 0;
+            hailuoLoopInProgressRef.current = false;
+          }, hailuoLoopBlendDuration + 60);
+        }, hailuoLoopBlendDuration);
+      })
+      .catch(() => {
+        hailuoLoopInProgressRef.current = false;
+      });
+  }
+
   return (
     <div
       className="app-atmosphere"
@@ -153,12 +259,14 @@ function AppAtmosphere({ requestedVariant }: { requestedVariant: AtmosphereVaria
       data-active-background={visibleVariant}
       data-kling-ready={videoReady.kling ? "true" : "false"}
       data-seedance-ready={videoReady.seedance ? "true" : "false"}
+      data-hailuo-ready={videoReady.hailuo ? "true" : "false"}
+      data-hailuo-loop-blend={hailuoLoopBlend ? "true" : "false"}
       aria-hidden="true"
     >
       {atmosphereVariants.map((variant) => {
         const sourceEnabled =
           motionAllowed &&
-          (variant === "kling" || requestedVariant === "seedance" || videoReady.seedance);
+          (variant === "kling" || requestedVariant === variant || videoReady[variant]);
 
         return (
           <video
@@ -175,6 +283,7 @@ function AppAtmosphere({ requestedVariant }: { requestedVariant: AtmosphereVaria
             poster={atmospherePoster}
             tabIndex={-1}
             onPlaying={() => handlePlaying(variant)}
+            onTimeUpdate={variant === "hailuo" ? handleHailuoTimeUpdate : undefined}
             onError={() => handleError(variant)}
             key={variant}
           >
@@ -182,6 +291,20 @@ function AppAtmosphere({ requestedVariant }: { requestedVariant: AtmosphereVaria
           </video>
         );
       })}
+      <video
+        className="app-atmosphere-video app-atmosphere-video-hailuo-loop"
+        data-background="hailuo-loop"
+        ref={hailuoLoopVideoRef}
+        muted
+        playsInline
+        preload={motionAllowed && (requestedVariant === "hailuo" || videoReady.hailuo) ? "auto" : "none"}
+        poster={atmospherePoster}
+        tabIndex={-1}
+      >
+        {motionAllowed && (requestedVariant === "hailuo" || videoReady.hailuo) ? (
+          <source src={atmosphereVideos.hailuo} type="video/mp4" />
+        ) : null}
+      </video>
       <span className="app-atmosphere-shade" />
     </div>
   );

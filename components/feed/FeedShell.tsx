@@ -69,7 +69,9 @@ export function FeedShell() {
   );
 
   useEffect(() => {
-    setFeedAtmosphere(activeView === "friends" ? "seedance" : "kling");
+    const atmosphere =
+      activeView === "friends" ? "seedance" : activeView === "nearby" ? "hailuo" : "kling";
+    setFeedAtmosphere(atmosphere);
   }, [activeView, setFeedAtmosphere]);
 
   useEffect(

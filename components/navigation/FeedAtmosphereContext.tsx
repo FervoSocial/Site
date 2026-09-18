@@ -2,7 +2,7 @@
 
 import { createContext, useContext } from "react";
 
-export type AtmosphereVariant = "kling" | "seedance";
+export type AtmosphereVariant = "kling" | "seedance" | "hailuo";
 
 export const FeedAtmosphereContext = createContext<
   ((variant: AtmosphereVariant) => void) | undefined

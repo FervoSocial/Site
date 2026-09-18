@@ -187,7 +187,7 @@ test("server-renders the founder-approved launch navigation shell", async () => 
   assert.match(html, /touch-action-label/);
 });
 
-test("the shared Feed atmosphere switches Kling and Seedance with a static fallback", () => {
+test("the shared Feed atmosphere switches Kling, Seedance, and Hailuo with a static fallback", () => {
   const css = readFileSync(new URL("../app/globals.css", import.meta.url), "utf8");
   const shell = readFileSync(
     new URL("../components/navigation/AppShell.tsx", import.meta.url),
@@ -200,6 +200,7 @@ test("the shared Feed atmosphere switches Kling and Seedance with a static fallb
 
   assert.match(shell, /fervo-gold-smoke-kling-2-5\.mp4/);
   assert.match(shell, /fervo-gold-smoke-seedance-2-5-h264\.mp4/);
+  assert.match(shell, /fervo-gold-smoke-hailuo-2-3\.mp4/);
   assert.doesNotMatch(
     shell,
     /seedance:\s*"\/fervo-gold-smoke-seedance-2-5\.mp4"/,
@@ -213,11 +214,14 @@ test("the shared Feed atmosphere switches Kling and Seedance with a static fallb
   assert.match(shell, /prefers-reduced-motion: reduce/);
   assert.match(shell, /video\.pause\(\)/);
   assert.match(shell, /\.play\(\)/);
-  assert.match(feed, /activeView === "friends" \? "seedance" : "kling"/);
+  assert.match(feed, /activeView === "nearby" \? "hailuo" : "kling"/);
   assert.doesNotMatch(css, /@keyframes app-gold-(flow|undertow)/);
   assert.match(css, /\.app-atmosphere-video[\s\S]*object-fit: cover/);
   assert.match(css, /data-active-background="kling"/);
   assert.match(css, /data-active-background="seedance"/);
+  assert.match(css, /data-active-background="hailuo"/);
+  assert.match(shell, /data-hailuo-loop-blend=\{hailuoLoopBlend \? "true" : "false"\}/);
+  assert.match(shell, /hailuoLoopBlendDuration = 700/);
   assert.match(css, /url\("\/fervo-gold-smoke-v2\.png"\)/);
   assert.match(css, /@media \(prefers-reduced-motion: reduce\)/);
   assert.match(css, /\.app-atmosphere-video\s*\{ display: none; \}/);
