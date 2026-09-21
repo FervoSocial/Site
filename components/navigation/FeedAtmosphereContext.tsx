@@ -1,19 +1,24 @@
 "use client";
 
 import { createContext, useContext } from "react";
+import type { Dispatch, SetStateAction } from "react";
+import type { FeedViewId } from "@/lib/feed-placeholder";
 
 export type AtmosphereVariant = "kling" | "seedance" | "hailuo";
 
-export const FeedAtmosphereContext = createContext<
-  ((variant: AtmosphereVariant) => void) | undefined
->(undefined);
+type FeedAtmosphereContextValue = {
+  activeView: FeedViewId;
+  setActiveView: Dispatch<SetStateAction<FeedViewId>>;
+};
 
-export function useFeedAtmosphere() {
-  const setAtmosphere = useContext(FeedAtmosphereContext);
+export const FeedAtmosphereContext = createContext<FeedAtmosphereContextValue | undefined>(undefined);
 
-  if (!setAtmosphere) {
-    throw new Error("useFeedAtmosphere must be used inside the application shell");
+export function useFeedView() {
+  const context = useContext(FeedAtmosphereContext);
+
+  if (!context) {
+    throw new Error("useFeedView must be used inside the application shell");
   }
 
-  return setAtmosphere;
+  return context;
 }

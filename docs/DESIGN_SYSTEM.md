@@ -2,7 +2,7 @@
 
 ## Visual direction
 
-The [16 September founder delta](source-of-truth/07_POST_FOUNDER_REVIEW_HANDOVER_2026-09-16.md) supplies the approved targets. Post-Founder Phase 1 implemented restrained authenticated-background movement, interaction feedback, larger existing avatar/ring treatments and accessible interaction labels. Post-Founder Phase 2 now implements the revised icon-led launch navigation and lighter one-Feed view switch, pending Product Owner review. The future image/ring taxonomy, additional badge design and chilli-pepper concept remain unimplemented.
+The [16 September founder delta](source-of-truth/07_POST_FOUNDER_REVIEW_HANDOVER_2026-09-16.md) supplies the approved targets. Post-Founder Phase 1 implemented restrained authenticated-background movement, interaction feedback, larger existing avatar/ring treatments and accessible interaction labels. Post-Founder Phase 2 implements the revised icon-led launch navigation and one-Feed views. Later Product Owner annotations replace the three adjacent Feed-view controls with one themed view menu opened from the desktop navigation rail (and the existing mobile More sheet). The future image/ring taxonomy and additional badge design remain unimplemented.
 
 ### Phase 2 navigation and Feed shell
 
@@ -10,10 +10,17 @@ The [16 September founder delta](source-of-truth/07_POST_FOUNDER_REVIEW_HANDOVER
 - Mobile retains five generous bottom controls: Home, Clubs & Events, Create, Messages and More. The accessible More sheet contains Profile, Health/Safety/Advice and Search instead of forcing six crowded bottom-bar destinations. Mobile navigation remains **PROVISIONAL / PRODUCT OWNER REVIEW PENDING**.
 - Search remains in the desktop/tablet header and in the mobile More sheet. It reuses `/explore/profiles`; Explore is no longer permanent navigation.
 - The Home masthead uses the Fervo Social wordmark followed by initials-based friend activity orbits. A solid purple ring and restrained neon glow indicate recent demo activity; initials remain the safe fallback until approved profile images exist.
-- The one Feed uses three consistently sized icon-only view controls for the provisional concepts `Público`, `Distância` and `Amigos`. People, radar and friend-pair icons replace the previous segmented text control while retaining accessible names, focus/hover tooltips, a shape-based selected marker and explicit keyboard focus ring. The icons remain visible on touch devices without depending on hover. These are local demo filters, not separate feeds, real ranking or real geolocation.
+- The one Feed uses a compact icon control in the desktop navigation rail for the provisional concepts `Público`, `Distância` and `Amigos`; mobile keeps the same choices inside the existing More sheet. The current selection keeps its community, radar or friend-pair symbol visible, while the dark themed popover exposes all three text options. It has an accessible name and explicit keyboard focus treatment and does not depend on hover. These are local demo views, not separate feeds, real ranking or real geolocation.
 - `/clubs-events` is one vertical mixed discovery surface. Existing Club and Event fixtures are interleaved, with textual type chips plus distinct restrained accents and direct links to the existing Club profile and Event detail demonstrations. It does not add filtering, promotion, ranking or backend behaviour.
 - Professionals are absent from launch navigation, Feed fixtures and discovery category shortcuts. Existing direct demonstration routes remain dormant implementation evidence.
 - Profile still points to `/me` until the separately approved Phase 4 can connect the signed-in member to a real public-facing profile without using a misleading fictional identity.
+
+### Phase 3 Clubs & Events first pass
+
+- `/clubs-events` remains one scrollable discovery experience. Club and Event items use the same card anatomy and sequence rather than separate panels, tabs or destination pages.
+- Text type labels are always present. Club cards use the established purple identity treatment and a venue symbol; Event cards use restrained gold secondary emphasis and a calendar/check symbol. Colour is never the only distinction.
+- Each card keeps its approximate location, safe fictional summary, schedule/activity metadata and one route-specific action visible. Event detail returns to the unified discovery surface.
+- The page uses the approved global Kling atmosphere and existing shell without introducing new motion, filters, promotion UI, ranking, persistence or backend behaviour.
 
 ### Phase 1 visual implementation
 
@@ -24,7 +31,7 @@ The [16 September founder delta](source-of-truth/07_POST_FOUNDER_REVIEW_HANDOVER
 - Interaction colour/border feedback takes 150–180ms; no delayed actions, moving click targets or animated page layouts. Existing navigation and feed tabs are retained.
 - Feed avatars are 64px desktop/56px small-screen (previously 48/44); discovery circles 92px (previously 72); message avatars 56px (previously 48). Profile-header borders are more prominent, and mobile profile circles grow to a maximum 280px. Existing colours and separate account/status labels are retained, not a final category taxonomy.
 - The image-replacement objective is **partially implemented**: no suitable approved profile-photo asset exists in the current fixture set. Initials/abstract backgrounds remain safe fallbacks; no portrait was invented or fetched.
-- Feed actions retain accessible names and pressed states. Like/Save keep their existing focus/hover tooltips; Comment, Message and Report now use clear icon-only presentation with explicit accessible labels and explanatory `title` text while remaining disabled demonstrations. Search/notification header buttons retain equivalent labels without gaining new functionality.
+- Feed actions retain accessible names and pressed states. Like/Save keep their existing focus/hover tooltips. Save now uses the Product Owner-selected solid-heart-with-keyhole symbol while retaining the existing `Guardar`/`Guardado` meaning and local-only state; this does not establish a wider icon taxonomy. Comment, Message and Report use clear icon-only presentation with explicit accessible labels and explanatory `title` text while remaining disabled demonstrations. Search/notification header buttons retain equivalent labels without gaining new functionality.
 - Home replaces the old HOME heading and introductory sentence with the Fervo Social wordmark and recent-activity orbit row. Small-screen wordmark and orbit spacing is tightened without changing hierarchy or mobile navigation. No realistic member portraits were invented; landing copy is unchanged.
 
 Fervo Social uses a calm, modern social-platform aesthetic:

@@ -15,7 +15,7 @@ export function EventDetailShell() {
 
   return (
     <section className="event-detail-shell" aria-labelledby="event-detail-title">
-      <Link className="event-detail-back" href="/explore/events"><span aria-hidden="true">←</span>{copy.back}</Link>
+      <Link className="event-detail-back" href="/clubs-events"><span aria-hidden="true">←</span>{copy.back}</Link>
 
       <Surface className="event-detail-card">
         <div className="event-detail-cover" role="img" aria-label={copy.coverLabel}>

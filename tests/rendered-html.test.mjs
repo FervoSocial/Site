@@ -193,11 +193,6 @@ test("the shared Feed atmosphere switches Kling, Seedance, and Hailuo with a sta
     new URL("../components/navigation/AppShell.tsx", import.meta.url),
     "utf8",
   );
-  const feed = readFileSync(
-    new URL("../components/feed/FeedShell.tsx", import.meta.url),
-    "utf8",
-  );
-
   assert.match(shell, /fervo-gold-smoke-kling-2-5\.mp4/);
   assert.match(shell, /fervo-gold-smoke-seedance-2-5-h264\.mp4/);
   assert.match(shell, /fervo-gold-smoke-hailuo-2-3\.mp4/);
@@ -214,7 +209,7 @@ test("the shared Feed atmosphere switches Kling, Seedance, and Hailuo with a sta
   assert.match(shell, /prefers-reduced-motion: reduce/);
   assert.match(shell, /video\.pause\(\)/);
   assert.match(shell, /\.play\(\)/);
-  assert.match(feed, /activeView === "nearby" \? "hailuo" : "kling"/);
+  assert.match(shell, /activeFeedView === "nearby" \? "hailuo" : "kling"/);
   assert.doesNotMatch(css, /@keyframes app-gold-(flow|undertow)/);
   assert.match(css, /\.app-atmosphere-video[\s\S]*object-fit: cover/);
   assert.match(css, /data-active-background="kling"/);
@@ -226,8 +221,8 @@ test("the shared Feed atmosphere switches Kling, Seedance, and Hailuo with a sta
   assert.match(css, /@media \(prefers-reduced-motion: reduce\)/);
   assert.match(css, /\.app-atmosphere-video\s*\{ display: none; \}/);
   assert.match(css, /@media \(hover: hover\) and \(pointer: fine\)/);
-  assert.match(css, /\.feed-view-switch button\[aria-selected="true"\]::after/);
-  assert.match(css, /\.feed-view-switch button:focus-visible/);
+  assert.match(css, /\.feed-view-navigation-menu > button:focus-visible/);
+  assert.match(css, /\.save-heart-lock-icon/);
 });
 
 test("server-renders public and authenticated placeholder routes", async () => {
@@ -348,14 +343,17 @@ test("persists private identity safely and enforces verification and role bounda
 
 test("server-renders one Feed with three selectable views", async () => {
   const home = await (await render("/home")).text();
-  const tabs = home.match(/role="tab"/g) ?? [];
+  const options = home.match(/role="menuitemradio"/g) ?? [];
 
-  assert.equal(tabs.length, 3);
-  assert.match(home, /role="tab" aria-selected="true"/i);
-  assert.match(home, /aria-label="Público"/i);
-  assert.match(home, /aria-label="Distância"/i);
-  assert.match(home, /aria-label="Amigos"/i);
+  assert.equal(options.length, 3);
+  assert.match(home, /id="feed-view-navigation-menu"/i);
+  assert.match(home, /aria-label="Visualização: Público"/i);
+  assert.match(home, /aria-checked="true"[^>]*>[\s\S]*?Público/i);
+  assert.match(home, /aria-checked="false"[^>]*>[\s\S]*?Distância/i);
+  assert.match(home, /aria-checked="false"[^>]*>[\s\S]*?Amigos/i);
+  assert.doesNotMatch(home, /id="feed-view-select"/i);
   assert.match(home, /Visualizações do Feed/i);
+  assert.match(home, /Visualização/i);
   assert.match(home, /class="feed-brand-logo" aria-label="Fervo Social"/i);
   assert.match(home, /class="friend-activity-orbits" aria-label="Amigos com atividade recente"/i);
   assert.match(home, /atividade recente/i);
@@ -365,6 +363,7 @@ test("server-renders one Feed with three selectable views", async () => {
   assert.match(home, /aria-label="Mensagem"/i);
   assert.match(home, /aria-label="Denunciar"/i);
   assert.match(home, /feed-action-svg/i);
+  assert.match(home, /save-heart-lock-icon/i);
   assert.match(home, /Evento/i);
   assert.doesNotMatch(home, /Perfil profissional de demonstração/i);
   assert.match(home, /Conteúdo seguro de demonstração/i);
@@ -377,6 +376,7 @@ test("server-renders the launch Clubs and Events and Health Safety entry points"
   const clubsEvents = await (await render("/clubs-events")).text();
   assert.match(clubsEvents, /Clubes e eventos/i);
   assert.match(clubsEvents, /Fluxo de Clubes e Eventos/i);
+  assert.match(clubsEvents, /Um único fluxo/i);
   assert.match(clubsEvents, /Clube ou espaço/i);
   assert.match(clubsEvents, />Evento</i);
   for (const name of ["Espaço Aurora", "Noite de Conexões", "Casa Livre", "Encontro no Jardim", "Ponto Violeta", "Fervo Social Club"]) {
@@ -384,7 +384,10 @@ test("server-renders the launch Clubs and Events and Health Safety entry points"
   }
   assert.match(clubsEvents, /href="\/profile\/espaco-aurora"/i);
   assert.match(clubsEvents, /href="\/event\/noite-conexoes"/i);
-  assert.match(clubsEvents, /Fase 3/i);
+  assert.match(clubsEvents, /Conhecer o espaço/i);
+  assert.match(clubsEvents, /Ver evento/i);
+  assert.match(clubsEvents, /sem ranking, promoção, reserva ou localização exata/i);
+  assert.doesNotMatch(clubsEvents, /Fase 3/i);
 
   const healthSafety = await (await render("/health-safety")).text();
   assert.match(healthSafety, /Saúde, segurança e orientação/i);
@@ -595,6 +598,7 @@ test("server-renders shared Club, Organiser, and Event detail shells", async () 
   assert.match(event, /Coletivo Lume/i);
   assert.match(event, /href="\/profile\/espaco-aurora"/i);
   assert.match(event, /href="\/profile\/coletivo-lume"/i);
+  assert.match(event, /href="\/clubs-events"/i);
   assert.match(event, /Tenho interesse/i);
   assert.match(event, /Entrar na lista de espera/i);
   assert.match(event, /Ver ingressos/i);

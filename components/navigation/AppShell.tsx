@@ -6,6 +6,8 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import { ptBR } from "@/lib/i18n";
 import { LogoutButton } from "@/components/auth/LogoutButton";
 import { TooltipButton } from "@/components/ui/TooltipButton";
+import { FeedViewIcon } from "@/components/feed/FeedViewIcon";
+import type { FeedViewId } from "@/lib/feed-placeholder";
 import {
   FeedAtmosphereContext,
   type AtmosphereVariant,
@@ -24,6 +26,12 @@ type NavItem = {
   match?: string[];
   action?: "create" | "more";
 };
+
+const feedViews: Array<{ id: FeedViewId; label: string }> = [
+  { id: "public", label: ptBR.feed.views.public },
+  { id: "nearby", label: ptBR.feed.views.nearby },
+  { id: "friends", label: ptBR.feed.views.friends },
+];
 
 const desktopNavItems: NavItem[] = [
   { label: ptBR.navigation.home, href: "/home", icon: "home", match: ["/home"] },
@@ -351,6 +359,7 @@ function Navigation({
   moreOpen,
   className,
   items,
+  children,
 }: {
   pathname: string;
   onCreate: () => void;
@@ -358,6 +367,7 @@ function Navigation({
   moreOpen?: boolean;
   className: string;
   items: NavItem[];
+  children?: ReactNode;
 }) {
   return (
     <nav className={className} aria-label="Navegação principal">
@@ -404,16 +414,79 @@ function Navigation({
           </Link>
         );
       })}
+      {children}
     </nav>
+  );
+}
+
+function FeedViewNavigationMenu({
+  activeView,
+  open,
+  onOpenChange,
+  onSelect,
+}: {
+  activeView: FeedViewId;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onSelect: (view: FeedViewId) => void;
+}) {
+  const activeLabel = feedViews.find((view) => view.id === activeView)?.label ?? ptBR.feed.views.public;
+
+  return (
+    <div className="feed-view-navigation">
+      <button
+        className="nav-item feed-view-nav-trigger"
+        type="button"
+        aria-label={`${ptBR.feed.viewMenuLabel}: ${activeLabel}`}
+        aria-expanded={open}
+        aria-controls="feed-view-navigation-menu"
+        onClick={() => onOpenChange(!open)}
+      >
+        <span className="nav-icon"><FeedViewIcon view={activeView} /></span>
+        <span className="nav-label" aria-hidden="true">{ptBR.feed.viewMenuLabel}: {activeLabel}</span>
+      </button>
+
+      <div
+        className="feed-view-navigation-menu"
+        id="feed-view-navigation-menu"
+        role="menu"
+        aria-label={ptBR.feed.viewsLabel}
+        hidden={!open}
+        onKeyDown={(event) => {
+          if (event.key === "Escape") onOpenChange(false);
+        }}
+      >
+        <p>{ptBR.feed.viewsLabel}</p>
+        {feedViews.map((view) => (
+          <button
+            type="button"
+            role="menuitemradio"
+            aria-checked={activeView === view.id}
+            onClick={() => {
+              onSelect(view.id);
+              onOpenChange(false);
+            }}
+            key={view.id}
+          >
+            <span className="feed-view-option-icon"><FeedViewIcon view={view.id} /></span>
+            <span>{view.label}</span>
+            <span className="feed-view-option-check" aria-hidden="true">✓</span>
+          </button>
+        ))}
+      </div>
+    </div>
   );
 }
 
 export function AppShell({ children }: AppShellProps) {
   const pathname = usePathname();
   const router = useRouter();
-  const [feedAtmosphere, setFeedAtmosphere] = useState<AtmosphereVariant>("kling");
+  const [activeFeedView, setActiveFeedView] = useState<FeedViewId>("public");
+  const [feedViewMenuOpen, setFeedViewMenuOpen] = useState(false);
   const [createOpen, setCreateOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
+  const feedAtmosphere: AtmosphereVariant =
+    activeFeedView === "friends" ? "seedance" : activeFeedView === "nearby" ? "hailuo" : "kling";
   const requestedAtmosphere = pathname === "/home" ? feedAtmosphere : "kling";
 
   function openCreate() {
@@ -427,7 +500,7 @@ export function AppShell({ children }: AppShellProps) {
   }
 
   return (
-    <FeedAtmosphereContext.Provider value={setFeedAtmosphere}>
+    <FeedAtmosphereContext.Provider value={{ activeView: activeFeedView, setActiveView: setActiveFeedView }}>
       <div className="app-shell">
         <AppAtmosphere requestedVariant={requestedAtmosphere} />
       <header className="app-header">
@@ -464,7 +537,16 @@ export function AppShell({ children }: AppShellProps) {
         onCreate={openCreate}
         className="desktop-navigation"
         items={desktopNavItems}
-      />
+      >
+        {pathname === "/home" ? (
+          <FeedViewNavigationMenu
+            activeView={activeFeedView}
+            open={feedViewMenuOpen}
+            onOpenChange={setFeedViewMenuOpen}
+            onSelect={setActiveFeedView}
+          />
+        ) : null}
+      </Navigation>
 
       <main className="app-content">{children}</main>
 
@@ -538,6 +620,24 @@ export function AppShell({ children }: AppShellProps) {
                 <span><strong>{ptBR.shell.search}</strong><small>{ptBR.shell.searchNote}</small></span>
               </Link>
             </nav>
+            {pathname === "/home" ? (
+              <div className="mobile-feed-view-options" aria-label={ptBR.feed.viewsLabel}>
+                <p>{ptBR.feed.viewsLabel}</p>
+                <div>
+                  {feedViews.map((view) => (
+                    <button
+                      type="button"
+                      aria-pressed={activeFeedView === view.id}
+                      onClick={() => setActiveFeedView(view.id)}
+                      key={view.id}
+                    >
+                      <FeedViewIcon view={view.id} />
+                      <span>{view.label}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ) : null}
             <button className="sheet-close" type="button" onClick={() => setMoreOpen(false)} autoFocus>
               {ptBR.shell.close}
             </button>

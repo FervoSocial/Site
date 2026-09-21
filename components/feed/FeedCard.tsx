@@ -52,6 +52,28 @@ function FeedActionIcon({ name }: { name: "comment" | "message" | "report" }) {
   );
 }
 
+function SaveHeartLockIcon({ id }: { id: string }) {
+  const maskId = `save-heart-lock-${id.replace(/[^a-zA-Z0-9_-]/g, "-")}`;
+
+  return (
+    <svg className="save-heart-lock-icon" aria-hidden="true" viewBox="0 0 38 24">
+      <defs>
+        <mask id={maskId}>
+          <rect width="25" height="24" fill="black" />
+          <path fill="white" d="M12 21.2 4.4 14C.7 10.5 2.6 4.5 7.5 4.5c2 0 3.6 1.1 4.5 2.5.9-1.4 2.5-2.5 4.5-2.5 4.9 0 6.8 6 3.1 9.5L12 21.2Z" />
+          <circle cx="12" cy="10.7" r="2.05" fill="black" />
+          <path d="m10.8 12.1-.9 4.2h4.2l-.9-4.2Z" fill="black" />
+        </mask>
+      </defs>
+      <rect width="25" height="24" fill="currentColor" mask={`url(#${maskId})`} />
+      <g className="save-heart-key">
+        <circle cx="29" cy="8.2" r="3.4" />
+        <path d="m31.4 10.6 5.1 5.1m-2.6-2.6 1.8-1.8m-3.7.1 1.8-1.8" />
+      </g>
+    </svg>
+  );
+}
+
 export function FeedCard({
   followed,
   item,
@@ -122,7 +144,7 @@ export function FeedCard({
           <FeedActionIcon name="comment" />
         </button>
         <TooltipButton type="button" label={saved ? actions.saved : actions.save} aria-pressed={saved} onClick={onSave} className={`feed-icon-action ${saved ? "is-active" : ""}`}>
-          <span className="bookmark-icon" aria-hidden="true" />
+          <SaveHeartLockIcon id={item.id} />
           <span className="touch-action-label" aria-hidden="true">{saved ? actions.saved : actions.save}</span>
         </TooltipButton>
         <button type="button" disabled aria-label={actions.message} title={`${actions.message}: ${actions.unavailable}`}>

@@ -69,7 +69,8 @@ Current client components include:
 
 - `AppShell` — current pathname highlighting and Create-sheet open state
 - Authentication shells — submit to Phase 1 server endpoints and display safe local request states
-- `FeedShell` — active feed tab plus temporary Like, Save, and Follow sets
+- `AppShell` / `FeedAtmosphereContext` — active Feed view menu state and the approved view-specific background mapping
+- `FeedShell` — one rendered Feed plus temporary Like, Save, and Follow sets
 - `ExploreShell` — category-specific discovery layout, search demonstration, result states, view choice, and non-persistent controls
 - `MessagesInbox` — inbox tabs, reviewable list states, and temporary request actions
 - `PrivateMemberProfile` — active profile tab plus temporary Follow and Save state

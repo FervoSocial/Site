@@ -110,11 +110,11 @@ Select Plan, Compare Period, Preview Changes, Manage Payment Method, Cancel, Vie
 
 ## Home feed contract
 
-The implemented Phase 2 shell is one Feed with three icon-only view controls. Their accessible Portuguese names are `Público`, `Distância` and `Amigos`; final wording and permission details remain `DECISION REQUIRED`. The Home masthead uses the Fervo Social wordmark and a safe initials-based row of recent friend activity orbits until approved member images exist. Friends-of-Friends is an audience permission, not a fourth view. Text, pictures and short video remain ordinary profile-linked posts, with no separate Reels product.
+The implemented shell is one Feed with one themed view menu containing `Público`, `Distância` and `Amigos`; a Product Owner annotation places its icon control in the desktop navigation rail, superseding both the earlier three-adjacent-icon treatment and the temporary in-page native dropdown. Mobile exposes the same three choices inside the existing More sheet. The selected view retains its community, radar or friend-pair symbol and the control remains keyboard and touch accessible. Final wording and permission details remain `DECISION REQUIRED`. The Home masthead uses the centred Fervo Social wordmark and a safe initials-based row of recent friend activity orbits until approved member images exist. Friends-of-Friends is an audience permission, not a fourth view. Text, pictures and short video remain ordinary profile-linked posts, with no separate Reels product.
 
 The views filter fixed demonstration items in component memory only. `Distância` does not use real geolocation or a member-selected geographic scope. Radius/city/area/region controls, ranking, persistence, detailed Friends permissions and triangulation-safe backend behaviour remain unimplemented. The Professional fixture is removed from the launch Feed; event and safety cards remain supported.
 
-`/clubs-events` is a single mixed discovery surface rather than separate Club and Event entry cards. It interleaves the existing Club and Event fixtures, keeps their type explicit, and links to existing `/profile/:handle` and `/event/:eventId` demonstrations. The full Phase 3 filters, promotion rules, ranking and backend data remain unimplemented.
+`/clubs-events` is a single mixed discovery surface rather than separate Club and Event entry cards or destinations. It interleaves the existing Club and Event fixtures in one continuous sequence, uses a shared discovery-card structure, keeps each type explicit in text and restrained visual treatment, keeps approximate location visible, and links to the existing `/profile/:handle` and `/event/:eventId` demonstrations. Event detail returns to `/clubs-events`. Filters, promotion rules, ranking, recommendations, real location logic and backend data remain unimplemented.
 
 Current placeholder card kinds supported by the component are:
 
@@ -125,7 +125,7 @@ Current placeholder card kinds supported by the component are:
 - Official safety guidance
 - Sponsored content
 
-Current interactions are component-local only. Like, Save, Follow, and tab selection reset on refresh. Comment, Message, and Report are unavailable placeholders.
+Current interactions are component-local only. Like, Save, Follow, and Feed-view selection reset on refresh. Save uses a solid heart with a central keyhole but retains the `Guardar` meaning. Comment, Message, and Report are unavailable placeholders.
 
 ## Universal profile contract
 
@@ -158,7 +158,7 @@ Club/Business and Event Organiser profiles reuse the universal `/profile/:handle
 
 Organisation shells contain safe fictional identity, approximate location, demonstration verification wording, operating/contact details, facilities, accessibility, rules, policies, and one upcoming-event link. Follow and Save are local-only interactions. Contact, Share, Reviews, and Report are disabled.
 
-`/event/:eventId` renders the same single example event for every ID. It contains an abstract cover, approximate location, venue and organiser links, event facts, rules, policies, and visible RSVP, Waitlist, Tickets, Share, Report, Reviews, and Event Discussion positions. Interest and Save are local-only; all other controls are disabled. No ticket price is hard-coded.
+`/event/:eventId` renders the same single example event for every ID. It contains an abstract cover, approximate location, venue and organiser links, event facts, rules, policies, and visible RSVP, Waitlist, Tickets, Share, Report, Reviews, and Event Discussion positions. Interest and Save are local-only; all other controls are disabled. Its back link returns to the unified `/clubs-events` destination. No ticket price is hard-coded.
 
 Real verification, event creation, ticketing, payments, RSVP/waitlist processing, check-in, WhatsApp, review logic, staff accounts, subscriptions, moderation, persistence, and backend permissions remain deferred.
 

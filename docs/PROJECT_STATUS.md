@@ -1,5 +1,17 @@
 # Fervo Social - Project Status
 
+## Post-Founder Phase 3 — Clubs & Events first visual/product pass, pending review
+
+Starting checkpoint: approved `post-founder-review/phase2-navigation-feed` at `ca5653d7cdbab96a198cc493e1cc60bd233f49de`. Working branch: `post-founder-review/phase3-clubs-events`.
+
+This controlled first pass keeps `/clubs-events` as one continuous discovery feed containing both Club and Event demonstrations. It replaces the generic Explore-card presentation with a shared Clubs & Events discovery card, preserves explicit textual type labels, adds distinct but restrained Club/Event visual cues, keeps approximate location visible, and retains the existing profile/detail links. The repeated two-part introduction is consolidated into one clear page introduction plus a compact “one flow” explanation. Event detail now returns to the unified `/clubs-events` surface rather than the retained historical `/explore/events` route.
+
+During Product Owner annotation review, Home received bounded presentation corrections without changing its three-view logic: the Feed-view control is now an accessible themed menu in the desktop navigation rail (with mobile access in the existing More sheet), the Fervo Social wordmark is larger and centred, and the local Save action uses a solid heart with a larger central keyhole plus a proportional key while retaining the `Guardar`/`Guardado` state and accessible name. The Kling/Public, Hailuo/Distance and Seedance/Friends mapping is unchanged.
+
+All content remains fixed fictional demo data. Existing direct Club and Event detail routes remain shells: multiple Club handles reuse one Club profile fixture, and every Event ID still renders the same example Event. This pass does not invent missing records or add ranking, filters, recommendations, promotion placement, RSVP rules, geolocation, commercial entitlements, persistence, schema, or backend behaviour. Those remain unresolved or separately gated. Phase 2 navigation, Feed backgrounds, Search, Messages, Health/Safety, identity, privacy and billing behaviour are intentionally unchanged.
+
+No commit, push, merge or deployment is authorised before Product Owner visual review.
+
 ## Post-Founder Phase 2 — navigation and Feed shell, pending review
 
 Starting checkpoint: approved `post-founder-review/phase1-visual-dynamics` at `9d9db2f3dbebd0604d038d3e5db97d99a25bf379`. Working branch: `post-founder-review/phase2-navigation-feed`.

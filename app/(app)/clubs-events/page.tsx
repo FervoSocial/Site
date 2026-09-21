@@ -1,4 +1,4 @@
-import { ExploreResultCard } from "@/components/discovery/ExploreResultCard";
+import { ClubsEventsDiscoveryCard } from "@/components/discovery/ClubsEventsDiscoveryCard";
 import { exploreResults, type ExploreResult } from "@/lib/explore-placeholder";
 import { ptBR } from "@/lib/i18n";
 
@@ -17,15 +17,22 @@ export default function ClubsEventsPage() {
         <p>{copy.description}</p>
       </header>
 
-      <div className="clubs-events-feed-heading">
-        <p className="section-kicker">{copy.feedEyebrow}</p>
-        <h2>{copy.feedTitle}</h2>
-        <p>{copy.feedDescription}</p>
+      <div className="clubs-events-stream-intro">
+        <span className="clubs-events-stream-mark" aria-hidden="true">
+          <span />
+          <span />
+          <span />
+        </span>
+        <div>
+          <p className="section-kicker">{copy.feedEyebrow}</p>
+          <h2>{copy.feedTitle}</h2>
+          <p>{copy.feedDescription}</p>
+        </div>
       </div>
 
       <div className="clubs-events-mixed-feed" aria-label={copy.feedLabel}>
         {mixedResults.map((result) => (
-          <ExploreResultCard key={`${result.category}-${result.id}`} result={result} showTypeBadge />
+          <ClubsEventsDiscoveryCard key={`${result.category}-${result.id}`} result={result} />
         ))}
       </div>
 
