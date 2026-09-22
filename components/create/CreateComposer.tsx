@@ -92,7 +92,7 @@ export function CreateComposer({
           placeholder={copy.textPlaceholder}
           disabled={state === "loading"}
           autoFocus
-          rows={7}
+          rows={5}
           aria-describedby="create-character-count create-post-guidance"
         />
       </label>
@@ -106,6 +106,36 @@ export function CreateComposer({
         >
           {count}/{POST_BODY_MAX_CHARACTERS}
         </output>
+      </div>
+
+      <div className="create-composer-tools" aria-label="Recursos da publicação">
+        <button className="create-tool-control" type="button" disabled>
+          <span className="create-tool-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <rect x="3" y="5" width="18" height="14" rx="2.5" />
+              <circle cx="8.5" cy="10" r="1.5" />
+              <path d="m5 17 4.5-4 3.2 2.6 2.4-2.2L19 17" />
+            </svg>
+          </span>
+          <span className="create-tool-copy">
+            <strong>{copy.addMedia}</strong>
+            <small>{copy.mediaUnavailable}</small>
+          </span>
+          <span className="create-tool-status">{copy.comingSoon}</span>
+        </button>
+
+        <button className="create-tool-control" type="button" disabled>
+          <span className="create-tool-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M4 7h10M18 7h2M4 17h2M10 17h10M14 4v6M6 14v6" />
+            </svg>
+          </span>
+          <span className="create-tool-copy">
+            <strong>{copy.moreOptions}</strong>
+            <small>{copy.moreOptionsUnavailable}</small>
+          </span>
+          <span className="create-tool-status">{copy.comingSoon}</span>
+        </button>
       </div>
 
       {state === "error" ? (

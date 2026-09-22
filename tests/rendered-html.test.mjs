@@ -460,6 +460,22 @@ test("creates, renders, and author-soft-deletes Public text posts with server pe
   assert.equal(repeatedDelete.status, 404);
 });
 
+test("keeps the universal Create composer Public-only while clearly marking future controls unavailable", () => {
+  const composer = readFileSync(
+    new URL("../components/create/CreateComposer.tsx", import.meta.url),
+    "utf8",
+  );
+  const copy = readFileSync(new URL("../lib/i18n.ts", import.meta.url), "utf8");
+
+  assert.match(composer, /body: JSON\.stringify\(\{ body, audience: "public" \}\)/);
+  assert.match(composer, /maxLength=\{POST_BODY_MAX_CHARACTERS\}/);
+  assert.match(copy, /addMedia: "Adicionar foto ou vídeo"/);
+  assert.match(copy, /moreOptions: "Mais opções"/);
+  assert.match(copy, /comingSoon: "Em breve"/);
+  assert.equal((composer.match(/className="create-tool-control" type="button" disabled/g) ?? []).length, 2);
+  assert.doesNotMatch(composer, /type="file"/);
+});
+
 test("server-renders one Feed with three selectable views", async () => {
   const home = await (await render("/home")).text();
   const options = home.match(/role="menuitemradio"/g) ?? [];
