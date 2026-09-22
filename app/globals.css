@@ -38,9 +38,21 @@
   stroke-width: 1.8;
 }
 
-.feed-icon-action[aria-pressed="true"] .save-heart-lock-icon {
-  color: #f5f3ff;
-  filter: drop-shadow(0 0 7px rgba(168, 85, 247, 0.62));
+.feed-save-action[aria-pressed="true"] .save-heart-lock-icon {
+  color: var(--gold-light);
+  filter:
+    drop-shadow(0 0 4px rgba(242, 193, 78, 0.95))
+    drop-shadow(0 0 10px rgba(212, 175, 55, 0.72));
+}
+
+.feed-actions .feed-like-action[aria-pressed="true"] > span:not(.touch-action-label):not(.control-tooltip) {
+  color: #ff415f;
+  font-size: 1.8rem;
+  text-shadow:
+    0 0 2px rgba(255, 255, 255, 1),
+    0 0 7px rgba(255, 255, 255, 0.82),
+    0 0 13px rgba(184, 68, 255, 0.98),
+    0 0 22px rgba(148, 0, 211, 0.9);
 }
 @media (hover: hover) and (pointer: fine) {
   .feed-icon-action .touch-action-label { display: none; }

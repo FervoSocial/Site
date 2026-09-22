@@ -153,14 +153,14 @@ export function FeedCard({
       </div>
 
       <footer className="feed-actions" aria-label="Ações da publicação">
-        <TooltipButton type="button" label={liked ? actions.liked : actions.like} aria-pressed={liked} onClick={onLike} className={`feed-icon-action ${liked ? "is-active" : ""}`}>
+        <TooltipButton type="button" label={liked ? actions.liked : actions.like} aria-pressed={liked} onClick={onLike} className={`feed-icon-action feed-like-action ${liked ? "is-active" : ""}`}>
           <span aria-hidden="true">{liked ? "♥" : "♡"}</span>
           <span className="touch-action-label" aria-hidden="true">{liked ? actions.liked : actions.like}</span>
         </TooltipButton>
         <button type="button" disabled aria-label={actions.comment} title={`${actions.comment}: ${actions.unavailable}`}>
           <FeedActionIcon name="comment" />
         </button>
-        <TooltipButton type="button" label={saved ? actions.saved : actions.save} aria-pressed={saved} onClick={onSave} className={`feed-icon-action ${saved ? "is-active" : ""}`}>
+        <TooltipButton type="button" label={saved ? actions.saved : actions.save} aria-pressed={saved} onClick={onSave} className={`feed-icon-action feed-save-action ${saved ? "is-active" : ""}`}>
           <SaveHeartLockIcon id={item.id} />
           <span className="touch-action-label" aria-hidden="true">{saved ? actions.saved : actions.save}</span>
         </TooltipButton>
