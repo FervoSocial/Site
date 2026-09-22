@@ -44,6 +44,7 @@ lib/
   auth/                 Password, token, session, repository, validation, and permission rules
   privacy/policy.ts     Data classification, retention defaults, and approximate-location rules
   posts.ts              Public post validation, persistence queries, and author soft deletion
+  member-profile.ts     Safe member-profile view models and persisted public-profile reads
   i18n.ts               Central pt-BR interface copy
   explore-placeholder.ts Typed safe Explore demonstration data
   feed-placeholder.ts   Typed safe feed demonstration data
@@ -77,6 +78,7 @@ Current client components include:
 - `ExploreShell` — category-specific discovery layout, search demonstration, result states, view choice, and non-persistent controls
 - `MessagesInbox` — inbox tabs, reviewable list states, and temporary request actions
 - `PrivateMemberProfile` — active profile tab plus temporary Follow and Save state
+- `EditProfileShell` — owner-only local edit preview; it deliberately performs no persistence
 - `GalleryShell` — gallery section, review state, temporary access request, and item-preview state
 - `OrganisationProfile` — shared Club/Business and Event Organiser renderer with temporary Follow, Save, and tab state
 - `EventDetailShell` — one example event with temporary Interest and Save state
@@ -97,7 +99,8 @@ Account, session, consent, verification, recovery-token, privacy-default records
 - `FeedCard` is a typed reusable base for all implemented feed-card variants.
 - `ExploreShell` is shared by the base Explore page and four category routes; category pages pass only a typed category key.
 - `MessagesInbox` owns the inbox and request demonstration state. `ConversationThread` is a server-rendered static thread shell with disabled future actions.
-- `PrivateMemberProfile` is the first profile renderer. Future profile classes should reuse shared profile primitives rather than duplicate the full page.
+- `PrivateMemberProfile` is shared by the signed-in owner experience at `/me` and member-facing `/profile/:handle` pages. It keeps owner controls separate from visitor actions and represents shared profiles as a social layer over individually verified adults.
+- `/me/settings` contains private account/verification/privacy/session entry points, while `/me/profile/edit` is an explicit non-persistent editing foundation. Neither adds schema or changes privacy permissions.
 - `GalleryShell` is mounted only inside the existing Private Member Mídia tab. It owns no route and exposes no real media or permission boundary.
 - `OrganisationProfile` renders both implemented organisation account classes from typed placeholder data, preserving one universal profile route.
 - `EventDetailShell` replaces the former `/event/:eventId` placeholder but does not read the ID or perform event operations.

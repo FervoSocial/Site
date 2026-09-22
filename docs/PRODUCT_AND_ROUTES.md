@@ -36,7 +36,7 @@ All four account families have front-end shells. The newly approved individual-a
 | Create | Modal or bottom sheet | Public text-post composer for verified Private Members; it is not a route |
 | Clubs & Events | `/clubs-events` | Minimal launch entry linking to retained club and event discovery routes |
 | Messages | `/messages` | Implemented inbox and conversation shell |
-| Profile | `/me` | Temporary account-first drift retained until Phase 4 can connect a genuine signed-in public profile |
+| Profile | `/me` | Signed-in member's public/social profile experience; account administration is secondary |
 | Health / Safety / Advice | `/health-safety` | Minimal authenticated editorial shell with an existing Help link |
 
 Desktop uses a narrow icon-led rail with accessible names and hover/focus labels. Mobile uses five bottom controls — Home, Clubs & Events, Create, Messages and More — with Profile, Health/Safety/Advice and Search in the More sheet. Search also remains in the desktop/tablet header and navigates to `/explore/profiles`.
@@ -74,9 +74,11 @@ Planned legal slugs include `terms`, `privacy`, `content`, `professionals`, and 
 | `/explore/professionals` | `app/(app)/explore/professionals/page.tsx` | Professional discovery shell with one profile link |
 | `/messages` | `app/(app)/messages/page.tsx` | Inbox and message-request shell |
 | `/messages/:threadId` | `app/(app)/messages/[threadId]/page.tsx` | Static placeholder conversation shell |
-| `/profile/:handle` | `app/(app)/profile/[handle]/page.tsx` | Shared route selecting Private Member, Club/Business, Event Organiser, or Professional shell |
+| `/profile/:handle` | `app/(app)/profile/[handle]/page.tsx` | Shared route selecting Private Member, Club/Business, Event Organiser, or dormant Professional shell; registered Private Members resolve to safe persisted public basics |
 | `/event/:eventId` | `app/(app)/event/[eventId]/page.tsx` | One safe placeholder event-detail shell |
-| `/me` | `app/(app)/me/page.tsx` | Account-management entry with Billing Shell link; other account areas remain placeholders |
+| `/me` | `app/(app)/me/page.tsx` | Owner view of the signed-in member's public/social profile |
+| `/me/profile/edit` | `app/(app)/me/profile/edit/page.tsx` | Owner-only edit-preview foundation; fields do not persist in this phase |
+| `/me/settings` | `app/(app)/me/settings/page.tsx` | Secondary private account, verification, privacy, security, session, and billing entry |
 | `/me/billing` | `app/(app)/me/billing/page.tsx` | Configuration-driven Billing Shell with disabled controls |
 
 The `(app)` route group adds `AppShell` without changing the URL. Its layout requires an active session with approved adult verification.
@@ -139,18 +141,23 @@ Public is the only supported publication audience. Friends and Friends-of-Friend
 
 All public profiles use `/profile/:handle`. The eventual renderer must select modules by account class rather than creating four separate profile applications.
 
-The implemented Private Member shell contains:
+The implemented Private Member experience now separates the owner profile, edit preview, and private account administration. `/me` uses the signed-in profile's persisted public display name, handle, privacy-safe location state, linked-member verification state, and Public text-post count/content. `/profile/:handle` resolves persisted Private Member basics where available and retains safe fictional demonstrations for known review handles.
+
+The shared Private Member renderer contains:
 
 - Photo placeholder
 - Display name
 - Text account-class label
 - Approximate location
 - Bio
-- Followers, following, and publication statistics
+- Linked-adult, publication, and protected-location summary
 - About, Media, and Posts tabs
 - Follow, Save, Nudge, Message, Report, and Block action positions
+- Owner-only Edit Profile, View as Member, and Account/Settings entry points
 
-Only Follow, Save, tab selection, and gallery demonstration interactions have local UI state. The route handle selects safe in-memory demonstrations only; no profile data is loaded.
+Only Follow, Save, tab selection, edit preview, and gallery demonstration interactions have local UI state. Profile editing does not persist because biography, interests, languages, and similar optional public fields have no approved schema. Existing registered-profile basics are read-only in this pass. Shared demo profiles explicitly show individually verified adults linked beneath a social profile; they are not presented as one verification identity.
+
+Private email, verification administration, privacy/security controls, logout, and billing entry now live under `/me/settings`. Billing rules and behavior are unchanged. Real profile images, profile-field persistence, linked-profile creation/invitations/permissions, relationship changes, gallery permissions, follower counts, blocks/reports, and messaging workflows remain unresolved or future work.
 
 ### Galleries shell contract
 

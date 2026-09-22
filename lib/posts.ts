@@ -112,6 +112,44 @@ export async function listPublicPosts(db: D1Database): Promise<PublicPost[]> {
   }));
 }
 
+export async function listPublicPostsForProfile(db: D1Database, profileId: string): Promise<PublicPost[]> {
+  const result = await db.prepare(`
+    SELECT
+      post.id,
+      post.author_profile_id,
+      post.body,
+      post.audience,
+      post.created_at,
+      profile.handle,
+      profile.display_name,
+      profile.approximate_location_label
+    FROM posts post
+    JOIN profiles profile ON profile.id = post.author_profile_id
+    JOIN account_types account_type ON account_type.id = profile.account_type_id
+    JOIN users owner ON owner.id = profile.owner_user_id
+    WHERE
+      post.author_profile_id = ?
+      AND post.audience = 'public'
+      AND post.deleted_at IS NULL
+      AND account_type.code = 'private'
+      AND owner.status = 'active'
+      AND owner.deleted_at IS NULL
+    ORDER BY post.created_at DESC, post.id DESC
+    LIMIT 30
+  `).bind(profileId).all<PublicPostRow>();
+
+  return (result.results ?? []).map((row) => ({
+    id: row.id,
+    authorProfileId: row.author_profile_id,
+    body: row.body,
+    audience: row.audience,
+    createdAt: row.created_at,
+    handle: row.handle,
+    displayName: row.display_name,
+    approximateLocationLabel: row.approximate_location_label,
+  }));
+}
+
 export async function softDeletePostForAuthor(
   db: D1Database,
   postId: string,

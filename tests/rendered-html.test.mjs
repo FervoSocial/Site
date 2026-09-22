@@ -249,6 +249,8 @@ test("server-renders public and authenticated placeholder routes", async () => {
     "/profile/example",
     "/event/example",
     "/me",
+    "/me/profile/edit",
+    "/me/settings",
     "/me/billing",
   ]) {
     const response = await render(pathname);
@@ -516,14 +518,17 @@ test("server-renders the launch Clubs and Events and Health Safety entry points"
 });
 
 test("server-renders the Private Member profile milestone", async () => {
-  const profile = await (await render("/profile/luna-caio")).text();
+  const profile = await (await render("/profile/luna-e-caio")).text();
 
   assert.match(profile, /Membro privado/i);
   assert.match(profile, /Luna &amp; Caio/i);
+  assert.match(profile, /Perfil compartilhado · 2 adultos/i);
+  assert.match(profile, /Adulta verificada individualmente/i);
+  assert.match(profile, /Adulto verificado individualmente/i);
+  assert.match(profile, /camada social vinculada/i);
   assert.match(profile, /Foto de perfil/i);
   assert.match(profile, /Localização aproximada/i);
-  assert.match(profile, /Seguidores/i);
-  assert.match(profile, /Seguindo/i);
+  assert.match(profile, /Adultos vinculados/i);
   assert.match(profile, /Publicações/i);
   assert.match(profile, /nenhum dado real/i);
   assert.match(profile, /Ações do perfil/i);
@@ -542,9 +547,39 @@ test("server-renders the Private Member profile milestone", async () => {
   assert.doesNotMatch(profile, /Profissional independente/i);
 
   const me = await (await render("/me")).text();
-  assert.match(me, /O meu perfil/i);
-  assert.match(me, /Planos e faturamento/i);
-  assert.match(me, /href="\/me\/billing"/i);
+  assert.match(me, /Seu perfil social/i);
+  assert.match(me, /Editar perfil/i);
+  assert.match(me, /Conta e configurações/i);
+  assert.match(me, /Ver como membro/i);
+  assert.doesNotMatch(me, /Identidade privada:/i);
+
+  const settings = await (await render("/me/settings")).text();
+  assert.match(settings, /Área privada/i);
+  assert.match(settings, /Conta e configurações/i);
+  assert.match(settings, /Identidade privada:/i);
+  assert.match(settings, /href="\/me\/billing"/i);
+
+  const edit = await (await render("/me/profile/edit")).text();
+  assert.match(edit, /Editar perfil/i);
+  assert.match(edit, /Prévia de edição/i);
+  assert.match(edit, /Nada digitado aqui será enviado ou guardado/i);
+  assert.match(edit, /Salvar alterações/i);
+  assert.match(edit, /disabled/i);
+
+  const hiddenMember = await createTestAccount({ approved: true });
+  const hiddenProfile = sqlite.prepare(`
+    SELECT profile.handle, profile.display_name, profile.owner_user_id
+    FROM profiles profile
+    JOIN auth_identities identity ON identity.user_id = profile.owner_user_id
+    WHERE identity.identifier = ?
+  `).get(hiddenMember.email);
+  sqlite.prepare("UPDATE privacy_settings SET profile_discoverability = 'hidden' WHERE user_id = ?").run(hiddenProfile.owner_user_id);
+
+  const viewer = await approvedAccount;
+  const hiddenResponse = await request(`/profile/${hiddenProfile.handle}`, { headers: { cookie: viewer.cookie } });
+  const hiddenHtml = await hiddenResponse.text();
+  assert.match(hiddenHtml, /Perfil indisponível/i);
+  assert.doesNotMatch(hiddenHtml, new RegExp(hiddenProfile.display_name));
 });
 
 test("server-renders the configuration-driven Billing shell", async () => {

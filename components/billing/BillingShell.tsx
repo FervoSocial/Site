@@ -19,7 +19,7 @@ export function BillingShell() {
 
   return (
     <section className="billing-shell" aria-labelledby="billing-title">
-      <Link className="billing-back" href="/me">
+      <Link className="billing-back" href="/me/settings">
         <span aria-hidden="true">←</span>
         {copy.backToAccount}
       </Link>

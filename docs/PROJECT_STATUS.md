@@ -1,10 +1,24 @@
 # Fervo Social - Project Status
 
-## Create v1 — Public text-posting foundation, pending Product Owner review
+## Post-Founder Phase 4 — public Profile and secondary settings, pending Product Owner review
+
+Starting checkpoint: approved `post-founder-review/create-composer` at `dc7a69be3d922e43db83651d5f6640c10665ff1d`. Working branch: `post-founder-review/phase4-profile-public`.
+
+This bounded pass changes the Profile destination at `/me` from an account dashboard into the signed-in member's public/social profile experience. It uses the existing verified session and basic persisted profile record for public display name, handle, privacy-safe location state, linked adult identity evidence, and Public text posts. The universal `/profile/:handle` route can render those safe persisted basics for registered Private Members while retaining fictional demonstrations for visual review.
+
+Owner-only administration is now secondary: `/me/profile/edit` is a clearly labelled local preview with no fake save or persistence, and `/me/settings` contains the existing private identity, verification, privacy/security, billing, session, and logout entry points. Billing rules and behavior are unchanged. Demo shared profiles explicitly show that every linked adult retains an individual verification; no couple/group verification identity, new linked-profile system, schema, migration, or verification change is introduced.
+
+**Unresolved:** persistent biography/interests/languages and other optional social fields need an approved schema and permission model; real profile image/media storage and moderation remain gated; linked-profile invitations, consent, ownership, unlink/archive behavior, and permissions need Product Owner decisions; privacy controls remain Phase 5 work. Health claims remain prohibited. Existing galleries and visitor actions are still demonstration shells unless already documented otherwise.
+
+No commit, push, merge or deployment is authorised before Product Owner visual review.
+
+## Create v1 — Public text-posting foundation, approved checkpoint
 
 Starting checkpoint: approved `post-founder-review/phase3-clubs-events` at `900596609b941391134f230b7e6587375a46b7b7`. Working branch: `post-founder-review/create-composer`.
 
 This bounded development foundation replaces the placeholder Create sheet with authenticated creation of ordinary Public text posts for verified Private Member accounts. Posts are limited to 1,000 characters, persist in D1, link to the author's personal profile, appear only in the existing Public Feed view, and support author-only confirmed soft deletion. Friends is deliberately not offered as a publication audience because a persistent relationship model does not yet exist. Shared profiles, Club/Event/Professional publishing, media, galleries, drafts, editing, comments, reactions and promotion remain deferred.
+
+Approved checkpoint: `post-founder-review/create-composer` at `dc7a69be3d922e43db83651d5f6640c10665ff1d`.
 
 **Production launch gate:** broad member publishing is not production-ready. It must remain gated until minimum Content Rules, reporting/moderation handling, operational ownership, and related retention/legal safeguards are approved. Soft-deleted records have no invented purge duration; final retention/deletion policy remains unresolved. The existing moderation administration shell is not a functional enforcement system.
 
