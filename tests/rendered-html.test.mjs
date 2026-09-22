@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { DatabaseSync } from "node:sqlite";
 import test from "node:test";
 
@@ -54,9 +54,12 @@ class TestD1Database {
 }
 
 const sqlite = new DatabaseSync(":memory:");
-const migration = readFileSync(new URL("../drizzle/0000_skinny_hellcat.sql", import.meta.url), "utf8");
-for (const statement of migration.split("--> statement-breakpoint").map((value) => value.trim()).filter(Boolean)) {
-  sqlite.exec(statement);
+const migrationsDirectory = new URL("../drizzle/", import.meta.url);
+for (const filename of readdirSync(migrationsDirectory).filter((value) => /^\d{4}_.+\.sql$/.test(value)).sort()) {
+  const migration = readFileSync(new URL(filename, migrationsDirectory), "utf8");
+  for (const statement of migration.split("--> statement-breakpoint").map((value) => value.trim()).filter(Boolean)) {
+    sqlite.exec(statement);
+  }
 }
 sqlite.exec("PRAGMA foreign_keys = ON");
 
@@ -77,14 +80,14 @@ async function request(pathname, init = {}) {
 }
 
 let accountSequence = 0;
-async function createTestAccount({ approved = false, role = "member" } = {}) {
+async function createTestAccount({ approved = false, role = "member", accountType = "private" } = {}) {
   accountSequence += 1;
   const email = `member-${accountSequence}@example.test`;
   const response = await request("/api/auth/register", {
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify({
-      accountType: "private",
+      accountType,
       email,
       username: `Membro Teste ${accountSequence}`,
       birthDate: "1990-01-01",
@@ -339,6 +342,120 @@ test("persists private identity safely and enforces verification and role bounda
   assert.match(logout.headers.get("set-cookie") ?? "", /Max-Age=0/);
   const afterLogout = await request("/home", { headers: { cookie: disposable.cookie }, redirect: "manual" });
   assert.match(afterLogout.headers.get("location") ?? "", /\/login$/);
+});
+
+test("creates, renders, and author-soft-deletes Public text posts with server permissions", async () => {
+  const pending = await pendingAccount;
+  const author = await approvedAccount;
+  const nonOwner = await createTestAccount({ approved: true });
+
+  const unauthenticatedCreate = await request("/api/posts", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ audience: "public", body: "Sem sessão" }),
+  });
+  assert.equal(unauthenticatedCreate.status, 401);
+
+  const unverifiedCreate = await request("/api/posts", {
+    method: "POST",
+    headers: { cookie: pending.cookie, "content-type": "application/json" },
+    body: JSON.stringify({ audience: "public", body: "Sem verificação" }),
+  });
+  assert.equal(unverifiedCreate.status, 403);
+
+  const emptyCreate = await request("/api/posts", {
+    method: "POST",
+    headers: { cookie: author.cookie, "content-type": "application/json" },
+    body: JSON.stringify({ audience: "public", body: "   " }),
+  });
+  assert.equal(emptyCreate.status, 400);
+
+  const tooLongCreate = await request("/api/posts", {
+    method: "POST",
+    headers: { cookie: author.cookie, "content-type": "application/json" },
+    body: JSON.stringify({ audience: "public", body: "a".repeat(1001) }),
+  });
+  assert.equal(tooLongCreate.status, 400);
+
+  const friendsCreate = await request("/api/posts", {
+    method: "POST",
+    headers: { cookie: author.cookie, "content-type": "application/json" },
+    body: JSON.stringify({ audience: "friends", body: "Audiência ainda não suportada" }),
+  });
+  assert.equal(friendsCreate.status, 400);
+
+  const club = await createTestAccount({ approved: true, accountType: "club_business" });
+  const clubCreate = await request("/api/posts", {
+    method: "POST",
+    headers: { cookie: club.cookie, "content-type": "application/json" },
+    body: JSON.stringify({ audience: "public", body: "Publicação de clube não autorizada" }),
+  });
+  assert.equal(clubCreate.status, 403);
+
+  const exactLimitCreate = await request("/api/posts", {
+    method: "POST",
+    headers: { cookie: author.cookie, "content-type": "application/json" },
+    body: JSON.stringify({ audience: "public", body: "b".repeat(1000) }),
+  });
+  assert.equal(exactLimitCreate.status, 201);
+  const exactLimitPayload = await exactLimitCreate.json();
+  const exactLimitDelete = await request(`/api/posts/${exactLimitPayload.post.id}`, {
+    method: "DELETE",
+    headers: { cookie: author.cookie },
+  });
+  assert.equal(exactLimitDelete.status, 200);
+
+  const uniqueBody = `Publicação persistente de teste ${Date.now()}`;
+  const created = await request("/api/posts", {
+    method: "POST",
+    headers: { cookie: author.cookie, "content-type": "application/json" },
+    body: JSON.stringify({ audience: "public", body: uniqueBody }),
+  });
+  assert.equal(created.status, 201);
+  const payload = await created.json();
+  assert.ok(payload.post.id);
+
+  const stored = sqlite.prepare("SELECT author_profile_id, body, audience, deleted_at FROM posts WHERE id = ?").get(payload.post.id);
+  assert.equal(stored.body, uniqueBody);
+  assert.equal(stored.audience, "public");
+  assert.equal(stored.deleted_at, null);
+  const authorProfile = sqlite.prepare("SELECT id, handle FROM profiles WHERE owner_user_id = (SELECT user_id FROM auth_identities WHERE identifier = ?)").get(author.email);
+  assert.equal(stored.author_profile_id, authorProfile.id);
+
+  const persistedHome = await request("/home", { headers: { cookie: author.cookie } });
+  const persistedHtml = await persistedHome.text();
+  assert.match(persistedHtml, new RegExp(uniqueBody));
+  assert.match(persistedHtml, new RegExp(`href="/profile/${authorProfile.handle}"`));
+  assert.match(persistedHtml, />Excluir</);
+
+  const nonOwnerDelete = await request(`/api/posts/${payload.post.id}`, {
+    method: "DELETE",
+    headers: { cookie: nonOwner.cookie },
+  });
+  assert.equal(nonOwnerDelete.status, 404);
+  assert.equal(sqlite.prepare("SELECT deleted_at FROM posts WHERE id = ?").get(payload.post.id).deleted_at, null);
+
+  const unverifiedDelete = await request(`/api/posts/${payload.post.id}`, {
+    method: "DELETE",
+    headers: { cookie: pending.cookie },
+  });
+  assert.equal(unverifiedDelete.status, 403);
+
+  const authorDelete = await request(`/api/posts/${payload.post.id}`, {
+    method: "DELETE",
+    headers: { cookie: author.cookie },
+  });
+  assert.equal(authorDelete.status, 200);
+  assert.ok(sqlite.prepare("SELECT deleted_at FROM posts WHERE id = ?").get(payload.post.id).deleted_at);
+
+  const afterDeleteHome = await request("/home", { headers: { cookie: author.cookie } });
+  assert.doesNotMatch(await afterDeleteHome.text(), new RegExp(uniqueBody));
+
+  const repeatedDelete = await request(`/api/posts/${payload.post.id}`, {
+    method: "DELETE",
+    headers: { cookie: author.cookie },
+  });
+  assert.equal(repeatedDelete.status, 404);
 });
 
 test("server-renders one Feed with three selectable views", async () => {

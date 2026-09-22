@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { index, integer, sqliteTable, text, uniqueIndex } from "drizzle-orm/sqlite-core";
+import { check, index, integer, sqliteTable, text, uniqueIndex } from "drizzle-orm/sqlite-core";
 
 const createdAt = integer("created_at", { mode: "timestamp" }).notNull().default(sql`(unixepoch())`);
 const updatedAt = integer("updated_at", { mode: "timestamp" }).notNull().default(sql`(unixepoch())`);
@@ -64,6 +64,21 @@ export const profiles = sqliteTable("profiles", {
   uniqueIndex("profiles_handle_unique").on(table.handle),
   index("profiles_account_type_idx").on(table.accountTypeId),
   index("profiles_approximate_location_idx").on(table.stateCode, table.cityName),
+]);
+
+export const posts = sqliteTable("posts", {
+  id: text("id").primaryKey(),
+  authorProfileId: text("author_profile_id").notNull().references(() => profiles.id, { onDelete: "cascade" }),
+  body: text("body").notNull(),
+  audience: text("audience", { enum: ["public"] }).notNull().default("public"),
+  createdAt,
+  updatedAt,
+  deletedAt: integer("deleted_at", { mode: "timestamp" }),
+}, (table) => [
+  index("posts_public_feed_idx").on(table.audience, table.deletedAt, table.createdAt),
+  index("posts_author_created_idx").on(table.authorProfileId, table.deletedAt, table.createdAt),
+  check("posts_body_length_check", sql`length(trim(${table.body})) BETWEEN 1 AND 1000`),
+  check("posts_public_audience_check", sql`${table.audience} = 'public'`),
 ]);
 
 export const profileMembers = sqliteTable("profile_members", {

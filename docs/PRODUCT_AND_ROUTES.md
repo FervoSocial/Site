@@ -33,7 +33,7 @@ All four account families have front-end shells. The newly approved individual-a
 | Item | Destination | Current behavior |
 | --- | --- | --- |
 | Home / Feed | `/home` | One Feed shell with three provisional selectable demo views |
-| Create | Modal or bottom sheet | Opens a placeholder sheet; it is not a route |
+| Create | Modal or bottom sheet | Public text-post composer for verified Private Members; it is not a route |
 | Clubs & Events | `/clubs-events` | Minimal launch entry linking to retained club and event discovery routes |
 | Messages | `/messages` | Implemented inbox and conversation shell |
 | Profile | `/me` | Temporary account-first drift retained until Phase 4 can connect a genuine signed-in public profile |
@@ -112,7 +112,7 @@ Select Plan, Compare Period, Preview Changes, Manage Payment Method, Cancel, Vie
 
 The implemented shell is one Feed with one themed view menu containing `Público`, `Distância` and `Amigos`; a Product Owner annotation places its icon control in the desktop navigation rail, superseding both the earlier three-adjacent-icon treatment and the temporary in-page native dropdown. Mobile exposes the same three choices inside the existing More sheet. The selected view retains its community, radar or friend-pair symbol and the control remains keyboard and touch accessible. Final wording and permission details remain `DECISION REQUIRED`. The Home masthead uses the centred Fervo Social wordmark and a safe initials-based row of recent friend activity orbits until approved member images exist. Friends-of-Friends is an audience permission, not a fourth view. Text, pictures and short video remain ordinary profile-linked posts, with no separate Reels product.
 
-The views filter fixed demonstration items in component memory only. `Distância` does not use real geolocation or a member-selected geographic scope. Radius/city/area/region controls, ranking, persistence, detailed Friends permissions and triangulation-safe backend behaviour remain unimplemented. The Professional fixture is removed from the launch Feed; event and safety cards remain supported.
+The views filter fixed demonstration items plus real Public text posts. Persisted posts appear only in `Público`; `Distância` does not use real geolocation or a member-selected geographic scope, and `Amigos` remains a demonstration foundation without a persistent relationship model. Radius/city/area/region controls, ranking, detailed Friends permissions and triangulation-safe backend behaviour remain unimplemented. The Professional fixture is removed from the launch Feed; event and safety cards remain supported.
 
 `/clubs-events` is a single mixed discovery surface rather than separate Club and Event entry cards or destinations. It interleaves the existing Club and Event fixtures in one continuous sequence, uses a shared discovery-card structure, keeps each type explicit in text and restrained visual treatment, keeps approximate location visible, and links to the existing `/profile/:handle` and `/event/:eventId` demonstrations. Event detail returns to `/clubs-events`. Filters, promotion rules, ranking, recommendations, real location logic and backend data remain unimplemented.
 
@@ -126,6 +126,14 @@ Current placeholder card kinds supported by the component are:
 - Sponsored content
 
 Current interactions are component-local only. Like, Save, Follow, and Feed-view selection reset on refresh. Save uses a solid heart with a central keyhole but retains the `Guardar` meaning. Comment, Message, and Report are unavailable placeholders.
+
+## Create v1 contract
+
+Create remains a global modal/bottom sheet and has no separate route. Verified, active Private Member accounts can publish a non-empty Public text post of at most 1,000 characters. The server chooses the signed-in member's personal profile as author; clients cannot submit an author ID. Posts persist in D1 and appear in the Public Feed after refresh. The owner can confirm and soft-delete their own post; normal queries omit tombstoned records. No purge duration has been decided.
+
+Public is the only supported publication audience. Friends and Friends-of-Friends are not offered because the required persistent relationship and permission model does not exist. Shared-profile, Club, Event and Professional publishing are excluded. Media, links, drafts, editing, comments, reactions and promotion are also excluded.
+
+**Launch gate:** this is a development foundation, not approval for unrestricted production publishing. Minimum Content Rules, report intake, moderation operations, retention policy and related legal/operational safeguards require approval before production enablement.
 
 ## Universal profile contract
 

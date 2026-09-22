@@ -7,6 +7,7 @@ import { ptBR } from "@/lib/i18n";
 import { LogoutButton } from "@/components/auth/LogoutButton";
 import { TooltipButton } from "@/components/ui/TooltipButton";
 import { FeedViewIcon } from "@/components/feed/FeedViewIcon";
+import { CreateComposer } from "@/components/create/CreateComposer";
 import type { FeedViewId } from "@/lib/feed-placeholder";
 import {
   FeedAtmosphereContext,
@@ -14,6 +15,7 @@ import {
 } from "@/components/navigation/FeedAtmosphereContext";
 
 type AppShellProps = {
+  canCreatePost: boolean;
   children: ReactNode;
 };
 
@@ -478,7 +480,7 @@ function FeedViewNavigationMenu({
   );
 }
 
-export function AppShell({ children }: AppShellProps) {
+export function AppShell({ canCreatePost, children }: AppShellProps) {
   const pathname = usePathname();
   const router = useRouter();
   const [activeFeedView, setActiveFeedView] = useState<FeedViewId>("public");
@@ -576,12 +578,13 @@ export function AppShell({ children }: AppShellProps) {
             onMouseDown={(event) => event.stopPropagation()}
           >
             <div className="sheet-handle" aria-hidden="true" />
-            <p className="section-kicker">{ptBR.common.foundation}</p>
-            <h2 id="create-sheet-title">{ptBR.shell.createTitle}</h2>
-            <p>{ptBR.shell.createDescription}</p>
-            <button className="sheet-close" type="button" onClick={() => setCreateOpen(false)} autoFocus>
-              {ptBR.shell.close}
-            </button>
+            <CreateComposer
+              canPublish={canCreatePost}
+              onCancel={() => setCreateOpen(false)}
+              onPublished={() => {
+                router.refresh();
+              }}
+            />
           </section>
         </div>
       ) : null}

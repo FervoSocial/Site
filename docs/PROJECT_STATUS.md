@@ -1,5 +1,15 @@
 # Fervo Social - Project Status
 
+## Create v1 — Public text-posting foundation, pending Product Owner review
+
+Starting checkpoint: approved `post-founder-review/phase3-clubs-events` at `900596609b941391134f230b7e6587375a46b7b7`. Working branch: `post-founder-review/create-composer`.
+
+This bounded development foundation replaces the placeholder Create sheet with authenticated creation of ordinary Public text posts for verified Private Member accounts. Posts are limited to 1,000 characters, persist in D1, link to the author's personal profile, appear only in the existing Public Feed view, and support author-only confirmed soft deletion. Friends is deliberately not offered as a publication audience because a persistent relationship model does not yet exist. Shared profiles, Club/Event/Professional publishing, media, galleries, drafts, editing, comments, reactions and promotion remain deferred.
+
+**Production launch gate:** broad member publishing is not production-ready. It must remain gated until minimum Content Rules, reporting/moderation handling, operational ownership, and related retention/legal safeguards are approved. Soft-deleted records have no invented purge duration; final retention/deletion policy remains unresolved. The existing moderation administration shell is not a functional enforcement system.
+
+No commit, push, merge or deployment is authorised before Product Owner review.
+
 ## Post-Founder Phase 3 — Clubs & Events first visual/product pass, pending review
 
 Starting checkpoint: approved `post-founder-review/phase2-navigation-feed` at `ca5653d7cdbab96a198cc493e1cc60bd233f49de`. Working branch: `post-founder-review/phase3-clubs-events`.

@@ -4,11 +4,13 @@ import { ptBR } from "@/lib/i18n";
 import { TooltipButton } from "@/components/ui/TooltipButton";
 
 type FeedCardProps = {
+  deleting?: boolean;
   followed: boolean;
   item: FeedPlaceholderItem;
   liked: boolean;
   onFollow: () => void;
   onLike: () => void;
+  onDelete?: () => void;
   onSave: () => void;
   saved: boolean;
 };
@@ -75,19 +77,25 @@ function SaveHeartLockIcon({ id }: { id: string }) {
 }
 
 export function FeedCard({
+  deleting = false,
   followed,
   item,
   liked,
   onFollow,
   onLike,
+  onDelete,
   onSave,
   saved,
 }: FeedCardProps) {
   const actions = ptBR.feed.actions;
-  const showFollow = item.kind !== "safety";
+  const showFollow = item.kind !== "safety" && !item.canDelete;
 
   return (
-    <article className={`feed-card feed-card-${item.kind}`} aria-labelledby={`feed-title-${item.id}`}>
+    <article
+      className={`feed-card feed-card-${item.kind}`}
+      aria-labelledby={item.title ? `feed-title-${item.id}` : undefined}
+      aria-label={item.title ? undefined : `${item.author}: ${item.body}`}
+    >
       <header className="feed-card-header">
         <Link className="feed-profile-link" href={item.profileHref} aria-label={`${actions.openProfile}: ${item.author}`}>
           <span className={`feed-avatar feed-avatar-${item.kind}`} aria-hidden="true">
@@ -111,6 +119,15 @@ export function FeedCard({
             onClick={onFollow}
           >
             {followed ? actions.following : actions.follow}
+          </button>
+        ) : onDelete ? (
+          <button
+            className="feed-delete-button"
+            type="button"
+            onClick={onDelete}
+            disabled={deleting}
+          >
+            {deleting ? actions.deleting : actions.delete}
           </button>
         ) : null}
       </header>

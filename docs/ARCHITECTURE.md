@@ -30,6 +30,7 @@ app/                    Route entry points and layouts
 components/
   admin/                Moderation queue, case detail, and separate admin shell
   auth/                 Login, registration, recovery, and age-verification shells
+  create/               Public text-post composer
   discovery/            Shared Explore shell and temporary discovery controls
   events/               Event-detail shell
   feed/                 Home feed controller and reusable feed card
@@ -42,6 +43,7 @@ components/
 lib/
   auth/                 Password, token, session, repository, validation, and permission rules
   privacy/policy.ts     Data classification, retention defaults, and approximate-location rules
+  posts.ts              Public post validation, persistence queries, and author soft deletion
   i18n.ts               Central pt-BR interface copy
   explore-placeholder.ts Typed safe Explore demonstration data
   feed-placeholder.ts   Typed safe feed demonstration data
@@ -68,6 +70,7 @@ Components are server components unless they need interaction.
 Current client components include:
 
 - `AppShell` — current pathname highlighting and Create-sheet open state
+- `CreateComposer` — Public-only text composition and explicit request states
 - Authentication shells — submit to Phase 1 server endpoints and display safe local request states
 - `AppShell` / `FeedAtmosphereContext` — active Feed view menu state and the approved view-specific background mapping
 - `FeedShell` — one rendered Feed plus temporary Like, Save, and Follow sets
@@ -82,7 +85,7 @@ Current client components include:
 - `ModerationQueue` — local queue-state previews; filters, sorting, and assignment remain disabled
 - `ModerationCaseDetail` — local tab selection across case, appeal, and audit placeholders; moderation actions remain disabled
 
-Account, session, consent, verification, recovery-token, and privacy-default records are persistent in D1. Product content and shell interactions remain in React memory and are intentionally lost on refresh.
+Account, session, consent, verification, recovery-token, privacy-default records, and bounded Public text posts are persistent in D1. Like, Save, Follow, Feed selection, and remaining shell interactions stay in React memory and are intentionally lost on refresh.
 
 ## Shared UI structure
 
@@ -130,7 +133,7 @@ The profile shell currently keeps its placeholder copy in `lib/i18n.ts`. No rout
 - a D1 binding named `DB`
 - no R2 binding
 
-`db/schema.ts` defines the Phase 1 account boundary. Public profile identity is stored separately from private sign-in identity. Birth dates and identity documents are not stored. Location fields accept only a state, city, approximate label, or hidden state; there are no address or coordinate columns.
+`db/schema.ts` defines the Phase 1 account boundary plus the bounded Create v1 `posts` table. Public profile identity is stored separately from private sign-in identity. Birth dates and identity documents are not stored. Location fields accept only a state, city, approximate label, or hidden state; there are no address or coordinate columns. Create v1 stores only author profile, text body, the fixed Public audience, timestamps and a soft-deletion timestamp.
 
 Passwords use salted PBKDF2-SHA-256 hashes. Session and recovery credentials are opaque random values; only their SHA-256 hashes are stored. Sessions use `HttpOnly`, `SameSite=Lax` cookies and are checked on every protected request. `/verify-age` accepts pending accounts, member routes require an active approved account, and moderation routes additionally require an administrative role.
 

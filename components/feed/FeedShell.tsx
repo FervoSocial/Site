@@ -2,8 +2,10 @@
 
 import Link from "next/link";
 import { useMemo, useState, type Dispatch, type SetStateAction } from "react";
-import { feedPlaceholderItems } from "@/lib/feed-placeholder";
+import { useRouter } from "next/navigation";
+import { feedPlaceholderItems, type FeedPlaceholderItem } from "@/lib/feed-placeholder";
 import { ptBR } from "@/lib/i18n";
+import type { PublicPost } from "@/lib/posts";
 import { useFeedView } from "@/components/navigation/FeedAtmosphereContext";
 import { FeedCard } from "./FeedCard";
 
@@ -13,18 +15,59 @@ const activeFriends = [
   { href: "/profile/renata-sp", initials: "RE", name: "Renata" },
 ];
 
-export function FeedShell() {
+function postInitials(displayName: string) {
+  return displayName
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => Array.from(part)[0]?.toLocaleUpperCase("pt-BR") ?? "")
+    .join("") || "FS";
+}
+
+function persistedFeedItem(post: PublicPost, viewerProfileId: string): FeedPlaceholderItem {
+  const date = new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "short" })
+    .format(new Date(post.createdAt * 1000));
+  return {
+    id: `persisted-${post.id}`,
+    persistedPostId: post.id,
+    kind: "text",
+    views: ["public"],
+    author: post.displayName,
+    handle: post.handle,
+    initials: postInitials(post.displayName),
+    accountLabel: ptBR.feed.persistedAccountLabel,
+    location: post.approximateLocationLabel ?? ptBR.feed.locationNotShared,
+    time: date,
+    profileHref: `/profile/${post.handle}`,
+    body: post.body,
+    canDelete: post.authorProfileId === viewerProfileId,
+  };
+}
+
+export function FeedShell({
+  persistedPosts: initialPersistedPosts,
+  viewerProfileId,
+}: {
+  persistedPosts: PublicPost[];
+  viewerProfileId: string;
+}) {
   const { activeView } = useFeedView();
+  const router = useRouter();
+  const [hiddenDeletedIds, setHiddenDeletedIds] = useState<Set<string>>(() => new Set());
+  const [deletingIds, setDeletingIds] = useState<Set<string>>(() => new Set());
+  const [deleteMessage, setDeleteMessage] = useState<string | null>(null);
   const [likedIds, setLikedIds] = useState<Set<string>>(() => new Set());
   const [savedIds, setSavedIds] = useState<Set<string>>(() => new Set());
   const [followedHandles, setFollowedHandles] = useState<Set<string>>(
     () => new Set(["luna-e-caio", "clube-aurora", "renata-sp"]),
   );
 
-  const visibleItems = useMemo(
-    () => feedPlaceholderItems.filter((item) => item.views.includes(activeView)),
-    [activeView],
-  );
+  const visibleItems = useMemo(() => {
+    const persistedItems = initialPersistedPosts
+      .filter((post) => !hiddenDeletedIds.has(post.id))
+      .map((post) => persistedFeedItem(post, viewerProfileId));
+    return [...persistedItems, ...feedPlaceholderItems].filter((item) => item.views.includes(activeView));
+  }, [activeView, hiddenDeletedIds, initialPersistedPosts, viewerProfileId]);
 
   function toggle(setter: Dispatch<SetStateAction<Set<string>>>, value: string) {
     setter((current) => {
@@ -33,6 +76,30 @@ export function FeedShell() {
       else next.add(value);
       return next;
     });
+  }
+
+  async function deletePost(item: FeedPlaceholderItem) {
+    if (!item.persistedPostId || !item.canDelete) return;
+    if (!window.confirm(ptBR.feed.actions.deleteConfirmation)) return;
+    setDeleteMessage(null);
+    setDeletingIds((current) => new Set(current).add(item.persistedPostId!));
+    try {
+      const response = await fetch(`/api/posts/${encodeURIComponent(item.persistedPostId)}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) throw new Error("delete_failed");
+      setHiddenDeletedIds((current) => new Set(current).add(item.persistedPostId!));
+      setDeleteMessage(ptBR.feed.actions.deleteSuccess);
+      router.refresh();
+    } catch {
+      setDeleteMessage(ptBR.feed.actions.deleteError);
+    } finally {
+      setDeletingIds((current) => {
+        const next = new Set(current);
+        next.delete(item.persistedPostId!);
+        return next;
+      });
+    }
   }
 
   return (
@@ -69,6 +136,7 @@ export function FeedShell() {
         role="region"
         aria-label={`${ptBR.feed.viewsLabel}: ${ptBR.feed.views[activeView]}`}
       >
+        {deleteMessage ? <p className="feed-mutation-status" role="status">{deleteMessage}</p> : null}
         {visibleItems.map((item) => (
           <FeedCard
             key={item.id}
@@ -79,6 +147,8 @@ export function FeedShell() {
             onLike={() => toggle(setLikedIds, item.id)}
             onSave={() => toggle(setSavedIds, item.id)}
             onFollow={() => toggle(setFollowedHandles, item.handle)}
+            deleting={Boolean(item.persistedPostId && deletingIds.has(item.persistedPostId))}
+            onDelete={item.canDelete ? () => deletePost(item) : undefined}
           />
         ))}
       </div>

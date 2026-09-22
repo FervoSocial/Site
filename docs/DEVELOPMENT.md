@@ -28,7 +28,7 @@ Use the local URL printed by vinext. The development server runs the App Router 
 | `npm test` | Build, then run rendered route-shell tests |
 | `npm run db:generate` | Generate Drizzle migrations after an approved schema change |
 
-Apply `drizzle/0000_skinny_hellcat.sql` to a new local or hosted D1 database before testing account flows. The migration creates the lookup rows required by registration.
+Apply the SQL migrations under `drizzle/` in numeric order to a new local or hosted D1 database before testing account and posting flows. Migration `0000` creates the identity foundation and lookup rows; `0001` adds the bounded Public text-post foundation. Migration application remains separate from deployment.
 
 ## Safe change workflow
 

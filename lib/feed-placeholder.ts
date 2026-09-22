@@ -25,6 +25,8 @@ export type FeedPlaceholderItem = {
   title?: string;
   verified?: boolean;
   visualLabel?: string;
+  canDelete?: boolean;
+  persistedPostId?: string;
 };
 
 export const feedPlaceholderItems: FeedPlaceholderItem[] = [
