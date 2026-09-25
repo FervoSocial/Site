@@ -11,9 +11,22 @@ export const metadata: Metadata = {
   title: "Fervo Social — Conexões reais, no seu ritmo",
   description:
     "Fervo Social é uma nova comunidade social para adultos no Brasil.",
+  manifest: "/manifest.webmanifest",
   icons: {
-    icon: "/favicon.svg",
-    shortcut: "/favicon.svg",
+    icon: [
+      {
+        url: "/icons/fervo-chilli-flame-192.png",
+        sizes: "192x192",
+        type: "image/png",
+      },
+      {
+        url: "/icons/fervo-chilli-flame-512.png",
+        sizes: "512x512",
+        type: "image/png",
+      },
+    ],
+    shortcut: "/icons/fervo-chilli-flame-192.png",
+    apple: "/icons/fervo-chilli-flame-180.png",
   },
 };
 
