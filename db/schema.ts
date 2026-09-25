@@ -81,6 +81,26 @@ export const posts = sqliteTable("posts", {
   check("posts_public_audience_check", sql`${table.audience} = 'public'`),
 ]);
 
+export const postMedia = sqliteTable("post_media", {
+  id: text("id").primaryKey(),
+  postId: text("post_id").notNull().references(() => posts.id, { onDelete: "cascade" }),
+  ownerProfileId: text("owner_profile_id").notNull().references(() => profiles.id, { onDelete: "cascade" }),
+  objectKey: text("object_key").notNull(),
+  mediaType: text("media_type", { enum: ["image", "video"] }).notNull(),
+  mimeType: text("mime_type").notNull(),
+  byteSize: integer("byte_size").notNull(),
+  attestationVersion: text("attestation_version").notNull(),
+  attestedAt: integer("attested_at", { mode: "timestamp" }).notNull(),
+  createdAt,
+  deletedAt: integer("deleted_at", { mode: "timestamp" }),
+}, (table) => [
+  uniqueIndex("post_media_post_unique").on(table.postId),
+  uniqueIndex("post_media_object_key_unique").on(table.objectKey),
+  index("post_media_owner_created_idx").on(table.ownerProfileId, table.deletedAt, table.createdAt),
+  check("post_media_type_check", sql`${table.mediaType} IN ('image', 'video')`),
+  check("post_media_size_check", sql`${table.byteSize} > 0`),
+]);
+
 export const profileMembers = sqliteTable("profile_members", {
   id: text("id").primaryKey(),
   profileId: text("profile_id").notNull().references(() => profiles.id, { onDelete: "cascade" }),

@@ -27,6 +27,8 @@ export type FeedPlaceholderItem = {
   visualLabel?: string;
   canDelete?: boolean;
   persistedPostId?: string;
+  mediaKind?: "image" | "video";
+  mediaUrl?: string;
 };
 
 export const feedPlaceholderItems: FeedPlaceholderItem[] = [

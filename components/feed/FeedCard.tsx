@@ -133,9 +133,31 @@ export function FeedCard({
       </header>
 
       {item.kind === "media" ? (
-        <div className="feed-media-placeholder" role="img" aria-label={item.visualLabel}>
-          <span>{item.visualLabel}</span>
-        </div>
+        item.mediaUrl ? (
+          <div className="feed-published-media">
+            {item.mediaKind === "video" ? (
+              <video
+                src={item.mediaUrl}
+                controls
+                playsInline
+                preload="metadata"
+                aria-label={`${item.author}: ${ptBR.feed.publishedMedia}`}
+              />
+            ) : (
+              // Authenticated R2 responses are served through a protected application route.
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={item.mediaUrl}
+                alt={`${item.author}: ${ptBR.feed.publishedMedia}`}
+                loading="lazy"
+              />
+            )}
+          </div>
+        ) : (
+          <div className="feed-media-placeholder" role="img" aria-label={item.visualLabel}>
+            <span>{item.visualLabel}</span>
+          </div>
+        )
       ) : null}
 
       <div className="feed-card-content">

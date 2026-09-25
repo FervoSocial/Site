@@ -1037,6 +1037,90 @@ a:focus-visible {
   opacity: 0.72;
 }
 
+.create-tool-control:not(:disabled) {
+  cursor: pointer;
+}
+
+.create-tool-control:not(:disabled):hover,
+.create-tool-control:not(:disabled):focus-visible {
+  border-color: rgba(168, 85, 247, 0.5);
+  background: rgba(139, 92, 246, 0.08);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.12);
+}
+
+.create-media-input {
+  position: fixed;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.create-media-preview {
+  display: grid;
+  gap: 11px;
+  margin-top: 14px;
+  padding: 12px;
+  border: 1px solid rgba(196, 181, 253, 0.18);
+  border-radius: 16px;
+  background: rgba(5, 5, 10, 0.55);
+}
+
+.create-media-preview > img,
+.create-media-preview > video {
+  display: block;
+  width: 100%;
+  max-height: 270px;
+  object-fit: contain;
+  border-radius: 12px;
+  background: #050508;
+}
+
+.create-media-preview > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--muted);
+  font-size: 0.72rem;
+}
+
+.create-media-preview > div span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.create-media-preview > div button {
+  flex: 0 0 auto;
+  border: 0;
+  background: transparent;
+  color: #fecaca;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 750;
+}
+
+.create-media-attestation {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  gap: 10px;
+  color: #c8c1d2;
+  font-size: 0.7rem;
+  line-height: 1.45;
+}
+
+.create-media-attestation input {
+  width: 17px;
+  height: 17px;
+  margin: 1px 0 0;
+  accent-color: var(--purple-bright);
+}
+
 .create-tool-icon {
   display: grid;
   width: 40px;
@@ -3093,6 +3177,24 @@ a:focus-visible {
   color: rgba(245, 243, 255, 0.66);
   font-size: 0.68rem;
   backdrop-filter: blur(8px);
+}
+
+.feed-published-media {
+  display: grid;
+  min-height: 220px;
+  overflow: hidden;
+  place-items: center;
+  border-block: 1px solid rgba(245, 243, 255, 0.07);
+  background: #050508;
+}
+
+.feed-published-media img,
+.feed-published-media video {
+  display: block;
+  width: 100%;
+  max-height: min(72vh, 720px);
+  object-fit: contain;
+  background: #050508;
 }
 
 .feed-card-content {

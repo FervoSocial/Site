@@ -53,6 +53,36 @@ class TestD1Database {
   }
 }
 
+class TestR2Bucket {
+  constructor() {
+    this.objects = new Map();
+  }
+
+  async put(key, value, options = {}) {
+    const bytes = value instanceof ArrayBuffer
+      ? new Uint8Array(value)
+      : new Uint8Array(await new Response(value).arrayBuffer());
+    this.objects.set(key, {
+      bytes: new Uint8Array(bytes),
+      contentType: options.httpMetadata?.contentType,
+    });
+  }
+
+  async get(key) {
+    const stored = this.objects.get(key);
+    if (!stored) return null;
+    return {
+      body: new Response(stored.bytes).body,
+      httpMetadata: { contentType: stored.contentType },
+      size: stored.bytes.byteLength,
+    };
+  }
+
+  async delete(key) {
+    this.objects.delete(key);
+  }
+}
+
 const sqlite = new DatabaseSync(":memory:");
 const migrationsDirectory = new URL("../drizzle/", import.meta.url);
 for (const filename of readdirSync(migrationsDirectory).filter((value) => /^\d{4}_.+\.sql$/.test(value)).sort()) {
@@ -63,9 +93,11 @@ for (const filename of readdirSync(migrationsDirectory).filter((value) => /^\d{4
 }
 sqlite.exec("PRAGMA foreign_keys = ON");
 
+const testMediaBucket = new TestR2Bucket();
 const testEnv = {
   ASSETS: { fetch: async () => new Response("Not found", { status: 404 }) },
   DB: new TestD1Database(sqlite),
+  MEDIA: testMediaBucket,
   VERIFICATION_PROVIDER_MODE: "sandbox",
 };
 const testContext = { waitUntil() {}, passThroughOnException() {} };
@@ -460,7 +492,106 @@ test("creates, renders, and author-soft-deletes Public text posts with server pe
   assert.equal(repeatedDelete.status, 404);
 });
 
-test("keeps the universal Create composer Public-only while clearly marking future controls unavailable", () => {
+test("stores, renders, protects, and deletes one image or video attached to a Public post", async () => {
+  const author = await approvedAccount;
+  const viewer = await createTestAccount({ approved: true });
+
+  const invalidForm = new FormData();
+  invalidForm.set("audience", "public");
+  invalidForm.set("body", "Arquivo inválido");
+  invalidForm.set("mediaAttestation", "accepted");
+  invalidForm.set("media", new File(["not-an-image"], "fake.png", { type: "image/png" }));
+  const invalidUpload = await request("/api/posts", {
+    method: "POST",
+    headers: { cookie: author.cookie },
+    body: invalidForm,
+  });
+  assert.equal(invalidUpload.status, 400);
+
+  const noAttestationForm = new FormData();
+  noAttestationForm.set("audience", "public");
+  noAttestationForm.set("body", "Sem confirmação");
+  noAttestationForm.set("media", new File([
+    new Uint8Array([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]),
+  ], "photo.png", { type: "image/png" }));
+  const noAttestation = await request("/api/posts", {
+    method: "POST",
+    headers: { cookie: author.cookie },
+    body: noAttestationForm,
+  });
+  assert.equal(noAttestation.status, 400);
+
+  const imageBytes = new Uint8Array([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 1, 2, 3]);
+  const imageForm = new FormData();
+  imageForm.set("audience", "public");
+  imageForm.set("body", "Foto persistente de teste");
+  imageForm.set("mediaAttestation", "accepted");
+  imageForm.set("media", new File([imageBytes], "photo.png", { type: "image/png" }));
+  const imageCreate = await request("/api/posts", {
+    method: "POST",
+    headers: { cookie: author.cookie },
+    body: imageForm,
+  });
+  assert.equal(imageCreate.status, 201);
+  const imagePayload = await imageCreate.json();
+  const imageMetadata = sqlite.prepare(`
+    SELECT object_key, media_type, mime_type, byte_size, attestation_version, deleted_at
+    FROM post_media WHERE post_id = ?
+  `).get(imagePayload.post.id);
+  assert.equal(imageMetadata.media_type, "image");
+  assert.equal(imageMetadata.mime_type, "image/png");
+  assert.equal(imageMetadata.byte_size, imageBytes.byteLength);
+  assert.ok(imageMetadata.attestation_version);
+  assert.equal(imageMetadata.deleted_at, null);
+  assert.ok(testMediaBucket.objects.has(imageMetadata.object_key));
+
+  const anonymousMedia = await request(`/api/posts/${imagePayload.post.id}/media`);
+  assert.equal(anonymousMedia.status, 401);
+  const imageResponse = await request(`/api/posts/${imagePayload.post.id}/media`, {
+    headers: { cookie: viewer.cookie },
+  });
+  assert.equal(imageResponse.status, 200);
+  assert.equal(imageResponse.headers.get("content-type"), "image/png");
+  assert.deepEqual(new Uint8Array(await imageResponse.arrayBuffer()), imageBytes);
+
+  const homeWithImage = await request("/home", { headers: { cookie: viewer.cookie } });
+  const imageHtml = await homeWithImage.text();
+  assert.match(imageHtml, /Foto persistente de teste/);
+  assert.match(imageHtml, new RegExp(`/api/posts/${imagePayload.post.id}/media`));
+
+  const mp4Bytes = new Uint8Array([0, 0, 0, 24, 0x66, 0x74, 0x79, 0x70, 0x69, 0x73, 0x6f, 0x6d]);
+  const videoForm = new FormData();
+  videoForm.set("audience", "public");
+  videoForm.set("body", "Vídeo persistente de teste");
+  videoForm.set("mediaAttestation", "accepted");
+  videoForm.set("media", new File([mp4Bytes], "clip.mp4", { type: "video/mp4" }));
+  const videoCreate = await request("/api/posts", {
+    method: "POST",
+    headers: { cookie: author.cookie },
+    body: videoForm,
+  });
+  assert.equal(videoCreate.status, 201);
+  const videoPayload = await videoCreate.json();
+  const videoMetadata = sqlite.prepare("SELECT media_type, mime_type FROM post_media WHERE post_id = ?").get(videoPayload.post.id);
+  assert.equal(videoMetadata.media_type, "video");
+  assert.equal(videoMetadata.mime_type, "video/mp4");
+  const homeWithVideo = await request("/home", { headers: { cookie: viewer.cookie } });
+  assert.match(await homeWithVideo.text(), new RegExp(`/api/posts/${videoPayload.post.id}/media`));
+
+  const deleteImage = await request(`/api/posts/${imagePayload.post.id}`, {
+    method: "DELETE",
+    headers: { cookie: author.cookie },
+  });
+  assert.equal(deleteImage.status, 200);
+  assert.ok(sqlite.prepare("SELECT deleted_at FROM post_media WHERE post_id = ?").get(imagePayload.post.id).deleted_at);
+  assert.equal(testMediaBucket.objects.has(imageMetadata.object_key), false);
+  const deletedMedia = await request(`/api/posts/${imagePayload.post.id}/media`, {
+    headers: { cookie: viewer.cookie },
+  });
+  assert.equal(deletedMedia.status, 404);
+});
+
+test("keeps Create Public-only while enabling one real media attachment and leaving advanced options unavailable", () => {
   const composer = readFileSync(
     new URL("../components/create/CreateComposer.tsx", import.meta.url),
     "utf8",
@@ -472,8 +603,12 @@ test("keeps the universal Create composer Public-only while clearly marking futu
   assert.match(copy, /addMedia: "Adicionar foto ou vídeo"/);
   assert.match(copy, /moreOptions: "Mais opções"/);
   assert.match(copy, /comingSoon: "Em breve"/);
-  assert.equal((composer.match(/className="create-tool-control" type="button" disabled/g) ?? []).length, 2);
-  assert.doesNotMatch(composer, /type="file"/);
+  assert.match(composer, /type="file"/);
+  assert.match(composer, /form\.set\("media", media\)/);
+  assert.match(composer, /form\.set\("mediaAttestation"/);
+  assert.match(composer, /mediaPreviewUrl/);
+  assert.match(composer, /clearMedia/);
+  assert.equal((composer.match(/className="create-tool-control" type="button" disabled/g) ?? []).length, 1);
 });
 
 test("server-renders one Feed with three selectable views", async () => {

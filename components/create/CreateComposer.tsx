@@ -1,7 +1,13 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type ChangeEvent, type FormEvent } from "react";
 import { ptBR } from "@/lib/i18n";
+import {
+  getSupportedPostMediaKind,
+  POST_IMAGE_MAX_BYTES,
+  POST_MEDIA_ACCEPT,
+  POST_VIDEO_MAX_BYTES,
+} from "@/lib/post-media";
 import { countPostCharacters, POST_BODY_MAX_CHARACTERS } from "@/lib/posts";
 
 type ComposerState = "editing" | "loading" | "success" | "error";
@@ -18,22 +24,74 @@ export function CreateComposer({
   const copy = ptBR.create;
   const [body, setBody] = useState("");
   const [state, setState] = useState<ComposerState>("editing");
+  const [media, setMedia] = useState<File | null>(null);
+  const [mediaPreviewUrl, setMediaPreviewUrl] = useState<string | null>(null);
+  const [mediaAttestation, setMediaAttestation] = useState(false);
+  const [mediaError, setMediaError] = useState<string | null>(null);
+  const mediaInputRef = useRef<HTMLInputElement>(null);
   const count = countPostCharacters(body);
   const trimmedBody = body.trim();
-  const invalid = !trimmedBody || count > POST_BODY_MAX_CHARACTERS;
+  const invalid = !trimmedBody || count > POST_BODY_MAX_CHARACTERS || Boolean(media && !mediaAttestation);
+
+  useEffect(() => {
+    return () => {
+      if (mediaPreviewUrl) URL.revokeObjectURL(mediaPreviewUrl);
+    };
+  }, [mediaPreviewUrl]);
+
+  function clearMedia() {
+    setMedia(null);
+    setMediaPreviewUrl(null);
+    setMediaAttestation(false);
+    setMediaError(null);
+    if (mediaInputRef.current) mediaInputRef.current.value = "";
+  }
+
+  function selectMedia(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0] ?? null;
+    if (!file) return;
+    const kind = getSupportedPostMediaKind(file.type);
+    const limit = kind === "image" ? POST_IMAGE_MAX_BYTES : POST_VIDEO_MAX_BYTES;
+    if (!kind) {
+      setMediaError(copy.mediaTypeError);
+      event.target.value = "";
+      return;
+    }
+    if (file.size > limit) {
+      setMediaError(kind === "image" ? copy.imageSizeError : copy.videoSizeError);
+      event.target.value = "";
+      return;
+    }
+    setMedia(file);
+    setMediaPreviewUrl(URL.createObjectURL(file));
+    setMediaAttestation(false);
+    setMediaError(null);
+    if (state === "error") setState("editing");
+  }
 
   async function publish(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (invalid || state === "loading" || !canPublish) return;
     setState("loading");
     try {
-      const response = await fetch("/api/posts", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ body, audience: "public" }),
-      });
+      let response: Response;
+      if (media) {
+        const form = new FormData();
+        form.set("body", body);
+        form.set("audience", "public");
+        form.set("media", media);
+        form.set("mediaAttestation", mediaAttestation ? "accepted" : "");
+        response = await fetch("/api/posts", { method: "POST", body: form });
+      } else {
+        response = await fetch("/api/posts", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ body, audience: "public" }),
+        });
+      }
       if (!response.ok) throw new Error("post_create_failed");
       setBody("");
+      clearMedia();
       setState("success");
       onPublished();
     } catch {
@@ -109,7 +167,12 @@ export function CreateComposer({
       </div>
 
       <div className="create-composer-tools" aria-label="Recursos da publicação">
-        <button className="create-tool-control" type="button" disabled>
+        <button
+          className="create-tool-control"
+          type="button"
+          onClick={() => mediaInputRef.current?.click()}
+          disabled={state === "loading"}
+        >
           <span className="create-tool-icon" aria-hidden="true">
             <svg viewBox="0 0 24 24">
               <rect x="3" y="5" width="18" height="14" rx="2.5" />
@@ -118,11 +181,20 @@ export function CreateComposer({
             </svg>
           </span>
           <span className="create-tool-copy">
-            <strong>{copy.addMedia}</strong>
-            <small>{copy.mediaUnavailable}</small>
+            <strong>{media ? copy.replaceMedia : copy.addMedia}</strong>
+            <small>{copy.mediaGuidance}</small>
           </span>
-          <span className="create-tool-status">{copy.comingSoon}</span>
         </button>
+
+        <input
+          ref={mediaInputRef}
+          id="create-post-media"
+          className="create-media-input"
+          type="file"
+          accept={POST_MEDIA_ACCEPT}
+          onChange={selectMedia}
+          disabled={state === "loading"}
+        />
 
         <button className="create-tool-control" type="button" disabled>
           <span className="create-tool-icon" aria-hidden="true">
@@ -137,6 +209,35 @@ export function CreateComposer({
           <span className="create-tool-status">{copy.comingSoon}</span>
         </button>
       </div>
+
+      {media && mediaPreviewUrl ? (
+        <div className="create-media-preview">
+          {media.type.startsWith("image/") ? (
+            // Local object URLs cannot use the framework image optimizer.
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={mediaPreviewUrl} alt={copy.mediaPreviewAlt} />
+          ) : (
+            <video src={mediaPreviewUrl} controls playsInline preload="metadata" aria-label={copy.mediaPreviewAlt} />
+          )}
+          <div>
+            <span>{media.name}</span>
+            <button type="button" onClick={clearMedia} disabled={state === "loading"}>
+              {copy.removeMedia}
+            </button>
+          </div>
+          <label className="create-media-attestation">
+            <input
+              type="checkbox"
+              checked={mediaAttestation}
+              onChange={(event) => setMediaAttestation(event.target.checked)}
+              disabled={state === "loading"}
+            />
+            <span>{copy.mediaAttestation}</span>
+          </label>
+        </div>
+      ) : null}
+
+      {mediaError ? <p className="create-composer-status create-composer-error" role="alert">{mediaError}</p> : null}
 
       {state === "error" ? (
         <p className="create-composer-status create-composer-error" role="alert">

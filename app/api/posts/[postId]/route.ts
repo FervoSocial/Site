@@ -1,4 +1,4 @@
-import { getD1 } from "@/db";
+import { getD1, getMediaBucket } from "@/db";
 import { jsonError, jsonSuccess } from "@/lib/auth/http";
 import { principalFromCookieHeader } from "@/lib/auth/session";
 import { canPublishFromPersonalProfile, softDeletePostForAuthor } from "@/lib/posts";
@@ -19,7 +19,8 @@ export async function DELETE(
 
   const { postId } = await context.params;
   if (!postId) return jsonError("post_not_found", 404);
-  const deleted = await softDeletePostForAuthor(db, postId, principal.profileId);
-  if (!deleted) return jsonError("post_not_found", 404);
+  const result = await softDeletePostForAuthor(db, postId, principal.profileId);
+  if (!result.deleted) return jsonError("post_not_found", 404);
+  if (result.objectKey) await getMediaBucket().delete(result.objectKey);
   return jsonSuccess({ deleted: true });
 }

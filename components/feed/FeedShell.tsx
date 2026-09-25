@@ -30,7 +30,7 @@ function persistedFeedItem(post: PublicPost, viewerProfileId: string): FeedPlace
   return {
     id: `persisted-${post.id}`,
     persistedPostId: post.id,
-    kind: "text",
+    kind: post.media ? "media" : "text",
     views: ["public"],
     author: post.displayName,
     handle: post.handle,
@@ -41,6 +41,8 @@ function persistedFeedItem(post: PublicPost, viewerProfileId: string): FeedPlace
     profileHref: `/profile/${post.handle}`,
     body: post.body,
     canDelete: post.authorProfileId === viewerProfileId,
+    mediaKind: post.media?.kind,
+    mediaUrl: post.media ? `/api/posts/${encodeURIComponent(post.id)}/media` : undefined,
   };
 }
 

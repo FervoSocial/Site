@@ -5,6 +5,7 @@ import handler from "vinext/server/app-router-entry";
 interface Env {
   ASSETS: Fetcher;
   DB: D1Database;
+  MEDIA: R2Bucket;
   VERIFICATION_PROVIDER_MODE?: string;
   IMAGES: {
     input(stream: ReadableStream): {
