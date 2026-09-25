@@ -920,42 +920,141 @@ a:focus-visible {
   line-height: 1.55;
 }
 
-.create-audience-note {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+.create-audience-selector {
+  position: relative;
+  min-width: 0;
   margin-top: 20px;
-  padding: 13px 15px;
+}
+
+.create-audience-label {
+  display: block;
+  margin-bottom: 9px;
+  color: var(--text);
+  font-size: 0.78rem;
+  font-weight: 720;
+}
+
+.create-audience-trigger {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  min-height: 56px;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
   border: 1px solid rgba(196, 181, 253, 0.18);
   border-radius: 15px;
   background: rgba(139, 92, 246, 0.075);
+  color: var(--text);
+  cursor: pointer;
+  text-align: left;
 }
 
-.create-audience-note > span:first-child {
+.create-audience-trigger:focus-visible {
+  border-color: rgba(168, 85, 247, 0.65);
+  box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.08);
+  outline: none;
+}
+
+.create-audience-trigger > span:first-child {
   display: grid;
   width: 34px;
   height: 34px;
   flex: 0 0 auto;
   place-items: center;
   border-radius: 50%;
-  background: rgba(139, 92, 246, 0.15);
+  background: rgba(139, 92, 246, 0.17);
   color: #d8ccff;
 }
 
-.create-audience-note > span:last-child {
+.create-audience-trigger > span:nth-child(2),
+.create-audience-menu button > span:nth-child(2) {
   display: grid;
   gap: 2px;
+  min-width: 0;
 }
 
-.create-audience-note strong {
+.create-audience-trigger strong,
+.create-audience-menu strong {
   color: var(--text);
   font-size: 0.82rem;
 }
 
-.create-audience-note small {
+.create-audience-trigger small,
+.create-audience-menu small {
   color: var(--muted);
   font-size: 0.72rem;
   line-height: 1.4;
+}
+
+.create-audience-chevron {
+  margin-left: auto;
+  color: #c4b5fd;
+  font-size: 1.1rem;
+  transition: transform 160ms ease;
+}
+
+.create-audience-trigger[aria-expanded="true"] .create-audience-chevron {
+  transform: rotate(180deg);
+}
+
+.create-audience-menu {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 7px);
+  right: 0;
+  left: 0;
+  display: grid;
+  gap: 4px;
+  padding: 6px;
+  border: 1px solid rgba(196, 181, 253, 0.22);
+  border-radius: 15px;
+  background: #151321;
+  box-shadow: 0 18px 38px rgba(0, 0, 0, 0.46);
+}
+
+.create-audience-menu button {
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 10px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  text-align: left;
+}
+
+.create-audience-menu button:hover:not(:disabled),
+.create-audience-menu button:focus-visible,
+.create-audience-menu button[aria-selected="true"] {
+  background: rgba(139, 92, 246, 0.13);
+  outline: none;
+}
+
+.create-audience-menu button > span:first-child {
+  color: #c4b5fd;
+  font-weight: 800;
+  text-align: center;
+}
+
+.create-audience-menu button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.create-audience-menu em {
+  margin-left: auto;
+  padding: 3px 7px;
+  border-radius: 999px;
+  background: rgba(212, 175, 55, 0.12);
+  color: #f6d878;
+  font-size: 0.62rem;
+  font-style: normal;
+  font-weight: 750;
+  white-space: nowrap;
 }
 
 .create-text-field {
@@ -3865,6 +3964,28 @@ a:focus-visible {
 .member-profile-post-list article > div span {
   color: #c4b5fd;
   font-weight: 750;
+}
+
+.member-profile-post-media {
+  display: block;
+  width: min(100%, 560px);
+  max-height: 520px;
+  margin-top: 14px;
+  border-radius: 12px;
+  background: #05050a;
+  object-fit: contain;
+}
+
+.member-profile-post-delete {
+  margin-top: 14px;
+  padding: 7px 11px;
+  border: 1px solid rgba(248, 113, 113, 0.28);
+  border-radius: 999px;
+  background: rgba(127, 29, 29, 0.12);
+  color: #fecaca;
+  font: inherit;
+  font-size: 0.7rem;
+  font-weight: 700;
 }
 
 .member-profile-empty {

@@ -8,7 +8,7 @@ import {
   POST_MEDIA_ACCEPT,
   POST_VIDEO_MAX_BYTES,
 } from "@/lib/post-media";
-import { countPostCharacters, POST_BODY_MAX_CHARACTERS } from "@/lib/posts";
+import { countPostCharacters, POST_BODY_MAX_CHARACTERS, type PostAudience } from "@/lib/posts";
 
 type ComposerState = "editing" | "loading" | "success" | "error";
 
@@ -23,12 +23,15 @@ export function CreateComposer({
 }) {
   const copy = ptBR.create;
   const [body, setBody] = useState("");
+  const [audience, setAudience] = useState<PostAudience>("public");
+  const [audienceOpen, setAudienceOpen] = useState(false);
   const [state, setState] = useState<ComposerState>("editing");
   const [media, setMedia] = useState<File | null>(null);
   const [mediaPreviewUrl, setMediaPreviewUrl] = useState<string | null>(null);
   const [mediaAttestation, setMediaAttestation] = useState(false);
   const [mediaError, setMediaError] = useState<string | null>(null);
   const mediaInputRef = useRef<HTMLInputElement>(null);
+  const audienceMenuRef = useRef<HTMLDivElement>(null);
   const count = countPostCharacters(body);
   const trimmedBody = body.trim();
   const invalid = !trimmedBody || count > POST_BODY_MAX_CHARACTERS || Boolean(media && !mediaAttestation);
@@ -38,6 +41,22 @@ export function CreateComposer({
       if (mediaPreviewUrl) URL.revokeObjectURL(mediaPreviewUrl);
     };
   }, [mediaPreviewUrl]);
+
+  useEffect(() => {
+    if (!audienceOpen) return;
+    function closeAudienceMenu(event: PointerEvent) {
+      if (!audienceMenuRef.current?.contains(event.target as Node)) setAudienceOpen(false);
+    }
+    function closeAudienceMenuOnEscape(event: KeyboardEvent) {
+      if (event.key === "Escape") setAudienceOpen(false);
+    }
+    document.addEventListener("pointerdown", closeAudienceMenu);
+    document.addEventListener("keydown", closeAudienceMenuOnEscape);
+    return () => {
+      document.removeEventListener("pointerdown", closeAudienceMenu);
+      document.removeEventListener("keydown", closeAudienceMenuOnEscape);
+    };
+  }, [audienceOpen]);
 
   function clearMedia() {
     setMedia(null);
@@ -78,7 +97,7 @@ export function CreateComposer({
       if (media) {
         const form = new FormData();
         form.set("body", body);
-        form.set("audience", "public");
+        form.set("audience", audience);
         form.set("media", media);
         form.set("mediaAttestation", mediaAttestation ? "accepted" : "");
         response = await fetch("/api/posts", { method: "POST", body: form });
@@ -86,7 +105,7 @@ export function CreateComposer({
         response = await fetch("/api/posts", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ body, audience: "public" }),
+          body: JSON.stringify({ body, audience }),
         });
       }
       if (!response.ok) throw new Error("post_create_failed");
@@ -118,7 +137,7 @@ export function CreateComposer({
         <span aria-hidden="true">✓</span>
         <p className="section-kicker">{copy.successEyebrow}</p>
         <h2 id="create-sheet-title">{copy.successTitle}</h2>
-        <p>{copy.successDescription}</p>
+        <p>{copy.audiences[audience].successDescription}</p>
         <button className="sheet-close" type="button" onClick={onCancel} autoFocus>
           {copy.viewFeed}
         </button>
@@ -132,9 +151,45 @@ export function CreateComposer({
       <h2 id="create-sheet-title">{copy.title}</h2>
       <p className="create-composer-description">{copy.description}</p>
 
-      <div className="create-audience-note" role="note">
-        <span aria-hidden="true">◎</span>
-        <span><strong>{copy.publicAudience}</strong><small>{copy.publicAudienceDescription}</small></span>
+      <div className="create-audience-selector" ref={audienceMenuRef}>
+        <span className="create-audience-label" id="create-audience-label">{copy.audienceLabel}</span>
+        <button
+          className="create-audience-trigger"
+          type="button"
+          aria-labelledby="create-audience-label create-audience-value"
+          aria-haspopup="listbox"
+          aria-expanded={audienceOpen}
+          onClick={() => setAudienceOpen((current) => !current)}
+          disabled={state === "loading"}
+        >
+          <span aria-hidden="true">◎</span>
+          <span id="create-audience-value"><strong>{copy.audiences[audience].label}</strong><small>{copy.audiences[audience].description}</small></span>
+          <span className="create-audience-chevron" aria-hidden="true">⌄</span>
+        </button>
+        {audienceOpen ? (
+          <div className="create-audience-menu" role="listbox" aria-labelledby="create-audience-label">
+            {(["public", "profile", "only_me"] as const).map((value) => (
+              <button
+                key={value}
+                type="button"
+                role="option"
+                aria-selected={audience === value}
+                onClick={() => {
+                  setAudience(value);
+                  setAudienceOpen(false);
+                }}
+              >
+                <span aria-hidden="true">{audience === value ? "✓" : ""}</span>
+                <span><strong>{copy.audiences[value].label}</strong><small>{copy.audiences[value].description}</small></span>
+              </button>
+            ))}
+            <button type="button" role="option" aria-selected="false" aria-disabled="true" disabled>
+              <span aria-hidden="true" />
+              <span><strong>{copy.audiences.friends.label}</strong><small>{copy.audiences.friends.description}</small></span>
+              <em>{copy.comingSoon}</em>
+            </button>
+          </div>
+        ) : null}
       </div>
 
       <label className="create-text-field" htmlFor="create-post-body">

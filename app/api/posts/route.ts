@@ -4,8 +4,8 @@ import { principalFromCookieHeader } from "@/lib/auth/session";
 import { validatePostMediaFile } from "@/lib/post-media";
 import {
   canPublishFromPersonalProfile,
-  createPublicPost,
-  createPublicPostWithMedia,
+  createPost,
+  createPostWithMedia,
   validateCreatePostInput,
 } from "@/lib/posts";
 
@@ -42,11 +42,12 @@ export async function POST(request: Request) {
     if (!validatedMedia.ok) return jsonError(validatedMedia.code);
 
     try {
-      const post = await createPublicPostWithMedia(
+      const post = await createPostWithMedia(
         db,
         getMediaBucket(),
         principal,
         parsed.body,
+        parsed.audience,
         validatedMedia.media,
       );
       return jsonSuccess({ post }, { status: 201 });
@@ -59,7 +60,7 @@ export async function POST(request: Request) {
   if (!parsed.ok) return jsonError(parsed.code);
 
   try {
-    const post = await createPublicPost(db, principal, parsed.body);
+    const post = await createPost(db, principal, parsed.body, parsed.audience);
     return jsonSuccess({ post }, { status: 201 });
   } catch {
     return jsonError("post_create_failed", 500);

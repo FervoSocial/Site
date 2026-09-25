@@ -1,7 +1,7 @@
 import { getD1, getMediaBucket } from "@/db";
 import { jsonError } from "@/lib/auth/http";
 import { principalFromCookieHeader } from "@/lib/auth/session";
-import { findPublicPostMedia } from "@/lib/posts";
+import { findVisiblePostMedia } from "@/lib/posts";
 
 export async function GET(
   request: Request,
@@ -15,7 +15,7 @@ export async function GET(
   }
 
   const { postId } = await context.params;
-  const media = await findPublicPostMedia(db, postId);
+  const media = await findVisiblePostMedia(db, postId, principal.profileId);
   if (!media) return jsonError("media_not_found", 404);
   const object = await getMediaBucket().get(media.object_key);
   if (!object) return jsonError("media_not_found", 404);

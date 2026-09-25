@@ -16,7 +16,7 @@ No commit, push, merge or deployment is authorised before Product Owner visual r
 
 Starting checkpoint: approved `post-founder-review/phase3-clubs-events` at `900596609b941391134f230b7e6587375a46b7b7`. Working branch: `post-founder-review/create-composer`.
 
-This bounded development foundation replaces the placeholder Create sheet with authenticated creation of ordinary Public text posts for verified Private Member accounts. Posts are limited to 1,000 characters, persist in D1, link to the author's personal profile, appear only in the existing Public Feed view, and support author-only confirmed soft deletion. Friends is deliberately not offered as a publication audience because a persistent relationship model does not yet exist. Shared profiles, Club/Event/Professional publishing, media, galleries, drafts, editing, comments, reactions and promotion remain deferred.
+The Create development foundation now supports authenticated text posts with an optional single photo or video for verified Private Member accounts. Posts are limited to 1,000 characters, persist in D1, link to the author's personal profile, and support author-only confirmed soft deletion. `Público`, `Somente no perfil`, and `Só eu` are enforced server-side; Friends remains disabled because a persistent relationship model does not yet exist. Shared profiles, Club/Event/Professional publishing, multiple-media galleries, drafts, editing, comments, reactions and promotion remain deferred. Production R2 provisioning, Photo & Media Rules, moderation/scanning and related operational safeguards remain launch gates.
 
 Approved checkpoint: `post-founder-review/create-composer` at `dc7a69be3d922e43db83651d5f6640c10665ff1d`.
 

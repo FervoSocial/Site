@@ -70,7 +70,7 @@ export const posts = sqliteTable("posts", {
   id: text("id").primaryKey(),
   authorProfileId: text("author_profile_id").notNull().references(() => profiles.id, { onDelete: "cascade" }),
   body: text("body").notNull(),
-  audience: text("audience", { enum: ["public"] }).notNull().default("public"),
+  audience: text("audience", { enum: ["public", "profile", "only_me"] }).notNull().default("public"),
   createdAt,
   updatedAt,
   deletedAt: integer("deleted_at", { mode: "timestamp" }),
@@ -78,7 +78,7 @@ export const posts = sqliteTable("posts", {
   index("posts_public_feed_idx").on(table.audience, table.deletedAt, table.createdAt),
   index("posts_author_created_idx").on(table.authorProfileId, table.deletedAt, table.createdAt),
   check("posts_body_length_check", sql`length(trim(${table.body})) BETWEEN 1 AND 1000`),
-  check("posts_public_audience_check", sql`${table.audience} = 'public'`),
+  check("posts_audience_check", sql`${table.audience} IN ('public', 'profile', 'only_me')`),
 ]);
 
 export const postMedia = sqliteTable("post_media", {

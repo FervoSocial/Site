@@ -131,9 +131,9 @@ Current interactions are component-local only. Like, Save, Follow, and Feed-view
 
 ## Create v1 contract
 
-Create remains a global modal/bottom sheet and has no separate route. Verified, active Private Member accounts can publish a non-empty Public text post of at most 1,000 characters. The server chooses the signed-in member's personal profile as author; clients cannot submit an author ID. Posts persist in D1 and appear in the Public Feed after refresh. The owner can confirm and soft-delete their own post; normal queries omit tombstoned records. No purge duration has been decided.
+Create remains a global modal/bottom sheet and has no separate route. Verified, active Private Member accounts can publish a non-empty text post of at most 1,000 characters, optionally with one validated photo or video stored through the configured R2 binding. The server chooses the signed-in member's personal profile as author; clients cannot submit an author ID. Posts persist in D1. The owner can confirm and soft-delete their own post; normal queries omit tombstoned records. No purge duration has been decided.
 
-Public is the only supported publication audience. Friends and Friends-of-Friends are not offered because the required persistent relationship and permission model does not exist. Shared-profile, Club, Event and Professional publishing are excluded. Media, links, drafts, editing, comments, reactions and promotion are also excluded.
+The supported audiences are `Público`, `Somente no perfil`, and `Só eu`. Public posts may appear in the Public Feed and profile; profile-only posts stay out of the Public Feed but remain on the author's member-visible profile; only-me posts are returned only on the signed-in owner's `/me` surface. `Amigos` remains visible but disabled because the required persistent relationship and permission model does not exist. Shared-profile, Club, Event and Professional publishing remain excluded, as do multiple-media galleries, links, drafts, editing, comments, reactions and promotion.
 
 **Launch gate:** this is a development foundation, not approval for unrestricted production publishing. Minimum Content Rules, report intake, moderation operations, retention policy and related legal/operational safeguards require approval before production enablement.
 

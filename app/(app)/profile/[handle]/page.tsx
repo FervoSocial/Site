@@ -6,7 +6,7 @@ import { isProfessionalHandle } from "@/lib/professional-placeholder";
 import { getD1 } from "@/db";
 import { requireVerifiedSession } from "@/lib/auth/guards";
 import { getDemoMemberProfile, getPersistedMemberProfile } from "@/lib/member-profile";
-import { listPublicPosts } from "@/lib/posts";
+import { listProfilePosts } from "@/lib/posts";
 import { ProfileUnavailable } from "@/components/profile/ProfileUnavailable";
 
 type ProfilePageProps = {
@@ -21,8 +21,8 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
   if (isProfessionalHandle(handle)) return <ProfessionalProfile />;
 
   const principal = await requireVerifiedSession();
-  const publicPosts = await listPublicPosts(getD1());
-  const persistedPosts = publicPosts.filter((post) => post.handle === handle);
+  const profileRow = await getD1().prepare("SELECT id FROM profiles WHERE handle = ? LIMIT 1").bind(handle).first<{ id: string }>();
+  const persistedPosts = profileRow ? await listProfilePosts(getD1(), profileRow.id) : [];
   const persistedProfile = await getPersistedMemberProfile(
     getD1(),
     handle,

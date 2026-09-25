@@ -21,28 +21,54 @@ function ProfileDetailGroup({ label, values }: { label: string; values: string[]
   );
 }
 
-function ProfilePosts({ profile }: { profile: MemberProfileView }) {
-  if (!profile.posts.length) {
+const audienceLabels = {
+  public: "Público",
+  profile: "Somente no perfil",
+  only_me: "Só eu",
+} as const;
+
+function ProfilePosts({ ownerView, profile }: { ownerView: boolean; profile: MemberProfileView }) {
+  const [removedPostIds, setRemovedPostIds] = useState<string[]>([]);
+  const visiblePosts = profile.posts.filter((post) => !removedPostIds.includes(post.id));
+
+  async function deletePost(postId: string) {
+    if (!window.confirm("Excluir esta publicação? Esta ação não pode ser desfeita nesta versão.")) return;
+    const response = await fetch(`/api/posts/${postId}`, { method: "DELETE" });
+    if (response.ok) setRemovedPostIds((current) => [...current, postId]);
+  }
+
+  if (!visiblePosts.length) {
     return (
       <div className="member-profile-empty">
         <span aria-hidden="true">◇</span>
-        <h3>Nenhuma publicação pública ainda</h3>
-        <p>As publicações públicas deste perfil aparecerão aqui.</p>
+        <h3>Nenhuma publicação visível ainda</h3>
+        <p>{ownerView ? "As suas publicações aparecerão aqui." : "As publicações deste perfil aparecerão aqui."}</p>
       </div>
     );
   }
 
   return (
     <div className="member-profile-post-list">
-      {profile.posts.map((post) => (
+      {visiblePosts.map((post) => (
         <article key={post.id}>
           <div>
-            <span>Público</span>
+            <span>{audienceLabels[post.audience]}</span>
             <time dateTime={new Date(post.createdAt * 1000).toISOString()}>
               {new Intl.DateTimeFormat("pt-BR", { dateStyle: "medium" }).format(post.createdAt * 1000)}
             </time>
           </div>
           <p>{post.body}</p>
+          {post.media?.kind === "image" ? (
+            // Persisted member media is served by the protected same-origin endpoint.
+            // eslint-disable-next-line @next/next/no-img-element
+            <img className="member-profile-post-media" src={`/api/posts/${post.id}/media`} alt="Mídia da publicação" />
+          ) : null}
+          {post.media?.kind === "video" ? (
+            <video className="member-profile-post-media" src={`/api/posts/${post.id}/media`} controls playsInline preload="metadata" />
+          ) : null}
+          {ownerView ? (
+            <button className="member-profile-post-delete" type="button" onClick={() => deletePost(post.id)}>Excluir</button>
+          ) : null}
         </article>
       ))}
     </div>
@@ -149,9 +175,11 @@ export function PrivateMemberProfile({
           <div className="private-profile-tab-panel private-profile-media-panel" id="private-profile-tab-panel-media" role="tabpanel" aria-labelledby="private-profile-tab-media" hidden={activeTab !== "media"}><GalleryShell /></div>
 
           <div className="private-profile-tab-panel" id="private-profile-tab-panel-posts" role="tabpanel" aria-labelledby="private-profile-tab-posts" hidden={activeTab !== "posts"}>
-            <h2>Publicações públicas</h2>
-            <p>Somente textos públicos persistidos aparecem aqui nesta primeira base funcional.</p>
-            <ProfilePosts profile={profile} />
+            <h2>{ownerView ? "Suas publicações" : "Publicações do perfil"}</h2>
+            <p>{ownerView
+              ? "Você vê aqui publicações públicas, somente no perfil e privadas para você."
+              : "Publicações públicas e marcadas como somente no perfil aparecem aqui."}</p>
+            <ProfilePosts ownerView={ownerView} profile={profile} />
           </div>
         </div>
       </Surface>

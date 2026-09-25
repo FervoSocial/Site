@@ -105,6 +105,12 @@ const workerUrl = new URL("../dist/server/index.js", import.meta.url);
 workerUrl.searchParams.set("test", `${process.pid}-${Date.now()}`);
 const { default: worker } = await import(workerUrl.href);
 
+test("applies the audience migration without retaining temporary-table constraints", () => {
+  const postsTable = sqlite.prepare("SELECT sql FROM sqlite_master WHERE type = 'table' AND name = 'posts'").get();
+  assert.match(postsTable.sql, /'public', 'profile', 'only_me'/);
+  assert.doesNotMatch(postsTable.sql, /__new_posts/);
+});
+
 async function request(pathname, init = {}) {
   const headers = new Headers(init.headers);
   if (!headers.has("accept")) headers.set("accept", "text/html");
@@ -492,6 +498,51 @@ test("creates, renders, and author-soft-deletes Public text posts with server pe
   assert.equal(repeatedDelete.status, 404);
 });
 
+test("enforces Public, profile-only, and only-me audiences across Feed and profiles", async () => {
+  const author = await createTestAccount({ approved: true });
+  const viewer = await createTestAccount({ approved: true });
+  const authorProfile = sqlite.prepare("SELECT id, handle FROM profiles WHERE owner_user_id = (SELECT user_id FROM auth_identities WHERE identifier = ?)").get(author.email);
+
+  async function createAudiencePost(audience, body) {
+    const response = await request("/api/posts", {
+      method: "POST",
+      headers: { cookie: author.cookie, "content-type": "application/json" },
+      body: JSON.stringify({ audience, body }),
+    });
+    assert.equal(response.status, 201);
+    return response.json();
+  }
+
+  const publicBody = `Público audience ${Date.now()}`;
+  const profileBody = `Somente perfil ${Date.now()}`;
+  const onlyMeBody = `Só eu ${Date.now()}`;
+  const publicPost = await createAudiencePost("public", publicBody);
+  const profilePost = await createAudiencePost("profile", profileBody);
+  const onlyMePost = await createAudiencePost("only_me", onlyMeBody);
+
+  const homeHtml = await (await request("/home", { headers: { cookie: viewer.cookie } })).text();
+  assert.match(homeHtml, new RegExp(publicBody));
+  assert.doesNotMatch(homeHtml, new RegExp(profileBody));
+  assert.doesNotMatch(homeHtml, new RegExp(onlyMeBody));
+
+  const publicProfileHtml = await (await request(`/profile/${authorProfile.handle}`, { headers: { cookie: viewer.cookie } })).text();
+  assert.match(publicProfileHtml, new RegExp(publicBody));
+  assert.match(publicProfileHtml, new RegExp(profileBody));
+  assert.doesNotMatch(publicProfileHtml, new RegExp(onlyMeBody));
+
+  const ownerProfileHtml = await (await request("/me", { headers: { cookie: author.cookie } })).text();
+  assert.match(ownerProfileHtml, new RegExp(publicBody));
+  assert.match(ownerProfileHtml, new RegExp(profileBody));
+  assert.match(ownerProfileHtml, new RegExp(onlyMeBody));
+  assert.match(ownerProfileHtml, /Somente no perfil/);
+  assert.match(ownerProfileHtml, /Só eu/);
+
+  for (const post of [publicPost, profilePost, onlyMePost]) {
+    const deleted = await request(`/api/posts/${post.post.id}`, { method: "DELETE", headers: { cookie: author.cookie } });
+    assert.equal(deleted.status, 200);
+  }
+});
+
 test("stores, renders, protects, and deletes one image or video attached to a Public post", async () => {
   const author = await approvedAccount;
   const viewer = await createTestAccount({ approved: true });
@@ -578,6 +629,21 @@ test("stores, renders, protects, and deletes one image or video attached to a Pu
   const homeWithVideo = await request("/home", { headers: { cookie: viewer.cookie } });
   assert.match(await homeWithVideo.text(), new RegExp(`/api/posts/${videoPayload.post.id}/media`));
 
+  const profileVideoForm = new FormData();
+  profileVideoForm.set("audience", "profile");
+  profileVideoForm.set("body", "Vídeo somente no perfil");
+  profileVideoForm.set("mediaAttestation", "accepted");
+  profileVideoForm.set("media", new File([mp4Bytes], "profile.mp4", { type: "video/mp4" }));
+  const profileVideoCreate = await request("/api/posts", {
+    method: "POST",
+    headers: { cookie: author.cookie },
+    body: profileVideoForm,
+  });
+  assert.equal(profileVideoCreate.status, 201);
+  const profileVideoPayload = await profileVideoCreate.json();
+  assert.equal((await request(`/api/posts/${profileVideoPayload.post.id}/media`, { headers: { cookie: viewer.cookie } })).status, 200);
+  assert.doesNotMatch(await (await request("/home", { headers: { cookie: viewer.cookie } })).text(), /Vídeo somente no perfil/);
+
   const deleteImage = await request(`/api/posts/${imagePayload.post.id}`, {
     method: "DELETE",
     headers: { cookie: author.cookie },
@@ -589,19 +655,43 @@ test("stores, renders, protects, and deletes one image or video attached to a Pu
     headers: { cookie: viewer.cookie },
   });
   assert.equal(deletedMedia.status, 404);
+
+  const privateImageForm = new FormData();
+  privateImageForm.set("audience", "only_me");
+  privateImageForm.set("body", "Foto privada persistente");
+  privateImageForm.set("mediaAttestation", "accepted");
+  privateImageForm.set("media", new File([imageBytes], "private.png", { type: "image/png" }));
+  const privateImageCreate = await request("/api/posts", {
+    method: "POST",
+    headers: { cookie: author.cookie },
+    body: privateImageForm,
+  });
+  assert.equal(privateImageCreate.status, 201);
+  const privateImagePayload = await privateImageCreate.json();
+  assert.equal((await request(`/api/posts/${privateImagePayload.post.id}/media`, { headers: { cookie: viewer.cookie } })).status, 404);
+  assert.equal((await request(`/api/posts/${privateImagePayload.post.id}/media`, { headers: { cookie: author.cookie } })).status, 200);
+  assert.equal((await request(`/api/posts/${privateImagePayload.post.id}`, { method: "DELETE", headers: { cookie: author.cookie } })).status, 200);
+  assert.equal((await request(`/api/posts/${profileVideoPayload.post.id}`, { method: "DELETE", headers: { cookie: author.cookie } })).status, 200);
 });
 
-test("keeps Create Public-only while enabling one real media attachment and leaving advanced options unavailable", () => {
+test("offers three enforced Create audiences while keeping Friends and advanced options unavailable", () => {
   const composer = readFileSync(
     new URL("../components/create/CreateComposer.tsx", import.meta.url),
     "utf8",
   );
   const copy = readFileSync(new URL("../lib/i18n.ts", import.meta.url), "utf8");
 
-  assert.match(composer, /body: JSON\.stringify\(\{ body, audience: "public" \}\)/);
+  assert.match(composer, /body: JSON\.stringify\(\{ body, audience \}\)/);
+  assert.match(composer, /\["public", "profile", "only_me"\]/);
+  assert.match(composer, /className="create-audience-trigger"/);
+  assert.match(composer, /role="listbox"/);
+  assert.match(composer, /aria-disabled="true" disabled/);
+  assert.match(copy, /label: "Somente no perfil"/);
+  assert.match(copy, /label: "Só eu"/);
   assert.match(composer, /maxLength=\{POST_BODY_MAX_CHARACTERS\}/);
   assert.match(copy, /addMedia: "Adicionar foto ou vídeo"/);
   assert.match(copy, /moreOptions: "Mais opções"/);
+  assert.match(copy, /Mais opções reúne configurações secundárias da publicação/);
   assert.match(copy, /comingSoon: "Em breve"/);
   assert.match(composer, /type="file"/);
   assert.match(composer, /form\.set\("media", media\)/);
