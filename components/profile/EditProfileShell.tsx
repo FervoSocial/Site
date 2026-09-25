@@ -28,7 +28,7 @@ export function EditProfileShell({ principal }: { principal: SessionPrincipal })
             <span aria-hidden="true">◇</span>
             <div>
               <strong>Prévia de edição</strong>
-              <p>A estrutura de dados para biografia, interesses e outras informações opcionais ainda requer aprovação. Nada digitado aqui será enviado ou guardado.</p>
+              <p>A estrutura de dados para biografia, interesses e outras informações opcionais ainda requer aprovação. Nada digitado aqui será enviado ou salvo.</p>
             </div>
           </div>
 

@@ -10,7 +10,7 @@ const mixedResults = exploreResults.clubs.flatMap<ExploreResult>((club, index) =
 
 export default function ClubsEventsPage() {
   return (
-    <section className="launch-entry-shell" aria-labelledby="clubs-events-title">
+    <section className="launch-entry-shell clubs-events-entry" aria-labelledby="clubs-events-title">
       <header className="launch-entry-heading">
         <p className="section-kicker">{copy.eyebrow}</p>
         <h1 id="clubs-events-title">{copy.title}</h1>

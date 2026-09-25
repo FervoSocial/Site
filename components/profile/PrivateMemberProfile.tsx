@@ -92,8 +92,8 @@ export function PrivateMemberProfile({
         <div>
           <p className="section-kicker">{ownerView ? "Seu perfil social" : "Perfil da comunidade"}</p>
           <p>{ownerView
-            ? "Esta é a sua identidade pública na Fervo — a experiência que outros membros podem reconhecer."
-            : "Identidade pública pseudônima · dados privados e de verificação não são exibidos."}</p>
+            ? "Sua identidade social na Fervo."
+            : "Perfil público pseudônimo · dados privados e de verificação não são exibidos."}</p>
         </div>
         {ownerView ? (
           <div className="member-profile-owner-links" aria-label="Controles do proprietário do perfil">
@@ -136,11 +136,11 @@ export function PrivateMemberProfile({
           ) : (
             <>
               <button type="button" className="private-profile-action private-profile-action-primary" aria-pressed={followed} onClick={() => setFollowed((current) => !current)}><span aria-hidden="true">＋</span>{followed ? "Seguindo" : "Seguir"}</button>
-              <button type="button" className="private-profile-action" aria-pressed={saved} onClick={() => setSaved((current) => !current)}><span aria-hidden="true">◇</span>{saved ? "Guardado" : "Guardar"}</button>
-              <button type="button" className="private-profile-action" title="Disponível numa próxima etapa" disabled><span aria-hidden="true">○</span>Acenar</button>
+              <button type="button" className="private-profile-action" aria-pressed={saved} onClick={() => setSaved((current) => !current)}><span aria-hidden="true">◇</span>{saved ? "Salvo" : "Salvar"}</button>
+              <button type="button" className="private-profile-action" title="Disponível em uma próxima etapa" disabled><span aria-hidden="true">○</span>Acenar</button>
               <Link className="private-profile-action" href="/messages"><span aria-hidden="true">✉</span>Mensagem</Link>
-              <button type="button" className="private-profile-action" title="Disponível numa próxima etapa" disabled><span aria-hidden="true">!</span>Denunciar</button>
-              <button type="button" className="private-profile-action" title="Disponível numa próxima etapa" disabled><span aria-hidden="true">×</span>Bloquear</button>
+              <button type="button" className="private-profile-action" title="Disponível em uma próxima etapa" disabled><span aria-hidden="true">!</span>Denunciar</button>
+              <button type="button" className="private-profile-action" title="Disponível em uma próxima etapa" disabled><span aria-hidden="true">×</span>Bloquear</button>
             </>
           )}
         </div>

@@ -76,7 +76,7 @@ export const feedPlaceholderItems: FeedPlaceholderItem[] = [
     profileHref: "/profile/clube-aurora",
     eventHref: "/event/noite-lilas",
     title: "Noite Lilás",
-    body: "Encontro social com regras claras de consentimento, receção para iniciantes e espaço acessível.",
+    body: "Encontro social com regras claras de consentimento, recepção para iniciantes e espaço acessível.",
     meta: "Sábado · confirmação futura",
   },
   {
@@ -92,7 +92,7 @@ export const feedPlaceholderItems: FeedPlaceholderItem[] = [
     time: "leitura de 1 min",
     profileHref: "/profile/fervo-oficial",
     title: "Combine limites antes do encontro",
-    body: "Prefira locais públicos no primeiro contacto, avise alguém de confiança e lembre: consentimento pode ser revogado a qualquer momento.",
+    body: "Prefira locais públicos no primeiro contato, avise alguém de confiança e lembre: consentimento pode ser revogado a qualquer momento.",
   },
   {
     id: "horizonte-sponsored",

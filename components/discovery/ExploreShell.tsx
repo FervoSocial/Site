@@ -22,6 +22,23 @@ const categoryRoutes: Array<{ category: ExploreCategory; href: string }> = [
   { category: "events", href: "/explore/events" },
 ];
 
+function normalizedSearchValue(value: string) {
+  return value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLocaleLowerCase("pt-BR");
+}
+
+function filterResults(query: string, results: typeof exploreResults[ExploreCategory]) {
+  const term = normalizedSearchValue(query.trim());
+  if (!term) return results;
+
+  return results.filter((result) => (
+    [result.name, result.accountLabel, result.location, result.summary, result.meta]
+      .some((value) => normalizedSearchValue(value).includes(term))
+  ));
+}
+
 function LoadingState() {
   return (
     <div className="explore-state explore-loading-state" role="status" aria-live="polite">
@@ -63,6 +80,7 @@ export function ExploreShell({ category }: ExploreShellProps) {
   const [resultView, setResultView] = useState<ResultView>("grid");
   const copy = ptBR.explore.categories[category];
   const results = exploreResults[category];
+  const filteredResults = filterResults(query, results);
 
   function showResults() {
     setQuery("");
@@ -71,7 +89,7 @@ export function ExploreShell({ category }: ExploreShellProps) {
 
   function submitSearch(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setResultState(query.trim() ? "no-results" : "results");
+    setResultState(query.trim() && filteredResults.length === 0 ? "no-results" : "results");
   }
 
   return (
@@ -131,16 +149,6 @@ export function ExploreShell({ category }: ExploreShellProps) {
             </select>
           </label>
           <label>
-            <span>{ptBR.explore.filters.profileType}</span>
-            <select defaultValue={category === "professionals" ? "profiles" : category}>
-              {categoryRoutes.map((item) => (
-                <option value={item.category} key={item.category}>
-                  {ptBR.explore.categories[item.category].label}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label>
             <span>{ptBR.explore.filters.ageRange}</span>
             <select defaultValue="all">
               <option value="all">Todas as idades 18+</option>
@@ -172,7 +180,7 @@ export function ExploreShell({ category }: ExploreShellProps) {
         <div>
           <p className="section-kicker">{copy.eyebrow}</p>
           <h2>{copy.title}</h2>
-          <span>{ptBR.explore.results.demoCount}</span>
+          <span>{ptBR.explore.results.demoCount(filteredResults.length)}</span>
         </div>
         <div className="explore-toolbar-controls">
           <label>
@@ -224,7 +232,7 @@ export function ExploreShell({ category }: ExploreShellProps) {
 
       {resultState === "results" ? (
         <div className={`explore-results explore-results-${resultView}`}>
-          {results.map((result) => (
+          {filteredResults.map((result) => (
             <ExploreResultCard key={result.id} result={result} />
           ))}
         </div>

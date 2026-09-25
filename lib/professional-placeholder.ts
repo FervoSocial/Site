@@ -23,7 +23,7 @@ export const professionalProfile = {
     "Encontros informativos sujeitos a aprovação futura",
   ],
   accessibility:
-    "Necessidades de acessibilidade poderão ser informadas durante um futuro contacto privado.",
+    "Necessidades de acessibilidade poderão ser informadas durante um futuro contato privado.",
   boundaries: [
     "Atendimento somente para adultos",
     "Consentimento e respeito são obrigatórios",

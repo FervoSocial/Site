@@ -19,8 +19,8 @@ export function PagePlaceholder({ title, description }: PagePlaceholderProps) {
           {ptBR.common.comingSoon}
         </span>
         <p>
-          A navegação, o layout e os componentes partilhados já estão ativos.
-          O conteúdo desta área será criado numa etapa posterior.
+          A navegação, o layout e os componentes compartilhados já estão ativos.
+          O conteúdo desta área será criado em uma etapa posterior.
         </p>
       </Surface>
     </section>

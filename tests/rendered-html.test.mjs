@@ -216,14 +216,14 @@ test("server-renders the founder-approved launch navigation shell", async () => 
   assert.match(html, /href="\/clubs-events"/);
   assert.match(html, /href="\/health-safety"/);
   assert.doesNotMatch(html, /class="nav-item" href="\/explore"/);
-  assert.match(html, /aria-label="Pesquisar"/);
+  assert.match(html, /aria-label="Explorar"/);
   assert.match(html, /aria-label="Mais"/);
   assert.doesNotMatch(html, /Descubra no seu ritmo/);
   assert.match(html, /id="feed-title"/);
   assert.match(html, /class="app-atmosphere"[^>]*aria-hidden="true"/);
   assert.doesNotMatch(html, /Pausar fundo|Retomar fundo/);
   assert.match(html, /aria-label="Curtir"/);
-  assert.match(html, /aria-label="Guardar"/);
+  assert.match(html, /aria-label="Salvar"/);
   assert.match(html, /control-tooltip/);
   assert.match(html, /touch-action-label/);
 });
@@ -701,12 +701,13 @@ test("offers three enforced Create audiences while keeping Friends and advanced 
   assert.equal((composer.match(/className="create-tool-control" type="button" disabled/g) ?? []).length, 1);
 });
 
-test("server-renders one Feed with three selectable views", async () => {
+test("server-renders Feed view controls with three selectable views", async () => {
   const home = await (await render("/home")).text();
   const options = home.match(/role="menuitemradio"/g) ?? [];
 
-  assert.equal(options.length, 3);
+  assert.equal(options.length, 6);
   assert.match(home, /id="feed-view-navigation-menu"/i);
+  assert.match(home, /id="feed-view-context-menu"/i);
   assert.match(home, /aria-label="Visualização: Público"/i);
   assert.match(home, /aria-checked="true"[^>]*>[\s\S]*?Público/i);
   assert.match(home, /aria-checked="false"[^>]*>[\s\S]*?Distância/i);
@@ -774,7 +775,7 @@ test("server-renders the Private Member profile milestone", async () => {
   assert.match(profile, /nenhum dado real/i);
   assert.match(profile, /Ações do perfil/i);
   assert.match(profile, />Seguir</i);
-  assert.match(profile, />Guardar</i);
+  assert.match(profile, />Salvar</i);
   assert.match(profile, />Acenar</i);
   assert.match(profile, />Mensagem</i);
   assert.match(profile, />Denunciar</i);
@@ -803,7 +804,7 @@ test("server-renders the Private Member profile milestone", async () => {
   const edit = await (await render("/me/profile/edit")).text();
   assert.match(edit, /Editar perfil/i);
   assert.match(edit, /Prévia de edição/i);
-  assert.match(edit, /Nada digitado aqui será enviado ou guardado/i);
+  assert.match(edit, /Nada digitado aqui será enviado ou salvo/i);
   assert.match(edit, /Salvar alterações/i);
   assert.match(edit, /disabled/i);
 
@@ -882,7 +883,7 @@ test("server-renders the separate Moderation Administration shell", async () => 
   assert.match(detail, />Caso</i);
   assert.match(detail, />Recurso</i);
   assert.match(detail, />Auditoria</i);
-  assert.match(detail, /Registo de auditoria preparado/i);
+  assert.match(detail, /Registro de auditoria preparado/i);
   assert.match(detail, />Rever recurso</i);
   for (const action of ["Atribuir", "Colocar em quarentena", "Advertir", "Restringir", "Suspender", "Banir", "Descartar", "Escalar"]) {
     assert.match(detail, new RegExp(`>${action}<`, "i"));
@@ -925,7 +926,7 @@ test("server-renders the Explore shell and category routes", async () => {
   assert.match(explore, /Pesquisa de demonstração/i);
   assert.match(explore, /Localização/i);
   assert.match(explore, /Distância aproximada/i);
-  assert.match(explore, /Tipo de resultado/i);
+  assert.doesNotMatch(explore, /Tipo de resultado/i);
   assert.match(explore, /Faixa etária/i);
   assert.match(explore, /Apenas verificados/i);
   assert.match(explore, /Atividade recente/i);
@@ -970,7 +971,7 @@ test("server-renders shared Club, Organiser, and Event detail shells", async () 
   assert.match(club, /Próximo evento/i);
   assert.match(club, /href="\/event\/noite-conexoes"/i);
   assert.match(club, />Seguir</i);
-  assert.match(club, />Guardar</i);
+  assert.match(club, />Salvar</i);
   assert.match(club, />Contato</i);
   assert.match(club, />Avaliações</i);
   assert.match(club, />Denunciar</i);
@@ -1015,7 +1016,7 @@ test("server-renders the Professional profile shell", async () => {
   assert.match(professional, /Acessibilidade/i);
   assert.match(professional, /Segurança e limites/i);
   assert.match(professional, />Seguir</i);
-  assert.match(professional, />Guardar</i);
+  assert.match(professional, />Salvar</i);
   assert.match(professional, />Contato</i);
   assert.match(professional, /Ver portfólio/i);
   assert.match(professional, /Solicitar acesso privado/i);

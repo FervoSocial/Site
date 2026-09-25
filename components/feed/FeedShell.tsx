@@ -53,11 +53,12 @@ export function FeedShell({
   persistedPosts: PublicPost[];
   viewerProfileId: string;
 }) {
-  const { activeView } = useFeedView();
+  const { activeView, setActiveView } = useFeedView();
   const router = useRouter();
   const [hiddenDeletedIds, setHiddenDeletedIds] = useState<Set<string>>(() => new Set());
   const [deletingIds, setDeletingIds] = useState<Set<string>>(() => new Set());
   const [deleteMessage, setDeleteMessage] = useState<string | null>(null);
+  const [viewMenuOpen, setViewMenuOpen] = useState(false);
   const [likedIds, setLikedIds] = useState<Set<string>>(() => new Set());
   const [savedIds, setSavedIds] = useState<Set<string>>(() => new Set());
   const [followedHandles, setFollowedHandles] = useState<Set<string>>(
@@ -127,10 +128,52 @@ export function FeedShell({
         </nav>
       </header>
 
-      <p className="feed-demo-notice">
-        <span aria-hidden="true" />
-        {ptBR.feed.demoNotice}
-      </p>
+      <div className="feed-context-row">
+        <p className="feed-demo-notice">
+          <span aria-hidden="true" />
+          {ptBR.feed.demoNotice}
+        </p>
+        <div className="feed-view-context">
+          <button
+            type="button"
+            aria-label={`${ptBR.feed.viewMenuLabel}: ${ptBR.feed.views[activeView]}`}
+            aria-expanded={viewMenuOpen}
+            aria-controls="feed-view-context-menu"
+            onClick={() => setViewMenuOpen((open) => !open)}
+            onKeyDown={(event) => {
+              if (event.key === "Escape") setViewMenuOpen(false);
+            }}
+          >
+            <strong>{ptBR.feed.views[activeView]}</strong>
+            <span aria-hidden="true">⌄</span>
+          </button>
+          <div
+            className="feed-view-context-menu"
+            id="feed-view-context-menu"
+            role="menu"
+            aria-label={ptBR.feed.viewsLabel}
+            hidden={!viewMenuOpen}
+            onKeyDown={(event) => {
+              if (event.key === "Escape") setViewMenuOpen(false);
+            }}
+          >
+            {(["public", "nearby", "friends"] as const).map((view) => (
+              <button
+                type="button"
+                role="menuitemradio"
+                aria-checked={activeView === view}
+                key={view}
+                onClick={() => {
+                  setActiveView(view);
+                  setViewMenuOpen(false);
+                }}
+              >
+                {ptBR.feed.views[view]}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
 
       <div
         className="feed-list"
